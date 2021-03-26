@@ -1,0 +1,78 @@
+[GIN-VUE-ADMIN]2021/03/25 - 13:58:48.008	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 13:58:48.036	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 13:59:21.439	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 13:59:21.466	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 13:59:21.466	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 13:59:21.467	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:00:05.011	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:00:05.038	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:00:05.038	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:00:05.039	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:06.714	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:06.740	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:06.741	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:06.742	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:40.888	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:40.940	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:40.940	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:01:40.941	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:02:23.774	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:02:23.801	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:02:23.801	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:02:23.803	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:03:40.303	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:03:40.331	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:03:40.331	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:03:40.332	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:04:19.815	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:04:19.842	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:04:19.842	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:04:19.843	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:35.734	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:35.763	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:35.763	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:35.764	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:47.039	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:47.067	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:47.067	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:49:47.068	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:25.406	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:25.443	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:25.443	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:25.445	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:32.223	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:32.252	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:32.252	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:52:32.253	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:08.079	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:08.115	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:08.115	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:08.117	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:44.179	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:44.206	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:44.206	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 14:53:44.208	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 15:51:00.845	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:48	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 15:51:00.872	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 15:51:00.872	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 15:51:00.873	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 15:52:35.646	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:47	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 15:52:35.675	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 15:52:35.675	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 15:52:35.675	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 15:55:07.090	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:47	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 15:55:07.121	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 15:55:07.121	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 15:55:07.122	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:10.299	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:47	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:10.326	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:10.326	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:10.328	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:54.228	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:47	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:54.256	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:54.257	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 16:00:54.257	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
+[GIN-VUE-ADMIN]2021/03/25 - 16:24:34.163	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/gorm.go:47	register table success
+[GIN-VUE-ADMIN]2021/03/25 - 16:24:34.190	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:17	use middleware logger
+[GIN-VUE-ADMIN]2021/03/25 - 16:24:34.190	[34minfo[0m	C:/Users/martin/go/src/danci-api/initialize/router.go:23	router register success
+[GIN-VUE-ADMIN]2021/03/25 - 16:24:34.192	[34minfo[0m	C:/Users/martin/go/src/danci-api/core/server.go:28	server run success on 	{"address": ":8889"}
