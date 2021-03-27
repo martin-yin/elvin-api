@@ -9,7 +9,6 @@ import (
 
 func SetWebPerformance(pagePerformance model.WebPerformance, context *gin.Context) {
 	err := global.GVA_DB.Create(&pagePerformance).Error
-	fmt.Print(pagePerformance.ID)
 	if err != nil {
 		fmt.Print(err, "err!!!!!!!!!!!!! \n")
 	}

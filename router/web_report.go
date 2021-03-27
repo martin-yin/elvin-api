@@ -17,7 +17,6 @@ func InitPageReport(Router *gin.RouterGroup) {
 		// js error 这里去接受js得报错。
 		WebPageReport.POST("/webReport/jsError", v1.SetWebRequest)
 
-
 		// 获取资源错误pv
 		WebPageReport.GET("/webReport/webResourcesError", v1.GetWebResourcesError)
 	}
