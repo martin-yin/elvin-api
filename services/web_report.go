@@ -27,5 +27,3 @@ func SetWebResourcesError(webResourceErrorInfo model.WebResourceErrorInfo, conte
 		fmt.Print(err, "err !!!!!!!! \n")
 	}
 }
-
-

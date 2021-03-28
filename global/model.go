@@ -8,5 +8,4 @@ type GVA_MODEL struct {
 	ID        uint `gorm:"primarykey"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
-
 }

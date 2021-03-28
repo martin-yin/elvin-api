@@ -16,26 +16,25 @@ func SetWebLoadPageInfo(context *gin.Context) {
 		fmt.Print(err)
 	}
 	webLoadPageInfoModel := &model.WebLoadpageInfo{
-		PageUrl: webLoadPageInfo.PageUrl,
-		UserId: "",
+		PageUrl:    webLoadPageInfo.PageUrl,
+		UserId:     "",
 		UploadType: "LOAD_PAGE",
-		HappenTime: "",
-		HappenDate: "",
-		PageKey: webLoadPageInfo.PageKey,
+		HappenTime: webLoadPageInfo.HappenDate,
+		HappenDate: webLoadPageInfo.HappenDate,
+		PageKey:    webLoadPageInfo.PageKey,
 
-		LoadPage: webLoadPageInfo.LoadPage,
 		DomReady: webLoadPageInfo.DomReady,
 		Redirect: webLoadPageInfo.Redirect,
 
 		LookupDomain: webLoadPageInfo.LookupDomain,
-		Ttfb: webLoadPageInfo.Ttfb,
-		Request: webLoadPageInfo.Request,
-		LoadEvent: webLoadPageInfo.LoadEvent,
-		Appcache: webLoadPageInfo.Appcache,
-		UnloadEvent: webLoadPageInfo.UnloadEvent,
+		Ttfb:         webLoadPageInfo.Ttfb,
+		Request:      webLoadPageInfo.Request,
+		LoadEvent:    webLoadPageInfo.LoadEvent,
+		Appcache:     webLoadPageInfo.Appcache,
+		UnloadEvent:  webLoadPageInfo.UnloadEvent,
 
-		Connect: webLoadPageInfo.Connect,
-		LoadType: webLoadPageInfo.LoadType,
+		Connect:     webLoadPageInfo.Connect,
+		LoadType:    webLoadPageInfo.LoadType,
 		BrowserInfo: webLoadPageInfo.BrowserInfo,
 	}
 	services.SetWebLoadPageInfo(*webLoadPageInfoModel, context)
@@ -50,21 +49,21 @@ func SetWebHttpInfo(context *gin.Context) {
 	}
 
 	webHttpInfoModel := &model.WebHttpInfo{
-		PageUrl: webHttpInfo.PageUrl,
-		UserId: "",
+		PageUrl:    webHttpInfo.PageUrl,
+		UserId:     "",
 		UploadType: "HTTP_LOG",
 		HappenTime: "",
 		HappenDate: "",
-		PageKey: webHttpInfo.PageKey,
+		PageKey:    webHttpInfo.PageKey,
 
-		HttpUrl: webHttpInfo.HttpUrl,
+		HttpUrl:       webHttpInfo.HttpUrl,
 		SimpleHttpUrl: webHttpInfo.SimpleHttpUrl,
-		LoadTime: webHttpInfo.LoadTime,
-		Status: webHttpInfo.Status,
-		StatusText: webHttpInfo.StatusText,
-		StatusResult: webHttpInfo.StatusResult,
-		RequestText: webHttpInfo.RequestText,
-		ResponseText: webHttpInfo.ResponseText,
+		LoadTime:      webHttpInfo.LoadTime,
+		Status:        webHttpInfo.Status,
+		StatusText:    webHttpInfo.StatusText,
+		StatusResult:  webHttpInfo.StatusResult,
+		RequestText:   webHttpInfo.RequestText,
+		ResponseText:  webHttpInfo.ResponseText,
 	}
 	services.WebHttpInfoModel(*webHttpInfoModel, context)
 }
@@ -76,15 +75,15 @@ func SetWebResourcesError(context *gin.Context) {
 		fmt.Print(err, "err!")
 	}
 	webResourceErrorInfoModel := &model.WebResourceErrorInfo{
-		PageUrl: webResourceErrorInfo.PageUrl,
-		UserId: webResourceErrorInfo.UserId,
-		HappenTime: webResourceErrorInfo.HappenTime,
-		UploadType: webResourceErrorInfo.PageUrl,
-		HappenDate: webResourceErrorInfo.HappenDate,
-		PageKey: webResourceErrorInfo.PageKey,
-		SourceUrl: webResourceErrorInfo.SourceUrl,
+		PageUrl:     webResourceErrorInfo.PageUrl,
+		UserId:      webResourceErrorInfo.UserId,
+		HappenTime:  webResourceErrorInfo.HappenTime,
+		UploadType:  webResourceErrorInfo.PageUrl,
+		HappenDate:  webResourceErrorInfo.HappenDate,
+		PageKey:     webResourceErrorInfo.PageKey,
+		SourceUrl:   webResourceErrorInfo.SourceUrl,
 		ElementType: webResourceErrorInfo.ElementType,
-		Status: webResourceErrorInfo.Status,
+		Status:      webResourceErrorInfo.Status,
 	}
 	services.SetWebResourcesError(*webResourceErrorInfoModel, context)
 }
