@@ -1,50 +1,62 @@
 package v1
 
 import (
+	"danci-api/model"
 	"danci-api/model/request"
+	"danci-api/services"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
 // 往数据中添加web性能
-func SetWebPerformance(context *gin.Context) {
-	var pagePerformance request.PagePerformance
-	err := context.BindJSON(&pagePerformance)
+func SetWebLoadPageInfo(context *gin.Context) {
+	var webLoadPageInfo request.WebLoadPageInfo
+	err := context.BindJSON(&webLoadPageInfo)
 	if err != nil {
-		context.JSON(http.StatusOK, gin.H{
-			"status": 200,
-			"error":  err,
-			"data":   pagePerformance,
-		})
+		fmt.Print(err)
 	}
+	pagePerformanceModel := &model.WebLoadpageInfo{
+		//PageUrl string `json:"page_url"`
+		//UserId      int    `json:"user_id"`
+		//UploadType  int    `json:"upload_type"`
+		//HappenTime  int    `json:"happen_time"`
+		//HappenDate  int    `json:"happen_date"`
+		//
+		//PageKey     string `json:"page_key"`
+		PageUrl: webLoadPageInfo.PageUrl,
+		UserId: "",
+		UploadType: "LOAD_PAGE",
+		HappenTime: "",
+		HappenDate: "",
+		PageKey: webLoadPageInfo.PageKey,
 
-	//cookie, err := context.Cookie("gin_cookie")
-	//pagePerformanceModel := &model.WebPerformance{
-	//	Appcache:        pagePerformance.Data.Appcache,
-	//	Contentdownload: pagePerformance.Data.Contentdownload,
-	//	Dns:             pagePerformance.Data.Dns,
-	//	Domparsing:      pagePerformance.Data.Domparsing,
-	//	PageUrl:         pagePerformance.Data.PageUrl,
-	//	Redirect:        pagePerformance.Data.Redirect,
-	//	Res:             pagePerformance.Data.Res,
-	//	Tcp:             pagePerformance.Data.Tcp,
-	//	Ttfb:            pagePerformance.Data.Ttfb,
-	//	UserAgent:       context.Request.UserAgent(),
-	//	IPAddress:       context.ClientIP(),
-	//	Cooike:          cookie,
-	//}
-	//services.SetWebPerformance(*pagePerformanceModel, context)
+		LoadPage: webLoadPageInfo.LoadPage,
+		DomReady: webLoadPageInfo.DomReady,
+		Redirect: webLoadPageInfo.Redirect,
+
+		LookupDomain: webLoadPageInfo.LookupDomain,
+		Ttfb: webLoadPageInfo.Ttfb,
+		Request: webLoadPageInfo.Request,
+		LoadEvent: webLoadPageInfo.LoadEvent,
+		Appcache: webLoadPageInfo.Appcache,
+		UnloadEvent: webLoadPageInfo.UnloadEvent,
+
+		Connect: webLoadPageInfo.Connect,
+		LoadType: webLoadPageInfo.LoadType,
+		BrowserInfo: webLoadPageInfo.BrowserInfo,
+	}
+	services.SetWebLoadPageInfo(*pagePerformanceModel, context)
 }
 
 // 存储页面得请求数据
 func SetWebRequest(context *gin.Context) {
-	var pageRequest request.PageRequest
-	err := context.BindJSON(&pageRequest)
-	if err != nil {
-		fmt.Print(err, "err!")
-		//global.GVA_LOG.Error(err)
-	}
+	//var pageRequest request.PageRequest
+	//err := context.BindJSON(&pageRequest)
+	//if err != nil {
+	//
+	//	//global.GVA_LOG.Error(err)
+	//}
 	//cookie, err := context.Cookie("gin_cookie")
 	//pageRequestModel := &model.WebRequest{
 	//	GenerateTime: pageRequest.Data.GenerateTime,
@@ -64,11 +76,11 @@ func SetWebRequest(context *gin.Context) {
 }
 
 func SetWebResourcesError(context *gin.Context) {
-	var pageResourcesError request.PageResourcesError
-	err := context.BindJSON(&pageResourcesError)
-	if err != nil {
-		fmt.Print(err, "err!")
-	}
+	//var pageResourcesError request.PageResourcesError
+	//err := context.BindJSON(&pageResourcesError)
+	//if err != nil {
+	//	fmt.Print(err, "err!")
+	//}
 	//context.Cookie()
 	//pageResourcesErrorModel := &model.WebResourcesError{
 	//	PageUrl:      pageResourcesError.Data.PageUrl,

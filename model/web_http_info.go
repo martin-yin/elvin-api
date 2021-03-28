@@ -5,6 +5,13 @@ import "danci-api/global"
 type WebHttpInfo struct {
 	global.GVA_MODEL
 
+	PageUrl string `json:"page_url"`
+	UserId      string    `json:"user_id"`
+	UploadType  string    `json:"upload_type"`
+	HappenTime  string    `json:"happen_time"`
+	HappenDate  string    `json:"happen_date"`
+	PageKey     string `json:"page_key"`
+
 	HttpUrl       string `json:"http_url"`
 	SimpleHttpUrl string `json:"simple_http_url"`
 	LoadTime      string `json:"load_time"`
