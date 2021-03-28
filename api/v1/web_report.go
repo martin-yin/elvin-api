@@ -36,8 +36,9 @@ func SetWebLoadPageInfo(context *gin.Context) {
 		Connect:     webLoadPageInfo.Connect,
 		LoadType:    webLoadPageInfo.LoadType,
 		BrowserInfo: webLoadPageInfo.BrowserInfo,
+
 	}
-	services.SetWebLoadPageInfo(*webLoadPageInfoModel, context)
+	services.SetWebLoadPageInfo(*webLoadPageInfoModel)
 }
 
 // 存储页面得请求数据
@@ -56,15 +57,15 @@ func SetWebHttpInfo(context *gin.Context) {
 		HappenDate: "",
 		PageKey:    webHttpInfo.PageKey,
 
-		HttpUrl:       webHttpInfo.HttpUrl,
-		LoadTime:      webHttpInfo.LoadTime,
-		Status:        webHttpInfo.Status,
-		StatusText:    webHttpInfo.StatusText,
-		StatusResult:  webHttpInfo.StatusResult,
-		RequestText:   webHttpInfo.RequestText,
-		ResponseText:  webHttpInfo.ResponseText,
+		HttpUrl:      webHttpInfo.HttpUrl,
+		LoadTime:     webHttpInfo.LoadTime,
+		Status:       webHttpInfo.Status,
+		StatusText:   webHttpInfo.StatusText,
+		StatusResult: webHttpInfo.StatusResult,
+		RequestText:  webHttpInfo.RequestText,
+		ResponseText: webHttpInfo.ResponseText,
 	}
-	services.WebHttpInfoModel(*webHttpInfoModel, context)
+	services.WebHttpInfoModel(*webHttpInfoModel)
 }
 
 func SetWebResourcesError(context *gin.Context) {
@@ -85,6 +86,30 @@ func SetWebResourcesError(context *gin.Context) {
 		Status:      webResourceErrorInfo.Status,
 	}
 	services.SetWebResourcesError(*webResourceErrorInfoModel, context)
+}
+
+func SetBehaviorInfo(context *gin.Context) {
+	var webBehaviorInfo request.WebBehaviorInfo
+	err := context.BindJSON(&webBehaviorInfo)
+	if err != nil {
+		fmt.Print(err, "err!")
+	}
+	webBehaviorInfoModel := &model.WebBehaviorInfo{
+		PageUrl:    webBehaviorInfo.PageUrl,
+		UserId:     webBehaviorInfo.UserId,
+		HappenTime: webBehaviorInfo.HappenTime,
+		UploadType: webBehaviorInfo.PageUrl,
+		HappenDate: webBehaviorInfo.HappenDate,
+		PageKey:    webBehaviorInfo.PageKey,
+
+		BehaviorType: webBehaviorInfo.BehaviorType,
+		ClassName:    webBehaviorInfo.ClassName,
+		Placeholder:  webBehaviorInfo.Placeholder,
+		InputValue:   webBehaviorInfo.InputValue,
+		TagNameint:   webBehaviorInfo.TagNameint,
+		InnterText:    webBehaviorInfo.InnterText,
+	}
+	services.SetBehaviorInfo(*webBehaviorInfoModel)
 }
 
 // 将uuid 写入cookie， 一个cookie 就是一个用户。每次切换一个页面等页面加载完成的时候，就是上报一次pv。

@@ -12,6 +12,9 @@ func InitPageReport(Router *gin.RouterGroup) {
 		WebPageReport.POST("/webReport/httpInfo", v1.SetWebHttpInfo)
 
 		WebPageReport.POST("/webReport/resourceError", v1.SetWebResourcesError)
+
+		WebPageReport.POST("/webReport/behavior", v1.SetBehaviorInfo)
+
 		//// 上报请求，不管这个请求得结果是正确还是错误得！
 		//WebPageReport.POST("/webReport/request", v1.SetWebRequest)
 		//// 接受资源错误！
