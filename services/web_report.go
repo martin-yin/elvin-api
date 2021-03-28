@@ -14,21 +14,18 @@ func SetWebLoadPageInfo(weLoadPageInfo model.WebLoadpageInfo, context *gin.Conte
 	}
 }
 
-//func SetWebPerformance(pagePerformance model.WebPerformance, context *gin.Context) {
-//
-//}
-//
-//func SetWebRequest(request model.WebRequest, context *gin.Context) {
-//	err := global.GVA_DB.Create(&request).Error
-//	if err != nil {
-//		fmt.Print(err, "err !!!!!!!! \n")
-//	}
-//}
-//
-//func SetWebResourcesError(resourceError model.WebResourcesError, context *gin.Context) {
-//	err := global.GVA_DB.Create(&resourceError).Error
-//	if err != nil {
-//		fmt.Print(err, "err!!!!!!!!!!!!! \n")
-//	}
-//}
+func WebHttpInfoModel(weLoadPageInfo model.WebHttpInfo, context *gin.Context) {
+	err := global.GVA_DB.Create(&weLoadPageInfo).Error
+	if err != nil {
+		fmt.Print(err, "err!!!!!!!!!!!!! \n")
+	}
+}
+
+func SetWebResourcesError(webResourceErrorInfo model.WebResourceErrorInfo, context *gin.Context) {
+	err := global.GVA_DB.Create(&webResourceErrorInfo).Error
+	if err != nil {
+		fmt.Print(err, "err !!!!!!!! \n")
+	}
+}
+
 

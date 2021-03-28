@@ -21,3 +21,35 @@ type WebLoadPageInfo struct {
 	LoadType     string `json:"load_type"`
 	BrowserInfo  string `json:"browser_info"`
 }
+
+type WebHttpInfo struct {
+
+	PageUrl string `json:"page_url"`
+	UserId      string    `json:"user_id"`
+	UploadType  string    `json:"upload_type"`
+	HappenTime  string    `json:"happen_time"`
+	HappenDate  string    `json:"happen_date"`
+	PageKey     string `json:"page_key"`
+
+	HttpUrl       string `json:"http_url"`
+	SimpleHttpUrl string `json:"simple_http_url"`
+	LoadTime      string `json:"load_time"`
+	Status        string `json:"status"`
+	StatusText    string `json:"status_text"`
+	StatusResult  string `json:"status_result"`
+	RequestText   string `json:"request_text"`
+	ResponseText  string `json:"response_text"`
+}
+
+type WebResourceErrorInfo struct {
+	PageUrl string `json:"page_url"`
+	UserId      string    `json:"user_id"`
+	UploadType  string    `json:"upload_type"`
+	HappenTime  string    `json:"happen_time"`
+	HappenDate  string    `json:"happen_date"`
+	PageKey     string `json:"page_key"`
+
+	SourceUrl   int    `json:"source_url"`
+	ElementType int    `json:"element_type"`
+	Status      int    `json:"status"`
+}
