@@ -57,7 +57,6 @@ func SetWebHttpInfo(context *gin.Context) {
 		PageKey:    webHttpInfo.PageKey,
 
 		HttpUrl:       webHttpInfo.HttpUrl,
-		SimpleHttpUrl: webHttpInfo.SimpleHttpUrl,
 		LoadTime:      webHttpInfo.LoadTime,
 		Status:        webHttpInfo.Status,
 		StatusText:    webHttpInfo.StatusText,

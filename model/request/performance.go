@@ -30,9 +30,8 @@ type WebHttpInfo struct {
 	PageKey    string  `json:"page_key"`
 
 	HttpUrl       string `json:"http_url"`
-	SimpleHttpUrl string `json:"simple_http_url"`
-	LoadTime      string `json:"load_time"`
-	Status        string `json:"status"`
+	LoadTime      float64 `json:"load_time"`
+	Status        int `json:"status"`
 	StatusText    string `json:"status_text"`
 	StatusResult  string `json:"status_result"`
 	RequestText   string `json:"request_text"`
