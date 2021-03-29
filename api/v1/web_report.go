@@ -10,7 +10,7 @@ import (
 
 func GetWebLoadPageInfo(context *gin.Context) {
 	result := services.GetWebLoadPageInfo()
-	context.JSON(200, gin.H{"result": result, "message": "msg", "redirect_url": "url"})
+	context.JSON(200, gin.H{"data": result, "message": "ok", "code": 200})
 }
 
 func SetWebLoadPageInfo(context *gin.Context) {
@@ -25,12 +25,18 @@ func SetWebLoadPageInfo(context *gin.Context) {
 		UploadType: "LOAD_PAGE",
 		HappenTime: webLoadPageInfo.HappenTime,
 
-		Redirect: webLoadPageInfo.Redirect,
-		Appcache: webLoadPageInfo.Appcache,
+		Redirect:     webLoadPageInfo.Redirect,
+		Appcache:     webLoadPageInfo.Appcache,
 		LookupDomain: webLoadPageInfo.LookupDomain,
-		Tcp: webLoadPageInfo.Tcp,
-		Request: webLoadPageInfo.Request,
+		Tcp:          webLoadPageInfo.Tcp,
+		SslT:         webLoadPageInfo.SslT,
+
+		Request:  webLoadPageInfo.Request,
 		DomParse: webLoadPageInfo.DomParse,
+
+		Ttfb:      webLoadPageInfo.Ttfb,
+		LoadPage:  webLoadPageInfo.LoadPage,
+		LoadEvent: webLoadPageInfo.LoadEvent,
 
 		LoadType: webLoadPageInfo.LoadType,
 
