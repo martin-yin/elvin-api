@@ -15,7 +15,7 @@ func SetWebLoadPageInfo(weLoadPageInfo model.WebLoadpageInfo) {
 	}
 }
 
-func WebHttpInfoModel(weLoadPageInfo model.WebHttpInfo) {
+func WebHttpInfoModel(weLoadPageInfo []*model.WebHttpInfo) {
 	err := global.GVA_DB.Create(&weLoadPageInfo).Error
 	if err != nil {
 		fmt.Print(err, "err!!!!!!!!!!!!! \n")

@@ -7,6 +7,6 @@ type Admin struct {
 
 	UserName string `json:"username"`
 	Password string `json:"password"`
-	Email string `json:"email"`
+	Email    string `json:"email"`
 	NickName string `json:"nick_name"`
 }

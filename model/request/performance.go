@@ -5,8 +5,6 @@ type WebLoadPageInfo struct {
 	UserId     string  `json:"user_id"`
 	UploadType string  `json:"upload_type"`
 	HappenTime float64 `json:"happen_time"`
-	HappenDate float64 `json:"happen_date"`
-	PageKey    string  `json:"page_key"`
 
 	DomReady     float64 `json:"dom_ready"`
 	Redirect     float64 `json:"redirect"`
@@ -18,16 +16,19 @@ type WebLoadPageInfo struct {
 	UnloadEvent  float64 `json:"unload_event"`
 	Connect      float64 `json:"connect"`
 	LoadType     string  `json:"load_type"`
-	BrowserInfo  string  `json:"browser_info"`
+
+	DeviceName     string `json:"device_name"`
+	Os             string `json:"os"`
+	BrowserName    string `json:"browser_name"`
+	BrowserVersion string `json:"browser_version"`
+	UA             string `json:"ua"`
 }
 
 type WebHttpInfo struct {
-	PageUrl    string  `json:"page_url"`
+	PageUrl    string  `json:"url"`
 	UserId     string  `json:"user_id"`
 	UploadType string  `json:"upload_type"`
 	HappenTime float64 `json:"happen_time"`
-	HappenDate float64 `json:"happen_date"`
-	PageKey    string  `json:"page_key"`
 
 	HttpUrl      string  `json:"http_url"`
 	LoadTime     float64 `json:"load_time"`
@@ -36,6 +37,12 @@ type WebHttpInfo struct {
 	StatusResult string  `json:"status_result"`
 	RequestText  string  `json:"request_text"`
 	ResponseText string  `json:"response_text"`
+
+	DeviceName     string `json:"device_name"`
+	Os             string `json:"os"`
+	BrowserName    string `json:"browser_name"`
+	BrowserVersion string `json:"browser_version"`
+	UA             string `json:"ua"`
 }
 
 type WebResourceErrorInfo struct {
@@ -43,12 +50,16 @@ type WebResourceErrorInfo struct {
 	UserId     string  `json:"user_id"`
 	UploadType string  `json:"upload_type"`
 	HappenTime float64 `json:"happen_time"`
-	HappenDate float64 `json:"happen_date"`
-	PageKey    string  `json:"page_key"`
 
 	SourceUrl   string `json:"source_url"`
 	ElementType string `json:"element_type"`
 	Status      string `json:"status"`
+
+	DeviceName     string `json:"device_name"`
+	Os             string `json:"os"`
+	BrowserName    string `json:"browser_name"`
+	BrowserVersion string `json:"browser_version"`
+	UA             string `json:"ua"`
 }
 
 type WebBehaviorInfo struct {
@@ -56,13 +67,17 @@ type WebBehaviorInfo struct {
 	UserId     string  `json:"user_id"`
 	UploadType string  `json:"upload_type"`
 	HappenTime float64 `json:"happen_time"`
-	HappenDate float64 `json:"happen_date"`
-	PageKey    string  `json:"page_key"`
 
-	BehaviorType string    `json:"behavior_type"`
-	ClassName    string    `json:"class_name"`
-	Placeholder  string    `json:"placeholder"`
-	InputValue   string    `json:"Input_value"`
+	BehaviorType string `json:"behavior_type"`
+	ClassName    string `json:"class_name"`
+	Placeholder  string `json:"placeholder"`
+	InputValue   string `json:"Input_value"`
 	TagNameint   string `json:"tag_name"`
-	InnterText    string    `json:"innter_text"`
+	InnterText   string `json:"innter_text"`
+
+	DeviceName     string `json:"device_name"`
+	Os             string `json:"os"`
+	BrowserName    string `json:"browser_name"`
+	BrowserVersion string `json:"browser_version"`
+	UA             string `json:"ua"`
 }

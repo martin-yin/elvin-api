@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 往数据中添加web性能
+
 func SetWebLoadPageInfo(context *gin.Context) {
 	var webLoadPageInfo request.WebLoadPageInfo
 	err := context.BindJSON(&webLoadPageInfo)
@@ -19,9 +19,7 @@ func SetWebLoadPageInfo(context *gin.Context) {
 		PageUrl:    webLoadPageInfo.PageUrl,
 		UserId:     "",
 		UploadType: "LOAD_PAGE",
-		HappenTime: webLoadPageInfo.HappenDate,
-		HappenDate: webLoadPageInfo.HappenDate,
-		PageKey:    webLoadPageInfo.PageKey,
+		HappenTime: webLoadPageInfo.HappenTime,
 
 		DomReady: webLoadPageInfo.DomReady,
 		Redirect: webLoadPageInfo.Redirect,
@@ -33,39 +31,49 @@ func SetWebLoadPageInfo(context *gin.Context) {
 		Appcache:     webLoadPageInfo.Appcache,
 		UnloadEvent:  webLoadPageInfo.UnloadEvent,
 
-		Connect:     webLoadPageInfo.Connect,
-		LoadType:    webLoadPageInfo.LoadType,
-		BrowserInfo: webLoadPageInfo.BrowserInfo,
+		Connect:  webLoadPageInfo.Connect,
+		LoadType: webLoadPageInfo.LoadType,
 
+		DeviceName:     webLoadPageInfo.DeviceName,
+		Os:             webLoadPageInfo.Os,
+		BrowserName:    webLoadPageInfo.BrowserName,
+		BrowserVersion: webLoadPageInfo.BrowserVersion,
+		UA:             webLoadPageInfo.UA,
 	}
 	services.SetWebLoadPageInfo(*webLoadPageInfoModel)
 }
 
-// 存储页面得请求数据
+// 存储HTTP请求
 func SetWebHttpInfo(context *gin.Context) {
-	var webHttpInfo request.WebHttpInfo
+	var webHttpInfo []request.WebHttpInfo
 	err := context.BindJSON(&webHttpInfo)
 	if err != nil {
 		fmt.Print(err)
 	}
+	var webHttpInfoModel []*model.WebHttpInfo
+	for _, item := range webHttpInfo {
+		webHttpInfoModelItem := &model.WebHttpInfo{
+			PageUrl:      item.PageUrl,
+			UserId:       "",
+			UploadType:   item.UploadType,
+			HappenTime:   item.HappenTime,
+			HttpUrl:      item.HttpUrl,
+			LoadTime:     item.LoadTime,
+			Status:       item.Status,
+			StatusText:   item.StatusText,
+			StatusResult: item.StatusResult,
+			RequestText:  item.RequestText,
+			ResponseText: item.ResponseText,
 
-	webHttpInfoModel := &model.WebHttpInfo{
-		PageUrl:    webHttpInfo.PageUrl,
-		UserId:     "",
-		UploadType: "HTTP_LOG",
-		HappenTime: "",
-		HappenDate: "",
-		PageKey:    webHttpInfo.PageKey,
-
-		HttpUrl:      webHttpInfo.HttpUrl,
-		LoadTime:     webHttpInfo.LoadTime,
-		Status:       webHttpInfo.Status,
-		StatusText:   webHttpInfo.StatusText,
-		StatusResult: webHttpInfo.StatusResult,
-		RequestText:  webHttpInfo.RequestText,
-		ResponseText: webHttpInfo.ResponseText,
+			DeviceName:     item.DeviceName,
+			Os:             item.Os,
+			BrowserName:    item.BrowserName,
+			BrowserVersion: item.BrowserVersion,
+			UA:             item.UA,
+		}
+		webHttpInfoModel = append(webHttpInfoModel, webHttpInfoModelItem)
 	}
-	services.WebHttpInfoModel(*webHttpInfoModel)
+	services.WebHttpInfoModel(webHttpInfoModel)
 }
 
 func SetWebResourcesError(context *gin.Context) {
@@ -75,19 +83,25 @@ func SetWebResourcesError(context *gin.Context) {
 		fmt.Print(err, "err!")
 	}
 	webResourceErrorInfoModel := &model.WebResourceErrorInfo{
-		PageUrl:     webResourceErrorInfo.PageUrl,
-		UserId:      webResourceErrorInfo.UserId,
+		PageUrl: webResourceErrorInfo.PageUrl,
+		UserId:  webResourceErrorInfo.UserId,
+
 		HappenTime:  webResourceErrorInfo.HappenTime,
 		UploadType:  webResourceErrorInfo.PageUrl,
-		HappenDate:  webResourceErrorInfo.HappenDate,
-		PageKey:     webResourceErrorInfo.PageKey,
 		SourceUrl:   webResourceErrorInfo.SourceUrl,
 		ElementType: webResourceErrorInfo.ElementType,
 		Status:      webResourceErrorInfo.Status,
+
+		DeviceName:     webResourceErrorInfo.DeviceName,
+		Os:             webResourceErrorInfo.Os,
+		BrowserName:    webResourceErrorInfo.BrowserName,
+		BrowserVersion: webResourceErrorInfo.BrowserVersion,
+		UA:             webResourceErrorInfo.UA,
 	}
 	services.SetWebResourcesError(*webResourceErrorInfoModel, context)
 }
 
+// 存储用户行为(点击等等……)。
 func SetBehaviorInfo(context *gin.Context) {
 	var webBehaviorInfo request.WebBehaviorInfo
 	err := context.BindJSON(&webBehaviorInfo)
@@ -99,15 +113,19 @@ func SetBehaviorInfo(context *gin.Context) {
 		UserId:     webBehaviorInfo.UserId,
 		HappenTime: webBehaviorInfo.HappenTime,
 		UploadType: webBehaviorInfo.PageUrl,
-		HappenDate: webBehaviorInfo.HappenDate,
-		PageKey:    webBehaviorInfo.PageKey,
 
 		BehaviorType: webBehaviorInfo.BehaviorType,
 		ClassName:    webBehaviorInfo.ClassName,
 		Placeholder:  webBehaviorInfo.Placeholder,
 		InputValue:   webBehaviorInfo.InputValue,
 		TagNameint:   webBehaviorInfo.TagNameint,
-		InnterText:    webBehaviorInfo.InnterText,
+		InnterText:   webBehaviorInfo.InnterText,
+
+		DeviceName:     webBehaviorInfo.DeviceName,
+		Os:             webBehaviorInfo.Os,
+		BrowserName:    webBehaviorInfo.BrowserName,
+		BrowserVersion: webBehaviorInfo.BrowserVersion,
+		UA:             webBehaviorInfo.UA,
 	}
 	services.SetBehaviorInfo(*webBehaviorInfoModel)
 }
