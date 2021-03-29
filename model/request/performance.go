@@ -6,15 +6,13 @@ type WebLoadPageInfo struct {
 	UploadType string  `json:"upload_type"`
 	HappenTime float64 `json:"happen_time"`
 
-	DomReady     float64 `json:"dom_ready"`
 	Redirect     float64 `json:"redirect"`
-	LookupDomain float64 `json:"lookup_domain"`
-	Ttfb         float64 `json:"ttfb"`
-	Request      float64 `json:"request"`
-	LoadEvent    float64 `json:"load_event"`
 	Appcache     float64 `json:"appcache"`
-	UnloadEvent  float64 `json:"unload_event"`
-	Connect      float64 `json:"connect"`
+	LookupDomain float64 `json:"lookup_domain"`
+	Tcp         float64 `json:"tcp"`
+	Request      float64 `json:"Request"`
+	DomParse     float64 `json:"dom_parse"`
+
 	LoadType     string  `json:"load_type"`
 
 	DeviceName     string `json:"device_name"`

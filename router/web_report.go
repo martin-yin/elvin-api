@@ -19,6 +19,8 @@ func InitPageReport(Router *gin.RouterGroup) {
 			context.JSON(200, gin.H{"result": nil, "message": "msg", "redirect_url": "url"})
 		})
 
+		WebPageReport.GET("report", v1.GetWebLoadPageInfo)
+
 		//// 上报请求，不管这个请求得结果是正确还是错误得！
 		//WebPageReport.POST("/webReport/request", v1.SetWebRequest)
 		//// 接受资源错误！

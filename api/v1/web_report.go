@@ -8,6 +8,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetWebLoadPageInfo(context *gin.Context) {
+	result := services.GetWebLoadPageInfo()
+	context.JSON(200, gin.H{"result": result, "message": "msg", "redirect_url": "url"})
+}
 
 func SetWebLoadPageInfo(context *gin.Context) {
 	var webLoadPageInfo request.WebLoadPageInfo
@@ -21,17 +25,13 @@ func SetWebLoadPageInfo(context *gin.Context) {
 		UploadType: "LOAD_PAGE",
 		HappenTime: webLoadPageInfo.HappenTime,
 
-		DomReady: webLoadPageInfo.DomReady,
 		Redirect: webLoadPageInfo.Redirect,
-
+		Appcache: webLoadPageInfo.Appcache,
 		LookupDomain: webLoadPageInfo.LookupDomain,
-		Ttfb:         webLoadPageInfo.Ttfb,
-		Request:      webLoadPageInfo.Request,
-		LoadEvent:    webLoadPageInfo.LoadEvent,
-		Appcache:     webLoadPageInfo.Appcache,
-		UnloadEvent:  webLoadPageInfo.UnloadEvent,
+		Tcp: webLoadPageInfo.Tcp,
+		Request: webLoadPageInfo.Request,
+		DomParse: webLoadPageInfo.DomParse,
 
-		Connect:  webLoadPageInfo.Connect,
 		LoadType: webLoadPageInfo.LoadType,
 
 		DeviceName:     webLoadPageInfo.DeviceName,
@@ -98,7 +98,7 @@ func SetWebResourcesError(context *gin.Context) {
 		BrowserVersion: webResourceErrorInfo.BrowserVersion,
 		UA:             webResourceErrorInfo.UA,
 	}
-	services.SetWebResourcesError(*webResourceErrorInfoModel, context)
+	services.SetWebResourcesError(*webResourceErrorInfoModel)
 }
 
 // 存储用户行为(点击等等……)。

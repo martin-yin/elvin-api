@@ -9,5 +9,5 @@ type Project struct {
 	AppKey      string `json:"app_key"`
 
 	AdminId string `json:"admin_id"`
-	Email string `json:"email"`
+	Email   string `json:"email"`
 }
