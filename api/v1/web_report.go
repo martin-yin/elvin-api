@@ -13,6 +13,11 @@ func GetWebLoadPageInfo(context *gin.Context) {
 	context.JSON(200, gin.H{"data": result, "message": "ok", "code": 200})
 }
 
+func GetWebHttpInfo(context *gin.Context) {
+	result := services.GetWebHttpInfo()
+	context.JSON(200, gin.H{"data": result, "message": "ok", "code": 200})
+}
+
 func SetWebLoadPageInfo(context *gin.Context) {
 	var webLoadPageInfo request.WebLoadPageInfo
 	err := context.BindJSON(&webLoadPageInfo)

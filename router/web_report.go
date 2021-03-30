@@ -21,6 +21,8 @@ func InitPageReport(Router *gin.RouterGroup) {
 
 		WebPageReport.GET("report", v1.GetWebLoadPageInfo)
 
+		WebPageReport.GET("http", v1.GetWebHttpInfo)
+
 		//// 上报请求，不管这个请求得结果是正确还是错误得！
 		//WebPageReport.POST("/webReport/request", v1.SetWebRequest)
 		//// 接受资源错误！
