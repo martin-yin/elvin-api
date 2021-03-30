@@ -1,13 +1,10 @@
 package response
 
-
-
 type WebLoadPageInfoResponse struct {
-	QuotaResponse QuotaResponse       `json:"quota"`
-	StackResponse StackResponse       `json:"stack"`
-	LoadpageInfoListResponse    []LoadpageInfoListResponse `json:"load_page_info_list"`
+	QuotaResponse            QuotaResponse              `json:"quota"`
+	StackResponse            StackResponse              `json:"stack"`
+	LoadpageInfoListResponse []LoadpageInfoListResponse `json:"load_page_info_list"`
 }
-
 
 type StackResponse struct {
 	Redirect     float64 `json:"redirect"`
@@ -40,4 +37,3 @@ type LoadpageInfoListResponse struct {
 	LoadType  string  `json:"load_type"`
 	Pv        int     `json:"pv"`
 }
-

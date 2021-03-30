@@ -49,17 +49,17 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("CONCAT(round((SELECT COUNT(id) as pv  FROM web_loadpage_infos WHERE web_loadpage_infos.load_page < 2000) / Count( id ) * 100, 2), '%')  AS Score ").Scan(&quota.Fast)
 
 	return &response.WebLoadPageInfoResponse{
-		QuotaResponse: quota,
-		StackResponse: stacking,
-		LoadpageInfoListResponse:  loadpageInfoList,
+		QuotaResponse:            quota,
+		StackResponse:            stacking,
+		LoadpageInfoListResponse: loadpageInfoList,
 	}
 }
 
-func GetWebHttpInfo() *response.WebHttpInfoListResponse {
+func GetWebHttpInfo() *response.WebHttpInfoResponse {
 	var httpInfoList []response.HttpInfoListResponse
 	var httpQuota response.HttpQuotaResponse
 
-	err := global.GVA_DB.Model(&model.WebHttpInfo{}).Select("http_url AS http_url, "+
+	err := global.GVA_DB.Model(&model.WebHttpInfo{}).Select("http_url AS request_url, " +
 		"page_url, " +
 		"COUNT( http_url ) AS request_total, " +
 		"round(AVG( load_time ), 2) AS load_time, " +
@@ -71,15 +71,28 @@ func GetWebHttpInfo() *response.WebHttpInfoListResponse {
 		"CONCAT(round((SELECT COUNT( http_url ) FROM web_http_infos WHERE web_http_infos.`status` != 0 AND web_http_infos.`status` BETWEEN 200 AND 305 ) / COUNT( http_url ) * 100,2 ), '%') AS success_rate," +
 		"(SELECT COUNT(DISTINCT user_id) as user FROM web_http_infos  WHERE web_http_infos.`status` > 305 ) as error_user").Where("web_http_infos.`status` != 0").Find(&httpQuota)
 
-	return &response.WebHttpInfoListResponse{
+	return &response.WebHttpInfoResponse{
 		HttpInfoListResponse: httpInfoList,
-		HttpQuotaResponse: httpQuota,
+		HttpQuotaResponse:    httpQuota,
 	}
 
-	//请求次数
-	// 成功率
-	// 请求耗时
-	// 失败影响用户
+}
 
-	// 请求成功列表
+func GetWebResourceErrorInfo() *response.WebResourcesInfoResponse {
+	var resourcesInfoList []response.ResourcesInfoListResponse
+	var resourcesQuota response.ResourcesQuota
+
+	err := global.GVA_DB.Model(&model.WebResourceErrorInfo{}).Select("source_url AS page_source_url, " +
+		"COUNT( source_url ) AS source_count, " +
+		"COUNT( DISTINCT user_id ) user_count, " +
+		"element_type, " +
+		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM web_resource_error_infos WHERE web_resource_error_infos.source_url = page_source_url ) AS page_url_count ").Group("page_source_url").Find(&resourcesInfoList)
+
+	err = global.GVA_DB.Model(&model.WebResourceErrorInfo{}).Select(" COUNT(*) as error_count,  COUNT(page_url) as error_page, COUNT(DISTINCT user_id) as error_user").Find(&resourcesQuota)
+	fmt.Print(err, "err!")
+	return &response.WebResourcesInfoResponse{
+		ResourcesInfoList: resourcesInfoList,
+		ResourcesQuota:    resourcesQuota,
+	}
+
 }
