@@ -41,6 +41,8 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 	var stacking response.StackResponse
 	var quota response.QuotaResponse
 	var loadpageInfoList []response.LoadpageInfoListResponse
+	var stageTime []response.StageTimeResponse
+
 
 	// 这里不赋值给一个变量是因为有bug！！！
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("ID, page_url, request, dom_parse, ttfb, load_page, load_event, load_type, load_page, COUNT(page_url) as pv").Group("page_url").Scan(&loadpageInfoList)
@@ -48,10 +50,23 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("round(AVG(dom_parse),2) as dom_parse, round(AVG(ttfb),2) as ttfb, round(AVG(load_page),2) as load_page, Count(id) as Pv").Scan(&quota)
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("CONCAT(round((SELECT COUNT(id) as pv  FROM web_loadpage_infos WHERE web_loadpage_infos.load_page < 2000) / Count( id ) * 100, 2), '%')  AS Score ").Scan(&quota.Fast)
 
+	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("FROM_UNIXTIME ( happen_time / 1000, \"%Y-%m-%d %H:%i\" ) AS time_key, " +
+		"round( AVG( redirect ), 2 ) AS redirect," +
+		"round( AVG( appcache ), 2 ) AS appcache," +
+		"round( AVG( lookup_domain ), 2 ) AS lookup_domain," +
+		"round( AVG( tcp ), 2 ) AS tcp," +
+		"round( AVG( ssl_t ), 2 ) AS ssl_t," +
+		"round( AVG( request ), 2 ) AS request," +
+		"round( AVG( ttfb ), 2 ) AS ttfb," +
+		"round( AVG( load_event ), 2 ) AS load_event," +
+		"COUNT(*) as Pv" +
+		"").Group("time_key").Scan(&stageTime)
+
 	return &response.WebLoadPageInfoResponse{
 		QuotaResponse:            quota,
 		StackResponse:            stacking,
 		LoadpageInfoListResponse: loadpageInfoList,
+		StageTimeResponse: stageTime,
 	}
 }
 
