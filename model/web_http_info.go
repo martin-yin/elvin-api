@@ -11,10 +11,10 @@ type WebHttpInfo struct {
 	HttpUrl string `json:"http_url"`
 
 	// 用户id
-	UserId     string  `json:"user_id"`
-	ApiKey     string  `json:"api_key"`
-	UploadType string  `json:"upload_type"`
-	HappenTime float64 `json:"happen_time"`
+	UserId     string `json:"user_id"`
+	ApiKey     string `json:"api_key"`
+	UploadType string `json:"upload_type"`
+	HappenTime string `json:"happen_time"`
 
 	LoadTime     float64 `json:"load_time"`
 	Status       int     `json:"status"`

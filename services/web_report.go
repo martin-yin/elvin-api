@@ -75,7 +75,6 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 	var stageTime []response.StageTimeResponse
 	startTime, endTime := getTodayStartAndEndTime()
 
-	//fmt.Print(, "getTody \n")
 	// 这里不赋值给一个变量是因为有bug！！！
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("ID, page_url, "+
 		"request, "+
@@ -85,7 +84,7 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 		"load_event, "+
 		"load_type, "+
 		"load_page, "+
-		"COUNT(page_url) as pv ").Where("web_loadpage_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&loadpageInfoList)
+		"COUNT(page_url) as pv ").Where("web_loadpage_infos.happend_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&loadpageInfoList)
 
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("round(AVG(redirect),2) as redirect, "+
 		"round(AVG(appcache),2) as appcache, "+
@@ -95,14 +94,14 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 		"round(AVG(request),2) as request, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_event),2) as load_event, "+
-		"round(AVG(dom_parse),2) as dom_parse ").Where("web_loadpage_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&stacking)
+		"round(AVG(dom_parse),2) as dom_parse ").Where("web_loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&stacking)
 
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("round(AVG(dom_parse),2) as dom_parse, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_page),2) as load_page, "+
-		"Count(id) as Pv ").Where("web_loadpage_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quota)
+		"Count(id) as Pv ").Where("web_loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quota)
 
-	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("CONCAT(round((SELECT COUNT(id) as pv FROM web_loadpage_infos WHERE web_loadpage_infos.load_page < 2000) / Count( id ) * 100, 2), '%')  AS Score").Where("web_loadpage_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quota.Fast)
+	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("CONCAT(round((SELECT COUNT(id) as pv FROM web_loadpage_infos WHERE web_loadpage_infos.load_page < 2000) / Count( id ) * 100, 2), '%')  AS Score").Where("web_loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quota.Fast)
 
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("FROM_UNIXTIME ( happen_time / 1000, \"%H:%i\" ) AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
@@ -114,7 +113,7 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 		"round( AVG( ttfb ), 2 ) AS ttfb,"+
 		"round( AVG( load_event ), 2 ) AS load_event,"+
 		"round( AVG( load_page ), 2 ) AS load_page,"+
-		"COUNT(*) as Pv ").Where("web_loadpage_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("time_key").Scan(&stageTime)
+		"COUNT(*) as Pv ").Where("web_loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("time_key").Scan(&stageTime)
 
 	return &response.WebLoadPageInfoResponse{
 		QuotaResponse:            quota,
@@ -134,12 +133,12 @@ func GetWebHttpInfo() *response.WebHttpInfoResponse {
 		"page_url, "+
 		"COUNT( http_url ) AS request_total, "+
 		"round(AVG( load_time ), 2) AS load_time, "+
-		"CONCAT(round(( SELECT COUNT( http_url ) FROM web_http_infos WHERE http_url = request_url AND web_http_infos.`status` != 0 AND web_http_infos.`status` BETWEEN 200 AND 305 ) / COUNT( http_url )  * 100, 2), '%')  AS success_rate").Where("web_http_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Where("web_http_infos.`status` != 0 ").Group("request_url").Find(&httpInfoList)
+		"CONCAT(round(( SELECT COUNT( http_url ) FROM web_http_infos WHERE http_url = request_url AND web_http_infos.`status` != 0 AND web_http_infos.`status` BETWEEN 200 AND 305 ) / COUNT( http_url )  * 100, 2), '%')  AS success_rate").Where("web_http_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Where("web_http_infos.`status` != 0 ").Group("request_url").Find(&httpInfoList)
 	fmt.Print(err, "err \n")
 	err = global.GVA_DB.Model(&model.WebHttpInfo{}).Select(""+
 		"COUNT( http_url ) AS request_total, "+
 		"round(AVG( load_time )) AS load_time, "+
-		"(SELECT COUNT(DISTINCT user_id) as user FROM web_http_infos  WHERE web_http_infos.`status` > 305 ) as error_user").Where("web_http_infos.`status` != 0 And web_http_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&httpQuota)
+		"(SELECT COUNT(DISTINCT user_id) as user FROM web_http_infos  WHERE web_http_infos.`status` > 305 ) as error_user").Where("web_http_infos.`status` != 0 And web_http_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&httpQuota)
 	fmt.Print(err, "err \n")
 	return &response.WebHttpInfoResponse{
 		HttpInfoListResponse: httpInfoList,
@@ -158,11 +157,11 @@ func GetWebResourceErrorInfo() *response.WebResourcesInfoResponse {
 		"COUNT( DISTINCT user_id ) user_count, "+
 		"element_type, "+
 		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM web_resource_error_infos WHERE web_resource_error_infos.source_url = page_source_url ) AS page_url_count"+
-		"").Where("web_resource_error_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesInfoList)
+		"").Where("web_resource_error_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesInfoList)
 
 	err = global.GVA_DB.Model(&model.WebResourceErrorInfo{}).Select(" COUNT(*) as error_count,"+
 		"COUNT(page_url) as error_page, "+
-		"COUNT(DISTINCT user_id) as error_user").Where("web_resource_error_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
+		"COUNT(DISTINCT user_id) as error_user").Where("web_resource_error_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
 	fmt.Print(err, "err!")
 	return &response.WebResourcesInfoResponse{
 		ResourcesInfoList: resourcesInfoList,

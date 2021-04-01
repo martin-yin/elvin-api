@@ -2,6 +2,7 @@ package router
 
 import (
 	v1 "danci-api/api/v1"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,11 +20,16 @@ func InitPageReport(Router *gin.RouterGroup) {
 			context.JSON(200, gin.H{"result": nil, "message": "msg", "redirect_url": "url"})
 		})
 
-		WebPageReport.GET("report1", v1.GetWebLoadPageInfo)
+		WebPageReport.GET("report", v1.GetWebLoadPageInfo)
 
 		WebPageReport.GET("http", v1.GetWebHttpInfo)
 
 		WebPageReport.GET("error", v1.GetWebResourceErrorInfo)
+
+		WebPageReport.POST("/tests", func(context *gin.Context) {
+			fmt.Print("testt!!!!!!!!")
+			context.JSON(200, gin.H{"result": nil, "message": "msg", "redirect_url": "url"})
+		})
 
 		//// 上报请求，不管这个请求得结果是正确还是错误得！
 		//WebPageReport.POST("/webReport/request", v1.SetWebRequest)
