@@ -8,7 +8,6 @@ import (
 )
 
 func SetWebLoadPageInfo(weLoadPageInfo model.WebLoadpageInfo) {
-
 	err := global.GVA_DB.Create(&weLoadPageInfo).Error
 	if err != nil {
 		fmt.Print(err, "err!!!!!!!!!!!!! \n")
@@ -50,7 +49,7 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("round(AVG(dom_parse),2) as dom_parse, round(AVG(ttfb),2) as ttfb, round(AVG(load_page),2) as load_page, Count(id) as Pv").Scan(&quota)
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("CONCAT(round((SELECT COUNT(id) as pv  FROM web_loadpage_infos WHERE web_loadpage_infos.load_page < 2000) / Count( id ) * 100, 2), '%')  AS Score ").Scan(&quota.Fast)
 
-	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("FROM_UNIXTIME ( happen_time / 1000, \"%Y-%m-%d %H:%i\" ) AS time_key, " +
+	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("FROM_UNIXTIME ( happen_time / 1000, \"%H:%i\" ) AS time_key, " +
 		"round( AVG( redirect ), 2 ) AS redirect," +
 		"round( AVG( appcache ), 2 ) AS appcache," +
 		"round( AVG( lookup_domain ), 2 ) AS lookup_domain," +
@@ -59,6 +58,7 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 		"round( AVG( request ), 2 ) AS request," +
 		"round( AVG( ttfb ), 2 ) AS ttfb," +
 		"round( AVG( load_event ), 2 ) AS load_event," +
+		"round( AVG( load_page ), 2 ) AS load_page," +
 		"COUNT(*) as Pv" +
 		"").Group("time_key").Scan(&stageTime)
 
@@ -80,12 +80,12 @@ func GetWebHttpInfo() *response.WebHttpInfoResponse {
 		"round(AVG( load_time ), 2) AS load_time, " +
 		"CONCAT(round(( SELECT COUNT( http_url ) FROM web_http_infos WHERE http_url = request_url AND web_http_infos.`status` != 0 AND web_http_infos.`status` BETWEEN 200 AND 305 ) / COUNT( http_url )  * 100, 2), '%')  AS success_rate ").Where("web_http_infos.`status` != 0 ").Group("request_url").Find(&httpInfoList)
 	fmt.Print(err, "err!")
-	global.GVA_DB.Model(&model.WebHttpInfo{}).Select("" +
+	err = global.GVA_DB.Model(&model.WebHttpInfo{}).Select("" +
 		"COUNT( http_url ) AS request_total, " +
 		"round(AVG( load_time )) AS load_time, " +
 		"CONCAT(round((SELECT COUNT( http_url ) FROM web_http_infos WHERE web_http_infos.`status` != 0 AND web_http_infos.`status` BETWEEN 200 AND 305 ) / COUNT( http_url ) * 100,2 ), '%') AS success_rate," +
 		"(SELECT COUNT(DISTINCT user_id) as user FROM web_http_infos  WHERE web_http_infos.`status` > 305 ) as error_user").Where("web_http_infos.`status` != 0").Find(&httpQuota)
-
+	fmt.Print(err, "err!")
 	return &response.WebHttpInfoResponse{
 		HttpInfoListResponse: httpInfoList,
 		HttpQuotaResponse:    httpQuota,

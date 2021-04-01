@@ -17,6 +17,7 @@ type StageTimeResponse struct {
 	Ttfb         float64 `json:"ttfb"`
 	Request      float64 `json:"request"`
 	DomParse     float64 `json:"dom_parse"`
+	LoadPage float64 `json:"load_page"`
 	LoadEvent    float64 `json:"load_event"`
 	Pv int `json:"pv"`
 }

@@ -28,7 +28,7 @@ type WebLoadPageInfo struct {
 }
 
 type WebHttpInfo struct {
-	PageUrl    string  `json:"url"`
+	PageUrl    string  `json:"page_url"`
 	UserId     string  `json:"user_id"`
 	UploadType string  `json:"upload_type"`
 	HappenTime float64 `json:"happen_time"`

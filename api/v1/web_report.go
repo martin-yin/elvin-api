@@ -103,7 +103,7 @@ func SetWebResourcesError(context *gin.Context) {
 		UserId:  webResourceErrorInfo.UserId,
 
 		HappenTime:  webResourceErrorInfo.HappenTime,
-		UploadType:  webResourceErrorInfo.PageUrl,
+		UploadType:  webResourceErrorInfo.UploadType,
 		SourceUrl:   webResourceErrorInfo.SourceUrl,
 		ElementType: webResourceErrorInfo.ElementType,
 		Status:      webResourceErrorInfo.Status,
