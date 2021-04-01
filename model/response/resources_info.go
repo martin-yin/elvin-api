@@ -14,7 +14,7 @@ type ResourcesInfoListResponse struct {
 }
 
 type ResourcesQuota struct {
-	ErrorCount    int `json:"error_count"`
-	ErrorPage       int `json:"error_page"`  // 影响页面次数
-	ErrorUser     int `json:"error_user"`
+	ErrorCount int `json:"error_count"`
+	ErrorPage  int `json:"error_page"` // 影响页面次数
+	ErrorUser  int `json:"error_user"`
 }

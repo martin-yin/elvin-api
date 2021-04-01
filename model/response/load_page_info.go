@@ -4,11 +4,11 @@ type WebLoadPageInfoResponse struct {
 	QuotaResponse            QuotaResponse              `json:"quota"`
 	StackResponse            StackResponse              `json:"stack"`
 	LoadpageInfoListResponse []LoadpageInfoListResponse `json:"load_page_info_list"`
-	StageTimeResponse []StageTimeResponse `json:"stage_time"`
+	StageTimeResponse        []StageTimeResponse        `json:"stage_time"`
 }
 
 type StageTimeResponse struct {
-	TimeKey string `json:"time_key"`
+	TimeKey      string  `json:"time_key"`
 	Redirect     float64 `json:"redirect"`
 	Appcache     float64 `json:"appcache"`
 	LookupDomain float64 `json:"lookup_domain"`
@@ -17,9 +17,9 @@ type StageTimeResponse struct {
 	Ttfb         float64 `json:"ttfb"`
 	Request      float64 `json:"request"`
 	DomParse     float64 `json:"dom_parse"`
-	LoadPage float64 `json:"load_page"`
+	LoadPage     float64 `json:"load_page"`
 	LoadEvent    float64 `json:"load_event"`
-	Pv int `json:"pv"`
+	Pv           int     `json:"pv"`
 }
 
 type StackResponse struct {

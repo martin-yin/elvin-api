@@ -31,7 +31,8 @@ func SetWebLoadPageInfo(context *gin.Context) {
 	}
 	webLoadPageInfoModel := &model.WebLoadpageInfo{
 		PageUrl:    webLoadPageInfo.PageUrl,
-		UserId:     "",
+		UserId:     webLoadPageInfo.UserId,
+		ApiKey:     webLoadPageInfo.ApiKey,
 		UploadType: "LOAD_PAGE",
 		HappenTime: webLoadPageInfo.HappenTime,
 
@@ -69,18 +70,18 @@ func SetWebHttpInfo(context *gin.Context) {
 	var webHttpInfoModel []*model.WebHttpInfo
 	for _, item := range webHttpInfo {
 		webHttpInfoModelItem := &model.WebHttpInfo{
-			PageUrl:      item.PageUrl,
-			UserId:       "",
-			UploadType:   item.UploadType,
-			HappenTime:   item.HappenTime,
-			HttpUrl:      item.HttpUrl,
-			LoadTime:     item.LoadTime,
-			Status:       item.Status,
-			StatusText:   item.StatusText,
-			StatusResult: item.StatusResult,
-			RequestText:  item.RequestText,
-			ResponseText: item.ResponseText,
-
+			PageUrl:        item.PageUrl,
+			UserId:         item.UserId,
+			ApiKey:         item.ApiKey,
+			UploadType:     item.UploadType,
+			HappenTime:     item.HappenTime,
+			HttpUrl:        item.HttpUrl,
+			LoadTime:       item.LoadTime,
+			Status:         item.Status,
+			StatusText:     item.StatusText,
+			StatusResult:   item.StatusResult,
+			RequestText:    item.RequestText,
+			ResponseText:   item.ResponseText,
 			DeviceName:     item.DeviceName,
 			Os:             item.Os,
 			BrowserName:    item.BrowserName,
@@ -99,9 +100,9 @@ func SetWebResourcesError(context *gin.Context) {
 		fmt.Print(err, "err!")
 	}
 	webResourceErrorInfoModel := &model.WebResourceErrorInfo{
-		PageUrl: webResourceErrorInfo.PageUrl,
-		UserId:  webResourceErrorInfo.UserId,
-
+		PageUrl:     webResourceErrorInfo.PageUrl,
+		UserId:      webResourceErrorInfo.UserId,
+		ApiKey:      webResourceErrorInfo.ApiKey,
 		HappenTime:  webResourceErrorInfo.HappenTime,
 		UploadType:  webResourceErrorInfo.UploadType,
 		SourceUrl:   webResourceErrorInfo.SourceUrl,
@@ -125,18 +126,17 @@ func SetBehaviorInfo(context *gin.Context) {
 		fmt.Print(err, "err!")
 	}
 	webBehaviorInfoModel := &model.WebBehaviorInfo{
-		PageUrl:    webBehaviorInfo.PageUrl,
-		UserId:     webBehaviorInfo.UserId,
-		HappenTime: webBehaviorInfo.HappenTime,
-		UploadType: webBehaviorInfo.PageUrl,
-
-		BehaviorType: webBehaviorInfo.BehaviorType,
-		ClassName:    webBehaviorInfo.ClassName,
-		Placeholder:  webBehaviorInfo.Placeholder,
-		InputValue:   webBehaviorInfo.InputValue,
-		TagNameint:   webBehaviorInfo.TagNameint,
-		InnterText:   webBehaviorInfo.InnterText,
-
+		PageUrl:        webBehaviorInfo.PageUrl,
+		UserId:         webBehaviorInfo.UserId,
+		ApiKey:         webBehaviorInfo.ApiKey,
+		HappenTime:     webBehaviorInfo.HappenTime,
+		UploadType:     webBehaviorInfo.PageUrl,
+		BehaviorType:   webBehaviorInfo.BehaviorType,
+		ClassName:      webBehaviorInfo.ClassName,
+		Placeholder:    webBehaviorInfo.Placeholder,
+		InputValue:     webBehaviorInfo.InputValue,
+		TagNameint:     webBehaviorInfo.TagNameint,
+		InnterText:     webBehaviorInfo.InnterText,
 		DeviceName:     webBehaviorInfo.DeviceName,
 		Os:             webBehaviorInfo.Os,
 		BrowserName:    webBehaviorInfo.BrowserName,

@@ -12,6 +12,7 @@ type WebHttpInfo struct {
 
 	// 用户id
 	UserId     string  `json:"user_id"`
+	ApiKey     string  `json:"api_key"`
 	UploadType string  `json:"upload_type"`
 	HappenTime float64 `json:"happen_time"`
 
@@ -27,4 +28,18 @@ type WebHttpInfo struct {
 	BrowserName    string `json:"browser_name"`
 	BrowserVersion string `json:"browser_version"`
 	UA             string `json:"ua"`
+}
+
+type WebHttpInfoStatistical struct {
+	global.GVA_MODEL
+	// 页面url
+	PageUrl string `json:"page_url"`
+	// http请求url
+	HttpUrl string `json:"http_url"`
+
+	SuccessTotal int `json:"success_total"`
+
+	FailTotal int `json:"fail_total"`
+
+	Total int `json:"fail_total"`
 }

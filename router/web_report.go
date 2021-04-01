@@ -19,7 +19,7 @@ func InitPageReport(Router *gin.RouterGroup) {
 			context.JSON(200, gin.H{"result": nil, "message": "msg", "redirect_url": "url"})
 		})
 
-		WebPageReport.GET("report", v1.GetWebLoadPageInfo)
+		WebPageReport.GET("report1", v1.GetWebLoadPageInfo)
 
 		WebPageReport.GET("http", v1.GetWebHttpInfo)
 
