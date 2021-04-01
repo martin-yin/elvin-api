@@ -130,15 +130,15 @@ func GetWebHttpInfo() *response.WebHttpInfoResponse {
 	var httpQuota response.HttpQuotaResponse
 	startTime, endTime := getTodayStartAndEndTime()
 
-	err := global.GVA_DB.Model(&model.WebHttpInfo{}).Select("http_url AS request_url, " +
-		"page_url, " +
-		"COUNT( http_url ) AS request_total, " +
-		"round(AVG( load_time ), 2) AS load_time, " +
+	err := global.GVA_DB.Model(&model.WebHttpInfo{}).Select("http_url AS request_url, "+
+		"page_url, "+
+		"COUNT( http_url ) AS request_total, "+
+		"round(AVG( load_time ), 2) AS load_time, "+
 		"CONCAT(round(( SELECT COUNT( http_url ) FROM web_http_infos WHERE http_url = request_url AND web_http_infos.`status` != 0 AND web_http_infos.`status` BETWEEN 200 AND 305 ) / COUNT( http_url )  * 100, 2), '%')  AS success_rate").Where("web_http_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Where("web_http_infos.`status` != 0 ").Group("request_url").Find(&httpInfoList)
 	fmt.Print(err, "err \n")
-	err = global.GVA_DB.Model(&model.WebHttpInfo{}).Select("" +
-		"COUNT( http_url ) AS request_total, " +
-		"round(AVG( load_time )) AS load_time, " +
+	err = global.GVA_DB.Model(&model.WebHttpInfo{}).Select(""+
+		"COUNT( http_url ) AS request_total, "+
+		"round(AVG( load_time )) AS load_time, "+
 		"(SELECT COUNT(DISTINCT user_id) as user FROM web_http_infos  WHERE web_http_infos.`status` > 305 ) as error_user").Where("web_http_infos.`status` != 0 And web_http_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&httpQuota)
 	fmt.Print(err, "err \n")
 	return &response.WebHttpInfoResponse{
@@ -153,15 +153,15 @@ func GetWebResourceErrorInfo() *response.WebResourcesInfoResponse {
 	var resourcesQuota response.ResourcesQuota
 	startTime, endTime := getTodayStartAndEndTime()
 
-	err := global.GVA_DB.Model(&model.WebResourceErrorInfo{}).Select("source_url AS page_source_url, " +
-		"COUNT( source_url ) AS source_count, " +
-		"COUNT( DISTINCT user_id ) user_count, " +
-		"element_type, " +
-		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM web_resource_error_infos WHERE web_resource_error_infos.source_url = page_source_url ) AS page_url_count" +
+	err := global.GVA_DB.Model(&model.WebResourceErrorInfo{}).Select("source_url AS page_source_url, "+
+		"COUNT( source_url ) AS source_count, "+
+		"COUNT( DISTINCT user_id ) user_count, "+
+		"element_type, "+
+		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM web_resource_error_infos WHERE web_resource_error_infos.source_url = page_source_url ) AS page_url_count"+
 		"").Where("web_resource_error_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesInfoList)
 
-	err = global.GVA_DB.Model(&model.WebResourceErrorInfo{}).Select(" COUNT(*) as error_count," +
-		"COUNT(page_url) as error_page, " +
+	err = global.GVA_DB.Model(&model.WebResourceErrorInfo{}).Select(" COUNT(*) as error_count,"+
+		"COUNT(page_url) as error_page, "+
 		"COUNT(DISTINCT user_id) as error_user").Where("web_resource_error_infos.created_at between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
 	fmt.Print(err, "err!")
 	return &response.WebResourcesInfoResponse{
