@@ -84,7 +84,7 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 		"load_event, "+
 		"load_type, "+
 		"load_page, "+
-		"COUNT(page_url) as pv ").Where("web_loadpage_infos.happend_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&loadpageInfoList)
+		"COUNT(page_url) as pv ").Where("web_loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&loadpageInfoList)
 
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("round(AVG(redirect),2) as redirect, "+
 		"round(AVG(appcache),2) as appcache, "+
@@ -103,7 +103,7 @@ func GetWebLoadPageInfo() *response.WebLoadPageInfoResponse {
 
 	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("CONCAT(round((SELECT COUNT(id) as pv FROM web_loadpage_infos WHERE web_loadpage_infos.load_page < 2000) / Count( id ) * 100, 2), '%')  AS Score").Where("web_loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quota.Fast)
 
-	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("FROM_UNIXTIME ( happen_time / 1000, \"%H:%i\" ) AS time_key, "+
+	global.GVA_DB.Model(&model.WebLoadpageInfo{}).Select("DATE_FORMAT(happen_time, \"%H:%i\") AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
 		"round( AVG( appcache ), 2 ) AS appcache,"+
 		"round( AVG( lookup_domain ), 2 ) AS lookup_domain,"+
