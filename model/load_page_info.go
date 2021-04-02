@@ -25,6 +25,6 @@ type LoadpageInfo struct {
 	Os             string `json:"os"`
 	OsVersion      string `json:"os_version"`
 	Browser        string `json:"browser"`
-	BrowserVersion string `json:"brower_version"`
+	BrowserVersion string `json:"browser_version"`
 	UA             string `json:"ua"`
 }

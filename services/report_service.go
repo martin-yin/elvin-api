@@ -59,12 +59,18 @@ func CreateBehaviorInfo(webBehaviorInfo model.BehaviorInfo) error {
 	return nil
 }
 
+func CreateJsErrorInfo(jsErrorInfO model.JsErrorInfo) error {
+	if err := global.GVA_DB.Create(&jsErrorInfO).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
 func getTodayStartAndEndTime() (startTime string, endTime string) {
 	startTime = time.Now().Format("2006-01-02 00:00")
 	endTime = (time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 23, 59, 59, 0, time.Now().Location())).Format("2006-01-02 15:04:05")
 	return startTime, endTime
 }
-
 
 // 获取资源错误
 func GetWebResourceErrorInfo() *response.WebResourcesInfoResponse {

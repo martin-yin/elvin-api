@@ -5,7 +5,6 @@ import (
 	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -110,10 +109,8 @@ func CreateResourcesError(context *gin.Context) {
 // 存储用户行为(点击等等……)。
 func CreateBehaviorInfo(context *gin.Context) {
 	var behaviorInfoBody request.PostBehaviorInfoBody
-	err := context.BindJSON(&behaviorInfoBody)
-	if err != nil {
-		fmt.Print(err, "err!")
-	}
+	_ = context.BindJSON(&behaviorInfoBody)
+
 	webBehaviorInfoModel := model.BehaviorInfo{
 		PageUrl:      behaviorInfoBody.PageUrl,
 		UserId:       behaviorInfoBody.UserId,
@@ -135,6 +132,31 @@ func CreateBehaviorInfo(context *gin.Context) {
 	}
 
 	if err := services.CreateBehaviorInfo(webBehaviorInfoModel); err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
+	response.Ok(context)
+}
+
+func CreateJsErrorInfo(context *gin.Context) {
+	var jsErrorInfoBody request.PostJsErrorInfoBody
+	_ = context.BindJSON(&jsErrorInfoBody)
+	jsErrorInfoModel := model.JsErrorInfo{
+		PageUrl:        jsErrorInfoBody.PageUrl,
+		UserId:         jsErrorInfoBody.UserId,
+		ApiKey:         jsErrorInfoBody.ApiKey,
+		HappenTime:     jsErrorInfoBody.HappenTime,
+		UploadType:     jsErrorInfoBody.UploadType,
+		ComponentName:  jsErrorInfoBody.ComponentName,
+		Stack:          jsErrorInfoBody.Stack,
+		Message:        jsErrorInfoBody.Message,
+		Os:             jsErrorInfoBody.Os,
+		OsVersion:      jsErrorInfoBody.OsVersion,
+		Browser:        jsErrorInfoBody.Browser,
+		BrowserVersion: jsErrorInfoBody.BrowserVersion,
+		UA:             jsErrorInfoBody.UA,
+	}
+	if err := services.CreateJsErrorInfo(jsErrorInfoModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}

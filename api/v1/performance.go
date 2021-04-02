@@ -8,13 +8,11 @@ import (
 	"time"
 )
 
-
 func getTodayStartAndEndTime() (startTime string, endTime string) {
 	startTime = time.Now().Format("2006-01-02 00:00")
 	endTime = (time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 23, 59, 59, 0, time.Now().Location())).Format("2006-01-02 15:04:05")
 	return
 }
-
 
 func GetPerformance(context *gin.Context) {
 	startTime, endTime := getTodayStartAndEndTime()
@@ -27,11 +25,10 @@ func GetPerformance(context *gin.Context) {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
 		response.OkWithDetailed(response.LoadPageInfoResponse{
-			QuotaResponse: QuotaResponse,
-			StackResponse: StackResponse,
+			QuotaResponse:            QuotaResponse,
+			StackResponse:            StackResponse,
 			LoadpageInfoListResponse: LoadpageInfoListResponse,
-			StageTimeResponse: StageTimeResponse,
+			StageTimeResponse:        StageTimeResponse,
 		}, "获取成功", context)
 	}
 }
-

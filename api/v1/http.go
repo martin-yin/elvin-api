@@ -17,9 +17,7 @@ func GetHttpInfo(context *gin.Context) {
 	} else {
 		response.OkWithDetailed(response.WebHttpInfoResponse{
 			HttpInfoListResponse: HttpInfoListResponse,
-			HttpQuotaResponse: HttpQuotaResponse,
+			HttpQuotaResponse:    HttpQuotaResponse,
 		}, "获取成功", context)
 	}
 }
-
-

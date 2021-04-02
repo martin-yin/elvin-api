@@ -13,6 +13,8 @@ func InitReport(Router *gin.RouterGroup) {
 		WebPageReport.POST("resourceError", v1.CreateResourcesError)
 		WebPageReport.POST("behavior", v1.CreateBehaviorInfo)
 
+		WebPageReport.POST("jsError", v1.CreateJsErrorInfo)
+
 		WebPageReport.POST("tests", func(context *gin.Context) {
 			context.JSON(200, gin.H{"result": nil, "message": "msg", "redirect_url": "url"})
 		})

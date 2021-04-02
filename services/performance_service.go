@@ -6,7 +6,7 @@ import (
 	"danci-api/model/response"
 )
 
-func GetStackPerformance(startTime string, endTime string) (stackData response.StackResponse ,err error){
+func GetStackPerformance(startTime string, endTime string) (stackData response.StackResponse, err error) {
 	err = global.GVA_DB.Model(&model.LoadpageInfo{}).Select("round(AVG(redirect),2) as redirect, "+
 		"round(AVG(appcache),2) as appcache, "+
 		"round(AVG(lookup_domain),2) as lookup_domain, "+
@@ -19,7 +19,7 @@ func GetStackPerformance(startTime string, endTime string) (stackData response.S
 	return
 }
 
-func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaResponse,err error) {
+func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaResponse, err error) {
 	err = global.GVA_DB.Model(&model.LoadpageInfo{}).Select("round(AVG(dom_parse),2) as dom_parse, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_page),2) as load_page, "+
@@ -28,7 +28,7 @@ func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaRes
 	return
 }
 
-func GetStageTimeList(startTime string, endTime string) (stageTimeList []response.StageTimeResponse ,err error) {
+func GetStageTimeList(startTime string, endTime string) (stageTimeList []response.StageTimeResponse, err error) {
 	err = global.GVA_DB.Model(&model.LoadpageInfo{}).Select("DATE_FORMAT(happen_time, \"%H:%i\") AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
 		"round( AVG( appcache ), 2 ) AS appcache,"+
@@ -43,7 +43,7 @@ func GetStageTimeList(startTime string, endTime string) (stageTimeList []respons
 	return
 }
 
-func GetLoadInfoPageList(startTime string, endTime string)(loadpageInfoList []response.LoadpageInfoListResponse ,err error) {
+func GetLoadInfoPageList(startTime string, endTime string) (loadpageInfoList []response.LoadpageInfoListResponse, err error) {
 	err = global.GVA_DB.Model(&model.LoadpageInfo{}).Select("ID, page_url, "+
 		"request, "+
 		"dom_parse, "+
