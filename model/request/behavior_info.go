@@ -19,4 +19,3 @@ type PostBehaviorInfoBody struct {
 	BrowserVersion string `json:"browser_version"`
 	UA             string `json:"ua"`
 }
-

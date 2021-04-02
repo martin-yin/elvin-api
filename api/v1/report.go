@@ -9,21 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetWebLoadPageInfo(context *gin.Context) {
-	result := services.GetWebLoadPageInfo()
-	response.OkWithDetailed(result, "获取成功", context)
-}
-
-func GetWebHttpInfo(context *gin.Context) {
-	result := services.GetWebHttpInfo()
-	response.OkWithDetailed(result, "获取成功", context)
-}
-
-func GetWebResourceErrorInfo(context *gin.Context) {
-	result := services.GetWebResourceErrorInfo()
-	response.OkWithDetailed(result, "获取成功", context)
-}
-
 func CreateLoadPageInfo(context *gin.Context) {
 	var loadPageInfoBody request.PostLoadPageInfoBody
 	_ = context.BindJSON(&loadPageInfoBody)

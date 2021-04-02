@@ -1,6 +1,6 @@
 package response
 
-type WebLoadPageInfoResponse struct {
+type LoadPageInfoResponse struct {
 	QuotaResponse            QuotaResponse              `json:"quota"`
 	StackResponse            StackResponse              `json:"stack"`
 	LoadpageInfoListResponse []LoadpageInfoListResponse `json:"load_page_info_list"`
