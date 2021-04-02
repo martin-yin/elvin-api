@@ -35,6 +35,7 @@ func CreateLoadPageInfo(context *gin.Context) {
 		BrowserVersion: loadPageInfoBody.BrowserVersion,
 		UA:             loadPageInfoBody.UA,
 	}
+
 	if err := services.CreateLoadPageInfo(webLoadPageInfoModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -44,31 +45,27 @@ func CreateLoadPageInfo(context *gin.Context) {
 
 // 存储HTTP请求
 func CreateHttpInfo(context *gin.Context) {
-	var httpInfoBody []request.PostHttpInfoBody
+	var httpInfoBody request.PostHttpInfoBody
 	_ = context.BindJSON(&httpInfoBody)
-	var webHttpInfoModel []model.HttpInfo
-	for _, item := range httpInfoBody {
-		webHttpInfoModelItem := model.HttpInfo{
-			PageUrl:      item.PageUrl,
-			UserId:       item.UserId,
-			ApiKey:       item.ApiKey,
-			UploadType:   item.UploadType,
-			HappenTime:   item.HappenTime,
-			HttpUrl:      item.HttpUrl,
-			LoadTime:     item.LoadTime,
-			Status:       item.Status,
-			StatusText:   item.StatusText,
-			StatusResult: item.StatusResult,
-			RequestText:  item.RequestText,
-			ResponseText: item.ResponseText,
+	webHttpInfoModel := model.HttpInfo{
+		PageUrl:      httpInfoBody.PageUrl,
+		UserId:       httpInfoBody.UserId,
+		ApiKey:       httpInfoBody.ApiKey,
+		UploadType:   httpInfoBody.UploadType,
+		HappenTime:   httpInfoBody.HappenTime,
+		HttpUrl:      httpInfoBody.HttpUrl,
+		LoadTime:     httpInfoBody.LoadTime,
+		Status:       httpInfoBody.Status,
+		StatusText:   httpInfoBody.StatusText,
+		StatusResult: httpInfoBody.StatusResult,
+		RequestText:  httpInfoBody.RequestText,
+		ResponseText: httpInfoBody.ResponseText,
 
-			Os:             item.Os,
-			OsVersion:      item.OsVersion,
-			Browser:        item.Browser,
-			BrowserVersion: item.BrowserVersion,
-			UA:             item.UA,
-		}
-		webHttpInfoModel = append(webHttpInfoModel, webHttpInfoModelItem)
+		Os:             httpInfoBody.Os,
+		OsVersion:      httpInfoBody.OsVersion,
+		Browser:        httpInfoBody.Browser,
+		BrowserVersion: httpInfoBody.BrowserVersion,
+		UA:             httpInfoBody.UA,
 	}
 
 	if err := services.CreateHttpInfoModel(webHttpInfoModel); err != nil {

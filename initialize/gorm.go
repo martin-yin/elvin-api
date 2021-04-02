@@ -36,6 +36,7 @@ func MysqlTables(db *gorm.DB) {
 		model.LoadpageInfo{},
 		model.ResourceErrorInfo{},
 		model.HttpInfoStatistical{},
+		model.UserBehaviorInfo{},
 
 		model.Admin{},
 		model.Project{},
