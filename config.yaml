@@ -57,8 +57,8 @@ mysql:
   path: '127.0.0.1:3306'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
   db-name: 'push_platform'
-  username: 'push_platform'
-  password: '5xpXsYCGF4kBzEsL'
+  username: 'root'
+  password: 'root'
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: false

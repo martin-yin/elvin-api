@@ -2,17 +2,18 @@ package response
 
 type HttpInfoListResponse struct {
 	PageUrl      string  `json:"page_url"`
-	RequestUrl   string  `json:"request_url"`
+	HttpUrl      string  `json:"http_url"`
 	LoadTime     float64 `json:"load_time"`
-	SuccessRate  string  `json:"success_rate"`
-	RequestTotal int     `json:"request_total"`
+	Total        int     `json:"total"`
+	FailTotal    int     `json:"fail_total"`
+	SuccessTotal int     `json:"success_total"`
 }
 
 type HttpQuotaResponse struct {
-	RequestTotal int    `json:"request_total"`
-	LoadTime     int    `json:"load_time"`
-	SuccessRate  string `json:"success_rate"`
-	ErrorUser    int    `json:"error_user"`
+	Total        int `json:"total"`
+	LoadTime     int `json:"load_time"`
+	SuccessTotal int `json:"success_total"`
+	ErrorUser    int `json:"error_user"`
 }
 
 type WebHttpInfoResponse struct {

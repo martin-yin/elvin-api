@@ -129,16 +129,16 @@ func GetWebHttpInfo() *response.WebHttpInfoResponse {
 	var httpQuota response.HttpQuotaResponse
 	startTime, endTime := getTodayStartAndEndTime()
 
-	err := global.GVA_DB.Model(&model.WebHttpInfo{}).Select("http_url AS request_url, "+
-		"page_url, "+
-		"COUNT( http_url ) AS request_total, "+
-		"round(AVG( load_time ), 2) AS load_time, "+
-		"CONCAT(round(( SELECT COUNT( http_url ) FROM web_http_infos WHERE http_url = request_url AND web_http_infos.`status` != 0 AND web_http_infos.`status` BETWEEN 200 AND 305 ) / COUNT( http_url )  * 100, 2), '%')  AS success_rate").Where("web_http_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Where("web_http_infos.`status` != 0 ").Group("request_url").Find(&httpInfoList)
-	fmt.Print(err, "err \n")
+	err := global.GVA_DB.Model(&model.WebHttpInfo{}).Select("web_http_infos.http_url,"+
+		"web_http_infos.page_url, "+
+		"round( AVG( load_time ), 2 ) AS load_time, "+
+		"total, fail_total, success_total").Where("web_http_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Joins("LEFT JOIN web_http_info_statisticals statisticals ON statisticals.http_url = web_http_infos.http_url").Where("web_http_infos.`status` != 0 ").Group("http_url").Find(&httpInfoList)
+
 	err = global.GVA_DB.Model(&model.WebHttpInfo{}).Select(""+
-		"COUNT( http_url ) AS request_total, "+
+		"COUNT( * ) AS total, "+
 		"round(AVG( load_time )) AS load_time, "+
-		"(SELECT COUNT(DISTINCT user_id) as user FROM web_http_infos  WHERE web_http_infos.`status` > 305 ) as error_user").Where("web_http_infos.`status` != 0 And web_http_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&httpQuota)
+		"(SELECT COUNT(DISTINCT user_id) as user FROM web_http_infos  WHERE web_http_infos.`status` > 305 ) as error_user, "+
+		"( SELECT COUNT(  * ) FROM web_http_infos WHERE web_http_infos.`status` BETWEEN 200 AND 305 ) AS success_total").Where("web_http_infos.`status` != 0 And web_http_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&httpQuota)
 	fmt.Print(err, "err \n")
 	return &response.WebHttpInfoResponse{
 		HttpInfoListResponse: httpInfoList,

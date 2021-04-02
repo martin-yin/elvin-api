@@ -8,7 +8,7 @@ type WebHttpInfo struct {
 	// 页面url
 	PageUrl string `json:"page_url"`
 	// http请求url
-	HttpUrl string `json:"http_url"`
+	HttpUrl string `json:"http_url" gorm:"index:http_url"`
 
 	// 用户id
 	UserId     string `json:"user_id"`
@@ -35,7 +35,7 @@ type WebHttpInfoStatistical struct {
 	// 页面url
 	PageUrl string `json:"page_url"`
 	// http请求url
-	HttpUrl string `json:"http_url"`
+	HttpUrl string `json:"http_url" gorm:"index:http_url"`
 
 	SuccessTotal int `json:"success_total"`
 
