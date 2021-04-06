@@ -1,10 +1,10 @@
 package response
 
-type LoadPageInfoResponse struct {
-	QuotaResponse            QuotaResponse              `json:"quota"`
-	StackResponse            StackResponse              `json:"stack"`
-	LoadpageInfoListResponse []LoadpageInfoListResponse `json:"load_page_info_list"`
-	StageTimeResponse        []StageTimeResponse        `json:"stage_time"`
+type PagePerformanceResponse struct {
+	QuotaResponse               QuotaResponse                 `json:"quota"`
+	StackResponse               StackResponse                 `json:"stack"`
+	PagePerformanceListResponse []PagePerformanceListResponse `json:"load_page_info_list"`
+	StageTimeResponse           []StageTimeResponse           `json:"stage_time"`
 }
 
 type StageTimeResponse struct {
@@ -42,7 +42,7 @@ type QuotaResponse struct {
 	Fast     string  `json:"fast"`
 }
 
-type LoadpageInfoListResponse struct {
+type PagePerformanceListResponse struct {
 	ID        string  `json:"id"`
 	PageUrl   string  `json:"page_url"`
 	Request   float64 `json:"request"`

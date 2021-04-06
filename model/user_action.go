@@ -3,7 +3,7 @@ package model
 import "danci-api/global"
 
 // 用户行为记录
-type UserBehaviorInfo struct {
+type UserAction struct {
 	global.GVA_MODEL
 
 	UserId     string `json:"user_id"`
@@ -26,9 +26,9 @@ type UserBehaviorInfo struct {
 
 	// 如果是发生错误的话
 	Message string `json:"message"`
-	Stack string `json:"stack"`
+	Stack   string `json:"stack"`
 
 	//如果是点击
-	ClassName    string `json:"class_name"`
-	InnterText   string `json:"innter_text" gorm:"type:text"`
+	ClassName  string `json:"class_name"`
+	InnterText string `json:"innter_text" gorm:"type:text"`
 }

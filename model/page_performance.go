@@ -3,7 +3,7 @@ package model
 import "danci-api/global"
 
 // 页面load 信息记录
-type LoadpageInfo struct {
+type PagePerformance struct {
 	global.GVA_MODEL
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`

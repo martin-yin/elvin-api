@@ -18,17 +18,17 @@ func GetPerformance(context *gin.Context) {
 	startTime, endTime := getTodayStartAndEndTime()
 	StackResponse, err := services.GetStackPerformance(startTime, endTime)
 	QuotaResponse, err := services.GetQuotaData(startTime, endTime)
-	LoadpageInfoListResponse, err := services.GetLoadInfoPageList(startTime, endTime)
+	PagePerformanceListResponse, err := services.GetLoadInfoPageList(startTime, endTime)
 	StageTimeResponse, err := services.GetStageTimeList(startTime, endTime)
 	if err != nil {
 		//global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
-		response.OkWithDetailed(response.LoadPageInfoResponse{
-			QuotaResponse:            QuotaResponse,
-			StackResponse:            StackResponse,
-			LoadpageInfoListResponse: LoadpageInfoListResponse,
-			StageTimeResponse:        StageTimeResponse,
+		response.OkWithDetailed(response.PagePerformanceResponse{
+			QuotaResponse:               QuotaResponse,
+			StackResponse:               StackResponse,
+			PagePerformanceListResponse: PagePerformanceListResponse,
+			StageTimeResponse:           StageTimeResponse,
 		}, "获取成功", context)
 	}
 }

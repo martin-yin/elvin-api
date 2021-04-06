@@ -1,10 +1,6 @@
-package model
+package request
 
-import "danci-api/global"
-
-// 页面资源错误
-type ResourceErrorInfo struct {
-	global.GVA_MODEL
+type PostPageResourceErroBody struct {
 	PageUrl     string `json:"page_url"`
 	UserId      string `json:"user_id"`
 	ApiKey      string `json:"api_key"`
@@ -13,7 +9,7 @@ type ResourceErrorInfo struct {
 	SourceUrl   string `json:"source_url"`
 	ElementType string `json:"element_type"`
 	Status      string `json:"status"`
-
+	// 设备信息
 	Os             string `json:"os"`
 	OsVersion      string `json:"os_version"`
 	Browser        string `json:"browser"`

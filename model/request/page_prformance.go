@@ -1,6 +1,6 @@
 package request
 
-type PostLoadPageInfoBody struct {
+type PostPagePerformance struct {
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`
 	ApiKey       string  `json:"api_key"`

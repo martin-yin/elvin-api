@@ -1,6 +1,6 @@
 package request
 
-type PostHttpInfoBody struct {
+type PostPageHttpBody struct {
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`
 	ApiKey       string  `json:"api_key"`

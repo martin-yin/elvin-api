@@ -8,35 +8,35 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CreateLoadPageInfo(context *gin.Context) {
-	var loadPageInfoBody request.PostLoadPageInfoBody
-	_ = context.BindJSON(&loadPageInfoBody)
-	webLoadPageInfoModel := model.LoadpageInfo{
-		PageUrl:      loadPageInfoBody.PageUrl,
-		UserId:       loadPageInfoBody.UserId,
-		ApiKey:       loadPageInfoBody.ApiKey,
-		UploadType:   loadPageInfoBody.UploadType,
-		HappenTime:   loadPageInfoBody.HappenTime,
-		Redirect:     loadPageInfoBody.Redirect,
-		Appcache:     loadPageInfoBody.Appcache,
-		LookupDomain: loadPageInfoBody.LookupDomain,
-		Tcp:          loadPageInfoBody.Tcp,
-		SslT:         loadPageInfoBody.SslT,
-		Request:      loadPageInfoBody.Request,
-		DomParse:     loadPageInfoBody.DomParse,
-		Ttfb:         loadPageInfoBody.Ttfb,
-		LoadPage:     loadPageInfoBody.LoadPage,
-		LoadEvent:    loadPageInfoBody.LoadEvent,
-		LoadType:     loadPageInfoBody.LoadType,
+func CreatePagePerformance(context *gin.Context) {
+	var pagePerformanceBody request.PostPagePerformance
+	_ = context.BindJSON(&pagePerformanceBody)
+	pagePerformanceModel := model.PagePerformance{
+		PageUrl:      pagePerformanceBody.PageUrl,
+		UserId:       pagePerformanceBody.UserId,
+		ApiKey:       pagePerformanceBody.ApiKey,
+		UploadType:   pagePerformanceBody.UploadType,
+		HappenTime:   pagePerformanceBody.HappenTime,
+		Redirect:     pagePerformanceBody.Redirect,
+		Appcache:     pagePerformanceBody.Appcache,
+		LookupDomain: pagePerformanceBody.LookupDomain,
+		Tcp:          pagePerformanceBody.Tcp,
+		SslT:         pagePerformanceBody.SslT,
+		Request:      pagePerformanceBody.Request,
+		DomParse:     pagePerformanceBody.DomParse,
+		Ttfb:         pagePerformanceBody.Ttfb,
+		LoadPage:     pagePerformanceBody.LoadPage,
+		LoadEvent:    pagePerformanceBody.LoadEvent,
+		LoadType:     pagePerformanceBody.LoadType,
 
-		Os:             loadPageInfoBody.Os,
-		OsVersion:      loadPageInfoBody.OsVersion,
-		Browser:        loadPageInfoBody.Browser,
-		BrowserVersion: loadPageInfoBody.BrowserVersion,
-		UA:             loadPageInfoBody.UA,
+		Os:             pagePerformanceBody.Os,
+		OsVersion:      pagePerformanceBody.OsVersion,
+		Browser:        pagePerformanceBody.Browser,
+		BrowserVersion: pagePerformanceBody.BrowserVersion,
+		UA:             pagePerformanceBody.UA,
 	}
 
-	if err := services.CreateLoadPageInfo(webLoadPageInfoModel); err != nil {
+	if err := services.CreatePagePerformance(pagePerformanceModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -45,30 +45,30 @@ func CreateLoadPageInfo(context *gin.Context) {
 
 // 存储HTTP请求
 func CreateHttpInfo(context *gin.Context) {
-	var httpInfoBody request.PostHttpInfoBody
-	_ = context.BindJSON(&httpInfoBody)
-	webHttpInfoModel := model.HttpInfo{
-		PageUrl:      httpInfoBody.PageUrl,
-		UserId:       httpInfoBody.UserId,
-		ApiKey:       httpInfoBody.ApiKey,
-		UploadType:   httpInfoBody.UploadType,
-		HappenTime:   httpInfoBody.HappenTime,
-		HttpUrl:      httpInfoBody.HttpUrl,
-		LoadTime:     httpInfoBody.LoadTime,
-		Status:       httpInfoBody.Status,
-		StatusText:   httpInfoBody.StatusText,
-		StatusResult: httpInfoBody.StatusResult,
-		RequestText:  httpInfoBody.RequestText,
-		ResponseText: httpInfoBody.ResponseText,
+	var pageHttpBody request.PostPageHttpBody
+	_ = context.BindJSON(&pageHttpBody)
+	webHttpInfoModel := model.PageHttp{
+		PageUrl:      pageHttpBody.PageUrl,
+		UserId:       pageHttpBody.UserId,
+		ApiKey:       pageHttpBody.ApiKey,
+		UploadType:   pageHttpBody.UploadType,
+		HappenTime:   pageHttpBody.HappenTime,
+		HttpUrl:      pageHttpBody.HttpUrl,
+		LoadTime:     pageHttpBody.LoadTime,
+		Status:       pageHttpBody.Status,
+		StatusText:   pageHttpBody.StatusText,
+		StatusResult: pageHttpBody.StatusResult,
+		RequestText:  pageHttpBody.RequestText,
+		ResponseText: pageHttpBody.ResponseText,
 
-		Os:             httpInfoBody.Os,
-		OsVersion:      httpInfoBody.OsVersion,
-		Browser:        httpInfoBody.Browser,
-		BrowserVersion: httpInfoBody.BrowserVersion,
-		UA:             httpInfoBody.UA,
+		Os:             pageHttpBody.Os,
+		OsVersion:      pageHttpBody.OsVersion,
+		Browser:        pageHttpBody.Browser,
+		BrowserVersion: pageHttpBody.BrowserVersion,
+		UA:             pageHttpBody.UA,
 	}
 
-	if err := services.CreateHttpInfoModel(webHttpInfoModel); err != nil {
+	if err := services.CreatePageHttpModel(webHttpInfoModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -76,27 +76,27 @@ func CreateHttpInfo(context *gin.Context) {
 }
 
 func CreateResourcesError(context *gin.Context) {
-	var resourceErrorInfoBody request.PostResourceErrorInfoBody
-	_ = context.BindJSON(&resourceErrorInfoBody)
+	var pageResourceErroBody request.PostPageResourceErroBody
+	_ = context.BindJSON(&pageResourceErroBody)
 
-	webResourceErrorInfoModel := model.ResourceErrorInfo{
-		PageUrl:     resourceErrorInfoBody.PageUrl,
-		UserId:      resourceErrorInfoBody.UserId,
-		ApiKey:      resourceErrorInfoBody.ApiKey,
-		HappenTime:  resourceErrorInfoBody.HappenTime,
-		UploadType:  resourceErrorInfoBody.UploadType,
-		SourceUrl:   resourceErrorInfoBody.SourceUrl,
-		ElementType: resourceErrorInfoBody.ElementType,
-		Status:      resourceErrorInfoBody.Status,
+	resourceErrorInfoModel := model.PageResourceError{
+		PageUrl:     pageResourceErroBody.PageUrl,
+		UserId:      pageResourceErroBody.UserId,
+		ApiKey:      pageResourceErroBody.ApiKey,
+		HappenTime:  pageResourceErroBody.HappenTime,
+		UploadType:  pageResourceErroBody.UploadType,
+		SourceUrl:   pageResourceErroBody.SourceUrl,
+		ElementType: pageResourceErroBody.ElementType,
+		Status:      pageResourceErroBody.Status,
 
-		Os:             resourceErrorInfoBody.Os,
-		OsVersion:      resourceErrorInfoBody.OsVersion,
-		Browser:        resourceErrorInfoBody.Browser,
-		BrowserVersion: resourceErrorInfoBody.BrowserVersion,
-		UA:             resourceErrorInfoBody.UA,
+		Os:             pageResourceErroBody.Os,
+		OsVersion:      pageResourceErroBody.OsVersion,
+		Browser:        pageResourceErroBody.Browser,
+		BrowserVersion: pageResourceErroBody.BrowserVersion,
+		UA:             pageResourceErroBody.UA,
 	}
 
-	if err := services.CreateResourcesError(webResourceErrorInfoModel); err != nil {
+	if err := services.CreateResourcesError(resourceErrorInfoModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -108,7 +108,7 @@ func CreateBehaviorInfo(context *gin.Context) {
 	var behaviorInfoBody request.PostBehaviorInfoBody
 	_ = context.BindJSON(&behaviorInfoBody)
 
-	webBehaviorInfoModel := model.BehaviorInfo{
+	pageBehaviorInfoModel := model.PageBehavior{
 		PageUrl:      behaviorInfoBody.PageUrl,
 		UserId:       behaviorInfoBody.UserId,
 		ApiKey:       behaviorInfoBody.ApiKey,
@@ -128,7 +128,7 @@ func CreateBehaviorInfo(context *gin.Context) {
 		UA:             behaviorInfoBody.UA,
 	}
 
-	if err := services.CreateBehaviorInfo(webBehaviorInfoModel); err != nil {
+	if err := services.CreateBehaviorInfo(pageBehaviorInfoModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -138,7 +138,7 @@ func CreateBehaviorInfo(context *gin.Context) {
 func CreateJsErrorInfo(context *gin.Context) {
 	var jsErrorInfoBody request.PostJsErrorInfoBody
 	_ = context.BindJSON(&jsErrorInfoBody)
-	jsErrorInfoModel := model.JsErrorInfo{
+	jsErrorInfoModel := model.PageJsError{
 		PageUrl:        jsErrorInfoBody.PageUrl,
 		UserId:         jsErrorInfoBody.UserId,
 		ApiKey:         jsErrorInfoBody.ApiKey,

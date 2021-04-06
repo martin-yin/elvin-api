@@ -9,14 +9,14 @@ import (
 
 func GetResourceErrorInfo(context *gin.Context) {
 	startTime, endTime := getTodayStartAndEndTime()
-	ResourcesInfoList, err := services.GetResourcesInfoList(startTime, endTime)
+	ResourcesList, err := services.GetResourcesInfoList(startTime, endTime)
 	ResourcesQuota, err := services.GetResourcesQuota(startTime, endTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
-		response.OkWithDetailed(response.WebResourcesInfoResponse{
-			ResourcesInfoList: ResourcesInfoList,
-			ResourcesQuota:    ResourcesQuota,
+		response.OkWithDetailed(response.PageResourcesResponse{
+			ResourcesList:  ResourcesList,
+			ResourcesQuota: ResourcesQuota,
 		}, "获取成功", context)
 	}
 }

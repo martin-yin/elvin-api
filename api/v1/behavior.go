@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetUserBehaviors(context *gin.Context)  {
+func GetUserBehaviors(context *gin.Context) {
 	responses, err := services.GetBehaviors()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
@@ -22,7 +22,7 @@ func GetUserBehavior(context *gin.Context) {
 	var err error
 	if behaviorRequest.BehaviorType == "PAGE_LOAD" {
 		responses, err = services.GetBehaviorPerformance(behaviorRequest.BehaviorId)
-	} else if  behaviorRequest.BehaviorType == "HTTP_LOG" {
+	} else if behaviorRequest.BehaviorType == "HTTP_LOG" {
 		responses, err = services.GetBehaviorHttp(behaviorRequest.BehaviorId)
 	}
 	//responses, err := services.GetPerformance(behaviorRequest.BehaviorId)

@@ -29,14 +29,13 @@ func Gorm() *gorm.DB {
 
 func MysqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
-		model.BehaviorInfo{},
-		model.CustomerPv{},
-		model.HttpInfo{},
-		model.JsErrorInfo{},
-		model.LoadpageInfo{},
-		model.ResourceErrorInfo{},
+		model.PageBehavior{},
+		model.PageHttp{},
+		model.PageJsError{},
+		model.PagePerformance{},
+		model.PageResourceError{},
 		model.HttpInfoStatistical{},
-		model.UserBehaviorInfo{},
+		model.UserAction{},
 
 		model.Admin{},
 		model.Project{},

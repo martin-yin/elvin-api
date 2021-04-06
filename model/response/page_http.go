@@ -1,6 +1,6 @@
 package response
 
-type HttpInfoListResponse struct {
+type HttpListResponse struct {
 	PageUrl      string  `json:"page_url"`
 	HttpUrl      string  `json:"http_url"`
 	LoadTime     float64 `json:"load_time"`
@@ -16,7 +16,7 @@ type HttpQuotaResponse struct {
 	ErrorUser    int `json:"error_user"`
 }
 
-type WebHttpInfoResponse struct {
-	HttpInfoListResponse []HttpInfoListResponse `json:"http_info_list"`
-	HttpQuotaResponse    HttpQuotaResponse      `json:"http_quota"`
+type PageHttpResponse struct {
+	HttpListResponse  []HttpListResponse `json:"http_info_list"`
+	HttpQuotaResponse HttpQuotaResponse  `json:"http_quota"`
 }

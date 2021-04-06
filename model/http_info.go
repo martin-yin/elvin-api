@@ -2,7 +2,7 @@ package model
 
 import "danci-api/global"
 
-type HttpInfo struct {
+type PageHttp struct {
 	global.GVA_MODEL
 	PageUrl      string  `json:"page_url"`
 	HttpUrl      string  `json:"http_url" gorm:"index:http_url"`

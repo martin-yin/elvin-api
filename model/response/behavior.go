@@ -1,16 +1,15 @@
 package response
 
-
 type BehaviorPerformanceResponse struct {
-	PageUrl   string  `json:"page_url"`
-	Request   float64 `json:"request"`
-	DomParse  float64 `json:"dom_parse"`
-	Ttfb      float64 `json:"ttfb"`
-	LoadPage  float64 `json:"load_page"`
-	LoadEvent float64 `json:"load_event"`
-	LoadType  string  `json:"load_type"`
-	UploadType   string  `json:"upload_type"`
-	HappenTime   string  `json:"happen_time"`
+	PageUrl    string  `json:"page_url"`
+	Request    float64 `json:"request"`
+	DomParse   float64 `json:"dom_parse"`
+	Ttfb       float64 `json:"ttfb"`
+	LoadPage   float64 `json:"load_page"`
+	LoadEvent  float64 `json:"load_event"`
+	LoadType   string  `json:"load_type"`
+	UploadType string  `json:"upload_type"`
+	HappenTime string  `json:"happen_time"`
 }
 
 type BehaviorHttpResponse struct {
@@ -28,14 +27,13 @@ type BehaviorHttpResponse struct {
 	ResponseText string  `json:"response_text"`
 }
 
-
 type BehaviorsResponse struct {
 	UserId     string `json:"user_id"`
 	ApiKey     string `json:"api_key"`
 	HappenTime string `json:"happen_time"`
 	// 打开页面 发送请求 点击等等……
 	BehaviorType string `json:"behavior_type"`
-	BehaviorId uint `json:"behavior_id"`
+	BehaviorId   uint   `json:"behavior_id"`
 	// 如果是打开页面的话
 	PageUrl  string `json:"page_url"`
 	LoadType string `json:"load_type"`
@@ -46,8 +44,8 @@ type BehaviorsResponse struct {
 	ElementType string `json:"element_type"`
 	// 如果是发生错误的话
 	Message string `json:"message"`
-	Stack string `json:"stack"`
+	Stack   string `json:"stack"`
 	//如果是点击
-	ClassName    string `json:"class_name"`
-	InnterText   string `json:"innter_text" gorm:"type:text"`
+	ClassName  string `json:"class_name"`
+	InnterText string `json:"innter_text" gorm:"type:text"`
 }

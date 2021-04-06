@@ -6,7 +6,6 @@ import (
 )
 
 func GetUserDetail() (userInfo []interface{}, err error) {
-	err = global.GVA_DB.Model(&model.UserBehaviorInfo{}).Find(&userInfo).Error
+	err = global.GVA_DB.Model(&model.UserAction{}).Find(&userInfo).Error
 	return
 }
-
