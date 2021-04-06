@@ -55,27 +55,3 @@ func GetLoadInfoPageList(startTime string, endTime string) (pagePerformanceList 
 		"COUNT(*) as pv ").Where("page_performances.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&pagePerformanceList).Error
 	return
 }
-
-type UserInfo struct {
-	PageUrl      string  `json:"page_url"`
-	UserId       string  `json:"user_id"`
-	ApiKey       string  `json:"api_key"`
-	UploadType   string  `json:"upload_type"`
-	HappenTime   string  `json:"happen_time"`
-	Redirect     float64 `json:"redirect"`
-	Appcache     float64 `json:"appcache"`
-	LookupDomain float64 `json:"lookup_domain"`
-	Tcp          float64 `json:"tcp"`
-	SslT         float64 `json:"ssl_t"`
-	Request      float64 `json:"request"`
-	DomParse     float64 `json:"dom_parse"`
-	Ttfb         float64 `json:"ttfb"`
-	LoadPage     float64 `json:"load_page"`
-	LoadEvent    float64 `json:"load_event"`
-	LoadType     string  `json:"load_type"`
-}
-
-func GetPerformance(id string) (userInfo UserInfo, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Where("id = ?", id).Scan(&userInfo).Error
-	return
-}

@@ -12,7 +12,7 @@ type UserResponse struct {
 	BrowserVersion string `json:"browser_version"`
 }
 
-type BehaviorPerformanceResponse struct {
+type ActionPerformanceResponse struct {
 	PageUrl    string  `json:"page_url"`
 	Request    float64 `json:"request"`
 	DomParse   float64 `json:"dom_parse"`
@@ -24,7 +24,7 @@ type BehaviorPerformanceResponse struct {
 	HappenTime string  `json:"happen_time"`
 }
 
-type BehaviorHttpResponse struct {
+type ActionHttpResponse struct {
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`
 	ApiKey       string  `json:"api_key"`
