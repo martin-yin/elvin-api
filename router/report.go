@@ -11,9 +11,9 @@ func InitReport(Router *gin.RouterGroup) {
 		WebPageReport.POST("performance", v1.CreatePagePerformance)
 		WebPageReport.POST("httpInfo", v1.CreateHttpInfo)
 		WebPageReport.POST("resourceError", v1.CreateResourcesError)
-		WebPageReport.POST("behavior", v1.CreateBehaviorInfo)
+		WebPageReport.POST("behavior", v1.CreatePageBehavior)
 
-		WebPageReport.POST("jsError", v1.CreateJsErrorInfo)
+		WebPageReport.POST("jsError", v1.CreatePageJsError)
 
 		WebPageReport.POST("tests", func(context *gin.Context) {
 			context.JSON(200, gin.H{"result": nil, "message": "msg", "redirect_url": "url"})

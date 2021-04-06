@@ -7,6 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func GetUsers(context *gin.Context) {
+	responses, err := services.GetUsers()
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+	}
+	response.OkWithDetailed(responses, "获取成功", context)
+}
+
 func GetUserBehaviors(context *gin.Context) {
 	responses, err := services.GetBehaviors()
 	if err != nil {

@@ -6,6 +6,11 @@ import (
 	"danci-api/model/response"
 )
 
+func GetUsers() (userResponse []response.UserResponse, err error) {
+	err = global.GVA_DB.Model(&model.User{}).Find(&userResponse).Error
+	return
+}
+
 func GetBehaviors() (behaviorsResponse []response.BehaviorsResponse, err error) {
 	err = global.GVA_DB.Model(&model.UserAction{}).Find(&behaviorsResponse).Error
 	return

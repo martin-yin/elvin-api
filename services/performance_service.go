@@ -15,7 +15,7 @@ func GetStackPerformance(startTime string, endTime string) (stackData response.S
 		"round(AVG(request),2) as request, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_event),2) as load_event, "+
-		"round(AVG(dom_parse),2) as dom_parse ").Where("loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&stackData).Error
+		"round(AVG(dom_parse),2) as dom_parse ").Where("page_performances.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&stackData).Error
 	return
 }
 
@@ -23,8 +23,8 @@ func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaRes
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("round(AVG(dom_parse),2) as dom_parse, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_page),2) as load_page, "+
-		"Count(*) as Pv ").Where("loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData).Error
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("CONCAT(round((SELECT COUNT(*) as pv FROM loadpage_infos WHERE loadpage_infos.load_page < 2000) / Count( * ) * 100, 2), '%')  AS Score").Where("loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData.Fast).Error
+		"Count(*) as Pv ").Where("page_performances.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData).Error
+	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("CONCAT(round((SELECT COUNT(*) as pv FROM page_performances WHERE page_performances.load_page < 2000) / Count( * ) * 100, 2), '%')  AS Score").Where("page_performances.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData.Fast).Error
 	return
 }
 
@@ -39,7 +39,7 @@ func GetStageTimeList(startTime string, endTime string) (stageTimeList []respons
 		"round( AVG( ttfb ), 2 ) AS ttfb,"+
 		"round( AVG( load_event ), 2 ) AS load_event,"+
 		"round( AVG( load_page ), 2 ) AS load_page,"+
-		"COUNT(*) as Pv ").Where("loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("time_key").Scan(&stageTimeList).Error
+		"COUNT(*) as Pv ").Where("page_performances.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("time_key").Scan(&stageTimeList).Error
 	return
 }
 
@@ -52,7 +52,7 @@ func GetLoadInfoPageList(startTime string, endTime string) (pagePerformanceList 
 		"load_event, "+
 		"load_type, "+
 		"load_page, "+
-		"COUNT(*) as pv ").Where("loadpage_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&pagePerformanceList).Error
+		"COUNT(*) as pv ").Where("page_performances.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&pagePerformanceList).Error
 	return
 }
 

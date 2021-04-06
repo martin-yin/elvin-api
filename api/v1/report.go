@@ -29,6 +29,7 @@ func CreatePagePerformance(context *gin.Context) {
 		LoadEvent:    pagePerformanceBody.LoadEvent,
 		LoadType:     pagePerformanceBody.LoadType,
 
+		IP:             context.ClientIP(),
 		Os:             pagePerformanceBody.Os,
 		OsVersion:      pagePerformanceBody.OsVersion,
 		Browser:        pagePerformanceBody.Browser,
@@ -103,8 +104,7 @@ func CreateResourcesError(context *gin.Context) {
 	response.Ok(context)
 }
 
-// 存储用户行为(点击等等……)。
-func CreateBehaviorInfo(context *gin.Context) {
+func CreatePageBehavior(context *gin.Context) {
 	var behaviorInfoBody request.PostBehaviorInfoBody
 	_ = context.BindJSON(&behaviorInfoBody)
 
@@ -128,14 +128,14 @@ func CreateBehaviorInfo(context *gin.Context) {
 		UA:             behaviorInfoBody.UA,
 	}
 
-	if err := services.CreateBehaviorInfo(pageBehaviorInfoModel); err != nil {
+	if err := services.CreatePageBehavior(pageBehaviorInfoModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
 	response.Ok(context)
 }
 
-func CreateJsErrorInfo(context *gin.Context) {
+func CreatePageJsError(context *gin.Context) {
 	var jsErrorInfoBody request.PostJsErrorInfoBody
 	_ = context.BindJSON(&jsErrorInfoBody)
 	jsErrorInfoModel := model.PageJsError{
@@ -153,7 +153,7 @@ func CreateJsErrorInfo(context *gin.Context) {
 		BrowserVersion: jsErrorInfoBody.BrowserVersion,
 		UA:             jsErrorInfoBody.UA,
 	}
-	if err := services.CreateJsErrorInfo(jsErrorInfoModel); err != nil {
+	if err := services.CreatePageJsError(jsErrorInfoModel); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}

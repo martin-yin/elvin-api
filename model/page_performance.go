@@ -22,6 +22,7 @@ type PagePerformance struct {
 	LoadEvent    float64 `json:"load_event"`
 	LoadType     string  `json:"load_type"`
 
+	IP             string `json:"ip"`
 	Os             string `json:"os"`
 	OsVersion      string `json:"os_version"`
 	Browser        string `json:"browser"`

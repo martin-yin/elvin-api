@@ -19,10 +19,30 @@ func CreatePagePerformance(pagePerformance model.PagePerformance) error {
 		ApiKey:       pagePerformance.ApiKey,
 		HappenTime:   pagePerformance.HappenTime,
 		BehaviorType: pagePerformance.UploadType,
+		IP:           pagePerformance.IP,
 		LoadType:     pagePerformance.LoadType,
 		BehaviorId:   pagePerformance.ID,
 	}
-	CreateUserBehaviorInfo(userActionModel)
+
+	userModel := model.User{
+		UserId:         pagePerformance.UserId,
+		ApiKey:         pagePerformance.ApiKey,
+		HappenTime:     pagePerformance.HappenTime,
+		IP:             pagePerformance.IP,
+		Os:             pagePerformance.Os,
+		OsVersion:      pagePerformance.OsVersion,
+		Browser:        pagePerformance.Browser,
+		BrowserVersion: pagePerformance.BrowserVersion,
+	}
+	err := CreateUser(userModel)
+	err = CreateUserBehaviorInfo(userActionModel)
+	return err
+}
+
+func CreateUser(user model.User) error {
+	if err := global.GVA_DB.Create(&user).Error; err != nil {
+		return err
+	}
 	return nil
 }
 
@@ -91,7 +111,7 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError) error {
 	return nil
 }
 
-func CreateBehaviorInfo(pageBehavior model.PageBehavior) error {
+func CreatePageBehavior(pageBehavior model.PageBehavior) error {
 	if err := global.GVA_DB.Create(&pageBehavior).Error; err != nil {
 		return err
 	}
@@ -109,7 +129,7 @@ func CreateBehaviorInfo(pageBehavior model.PageBehavior) error {
 	return nil
 }
 
-func CreateJsErrorInfo(pageJsError model.PageJsError) error {
+func CreatePageJsError(pageJsError model.PageJsError) error {
 	if err := global.GVA_DB.Create(&pageJsError).Error; err != nil {
 		return err
 	}
@@ -144,12 +164,12 @@ func GetWebResourceErrorInfo() *response.PageResourcesResponse {
 		"COUNT( source_url ) AS source_count, "+
 		"COUNT( DISTINCT user_id ) user_count, "+
 		"element_type, "+
-		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM resource_error_infos WHERE resource_error_infos.source_url = page_source_url ) AS page_url_count"+
-		"").Where("resource_error_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList)
+		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM page_resource_errors WHERE page_resource_errors.source_url = page_source_url ) AS page_url_count"+
+		"").Where("page_resource_errors.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList)
 
 	err = global.GVA_DB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
 		"COUNT(page_url) as error_page, "+
-		"COUNT(DISTINCT user_id) as error_user").Where("resource_error_infos.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
+		"COUNT(DISTINCT user_id) as error_user").Where("page_resource_errors.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
 	fmt.Print(err, "err!")
 	return &response.PageResourcesResponse{
 		ResourcesList:  resourcesList,
