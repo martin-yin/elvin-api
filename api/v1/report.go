@@ -10,25 +10,25 @@ import (
 
 func CreatePagePerformance(context *gin.Context) {
 	var pagePerformanceBody request.PostPagePerformance
-	_ = context.BindJSON(&pagePerformanceBody)
+	err := context.BindJSON(&pagePerformanceBody)
 	pagePerformanceModel := model.PagePerformance{
-		PageUrl:      pagePerformanceBody.PageUrl,
-		UserId:       pagePerformanceBody.UserId,
-		ApiKey:       pagePerformanceBody.ApiKey,
-		UploadType:   pagePerformanceBody.UploadType,
-		HappenTime:   pagePerformanceBody.HappenTime,
-		Redirect:     pagePerformanceBody.Redirect,
-		Appcache:     pagePerformanceBody.Appcache,
-		LookupDomain: pagePerformanceBody.LookupDomain,
-		Tcp:          pagePerformanceBody.Tcp,
-		SslT:         pagePerformanceBody.SslT,
-		Request:      pagePerformanceBody.Request,
-		DomParse:     pagePerformanceBody.DomParse,
-		Ttfb:         pagePerformanceBody.Ttfb,
-		LoadPage:     pagePerformanceBody.LoadPage,
-		LoadEvent:    pagePerformanceBody.LoadEvent,
-		LoadType:     pagePerformanceBody.LoadType,
-
+		PageUrl:        pagePerformanceBody.PageUrl,
+		UserId:         pagePerformanceBody.UserId,
+		ApiKey:         pagePerformanceBody.ApiKey,
+		ActionType:     pagePerformanceBody.ActionType,
+		HappenTime:     pagePerformanceBody.HappenTime,
+		HappenDay:      pagePerformanceBody.HappenDay,
+		Redirect:       pagePerformanceBody.Redirect,
+		Appcache:       pagePerformanceBody.Appcache,
+		LookupDomain:   pagePerformanceBody.LookupDomain,
+		Tcp:            pagePerformanceBody.Tcp,
+		SslT:           pagePerformanceBody.SslT,
+		Request:        pagePerformanceBody.Request,
+		DomParse:       pagePerformanceBody.DomParse,
+		Ttfb:           pagePerformanceBody.Ttfb,
+		LoadPage:       pagePerformanceBody.LoadPage,
+		LoadEvent:      pagePerformanceBody.LoadEvent,
+		LoadType:       pagePerformanceBody.LoadType,
 		IP:             context.ClientIP(),
 		Device:         pagePerformanceBody.Device,
 		DeviceType:     pagePerformanceBody.DeviceType,
@@ -37,6 +37,11 @@ func CreatePagePerformance(context *gin.Context) {
 		Browser:        pagePerformanceBody.Browser,
 		BrowserVersion: pagePerformanceBody.BrowserVersion,
 		UA:             pagePerformanceBody.UA,
+	}
+
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
 	}
 
 	if err := services.CreatePagePerformance(pagePerformanceModel); err != nil {
@@ -54,8 +59,9 @@ func CreateHttpInfo(context *gin.Context) {
 		PageUrl:      pageHttpBody.PageUrl,
 		UserId:       pageHttpBody.UserId,
 		ApiKey:       pageHttpBody.ApiKey,
-		UploadType:   pageHttpBody.UploadType,
+		ActionType:   pageHttpBody.ActionType,
 		HappenTime:   pageHttpBody.HappenTime,
+		HappenDay:    pageHttpBody.HappenDay,
 		HttpUrl:      pageHttpBody.HttpUrl,
 		LoadTime:     pageHttpBody.LoadTime,
 		Status:       pageHttpBody.Status,
@@ -86,15 +92,15 @@ func CreateResourcesError(context *gin.Context) {
 	_ = context.BindJSON(&pageResourceErroBody)
 
 	resourceErrorInfoModel := model.PageResourceError{
-		PageUrl:     pageResourceErroBody.PageUrl,
-		UserId:      pageResourceErroBody.UserId,
-		ApiKey:      pageResourceErroBody.ApiKey,
-		HappenTime:  pageResourceErroBody.HappenTime,
-		UploadType:  pageResourceErroBody.UploadType,
-		SourceUrl:   pageResourceErroBody.SourceUrl,
-		ElementType: pageResourceErroBody.ElementType,
-		Status:      pageResourceErroBody.Status,
-
+		PageUrl:        pageResourceErroBody.PageUrl,
+		UserId:         pageResourceErroBody.UserId,
+		ApiKey:         pageResourceErroBody.ApiKey,
+		HappenTime:     pageResourceErroBody.HappenTime,
+		HappenDay:      pageResourceErroBody.HappenDay,
+		ActionType:     pageResourceErroBody.ActionType,
+		SourceUrl:      pageResourceErroBody.SourceUrl,
+		ElementType:    pageResourceErroBody.ElementType,
+		Status:         pageResourceErroBody.Status,
 		IP:             context.ClientIP(),
 		Device:         pageResourceErroBody.Device,
 		DeviceType:     pageResourceErroBody.DeviceType,
@@ -121,7 +127,7 @@ func CreatePageBehavior(context *gin.Context) {
 		UserId:      behaviorInfoBody.UserId,
 		ApiKey:      behaviorInfoBody.ApiKey,
 		HappenTime:  behaviorInfoBody.HappenTime,
-		UploadType:  behaviorInfoBody.UploadType,
+		HappenDay:   behaviorInfoBody.HappenDay,
 		ActionType:  behaviorInfoBody.ActionType,
 		ClassName:   behaviorInfoBody.ClassName,
 		Placeholder: behaviorInfoBody.Placeholder,
@@ -150,15 +156,15 @@ func CreatePageJsError(context *gin.Context) {
 	var jsErrorInfoBody request.PostJsErrorInfoBody
 	_ = context.BindJSON(&jsErrorInfoBody)
 	jsErrorInfoModel := model.PageJsError{
-		PageUrl:       jsErrorInfoBody.PageUrl,
-		UserId:        jsErrorInfoBody.UserId,
-		ApiKey:        jsErrorInfoBody.ApiKey,
-		HappenTime:    jsErrorInfoBody.HappenTime,
-		UploadType:    jsErrorInfoBody.UploadType,
-		ComponentName: jsErrorInfoBody.ComponentName,
-		Stack:         jsErrorInfoBody.Stack,
-		Message:       jsErrorInfoBody.Message,
-
+		PageUrl:        jsErrorInfoBody.PageUrl,
+		UserId:         jsErrorInfoBody.UserId,
+		ApiKey:         jsErrorInfoBody.ApiKey,
+		HappenTime:     jsErrorInfoBody.HappenTime,
+		HappenDay:      jsErrorInfoBody.HappenDay,
+		ActionType:     jsErrorInfoBody.ActionType,
+		ComponentName:  jsErrorInfoBody.ComponentName,
+		Stack:          jsErrorInfoBody.Stack,
+		Message:        jsErrorInfoBody.Message,
 		IP:             context.ClientIP(),
 		Device:         jsErrorInfoBody.Device,
 		DeviceType:     jsErrorInfoBody.DeviceType,

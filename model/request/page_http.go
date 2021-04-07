@@ -4,8 +4,9 @@ type PostPageHttpBody struct {
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`
 	ApiKey       string  `json:"api_key"`
-	UploadType   string  `json:"upload_type"`
-	HappenTime   string  `json:"happen_time"`
+	ActionType   string  `json:"action_type"`
+	HappenTime   int     `json:"happen_time"`
+	HappenDay    string  `json:"happen_day"`
 	HttpUrl      string  `json:"http_url"`
 	LoadTime     float64 `json:"load_time"`
 	Status       int     `json:"status"`

@@ -12,13 +12,13 @@ func GetResourcesInfoList(startTime string, endTime string) (resourcesList []res
 		"COUNT( DISTINCT user_id ) user_count, "+
 		"element_type, "+
 		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM page_resource_errors WHERE page_resource_errors.source_url = page_source_url ) AS page_url_count"+
-		"").Where("page_resource_errors.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList).Error
+		"").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList).Error
 	return
 }
 
 func GetResourcesQuota(startTime string, endTime string) (resourcesQuota response.ResourcesQuotaResponse, err error) {
 	err = global.GVA_DB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
 		"COUNT(page_url) as error_page, "+
-		"COUNT(DISTINCT user_id) as error_user").Where("page_resource_errors.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota).Error
+		"COUNT(DISTINCT user_id) as error_user").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota).Error
 	return
 }

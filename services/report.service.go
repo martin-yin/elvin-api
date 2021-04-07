@@ -18,7 +18,8 @@ func CreatePagePerformance(pagePerformance model.PagePerformance) error {
 		UserId:     pagePerformance.UserId,
 		ApiKey:     pagePerformance.ApiKey,
 		HappenTime: pagePerformance.HappenTime,
-		ActionType: pagePerformance.UploadType,
+		HappenDay:  pagePerformance.HappenDay,
+		ActionType: pagePerformance.ActionType,
 		LoadType:   pagePerformance.LoadType,
 		ActionID:   pagePerformance.ID,
 	}
@@ -27,6 +28,7 @@ func CreatePagePerformance(pagePerformance model.PagePerformance) error {
 		UserId:         pagePerformance.UserId,
 		ApiKey:         pagePerformance.ApiKey,
 		HappenTime:     pagePerformance.HappenTime,
+		HappenDay:      pagePerformance.HappenDay,
 		IP:             pagePerformance.IP,
 		Device:         pagePerformance.Device,
 		DeviceType:     pagePerformance.DeviceType,
@@ -85,7 +87,8 @@ func CreatePageHttpModel(pageHttp model.PageHttp) error {
 		UserId:     pageHttp.UserId,
 		ApiKey:     pageHttp.ApiKey,
 		HappenTime: pageHttp.HappenTime,
-		ActionType: pageHttp.UploadType,
+		HappenDay:  pageHttp.HappenDay,
+		ActionType: pageHttp.ActionType,
 		ActionID:   pageHttp.ID,
 		HttpUrl:    pageHttp.HttpUrl,
 	}
@@ -105,7 +108,8 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError) error {
 		UserId:      resourceErrorInfo.UserId,
 		ApiKey:      resourceErrorInfo.ApiKey,
 		HappenTime:  resourceErrorInfo.HappenTime,
-		ActionType:  resourceErrorInfo.UploadType,
+		HappenDay:   resourceErrorInfo.HappenDay,
+		ActionType:  resourceErrorInfo.ActionType,
 		ActionID:    resourceErrorInfo.ID,
 		SourceUrl:   resourceErrorInfo.SourceUrl,
 		ElementType: resourceErrorInfo.ElementType,
@@ -141,7 +145,8 @@ func CreatePageJsError(pageJsError model.PageJsError) error {
 		UserId:     pageJsError.UserId,
 		ApiKey:     pageJsError.ApiKey,
 		HappenTime: pageJsError.HappenTime,
-		ActionType: pageJsError.UploadType,
+		HappenDay:  pageJsError.HappenDay,
+		ActionType: pageJsError.ActionType,
 		ActionID:   pageJsError.ID,
 		Message:    pageJsError.Message,
 		Stack:      "pageJsError.Stack",
@@ -167,11 +172,11 @@ func GetWebResourceErrorInfo() *response.PageResourcesResponse {
 		"COUNT( DISTINCT user_id ) user_count, "+
 		"element_type, "+
 		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM page_resource_errors WHERE page_resource_errors.source_url = page_source_url ) AS page_url_count"+
-		"").Where("page_resource_errors.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList)
+		"").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList)
 
 	err = global.GVA_DB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
 		"COUNT(page_url) as error_page, "+
-		"COUNT(DISTINCT user_id) as error_user").Where("page_resource_errors.happen_time between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
+		"COUNT(DISTINCT user_id) as error_user").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
 	fmt.Print(err, "err!")
 	return &response.PageResourcesResponse{
 		ResourcesList:  resourcesList,

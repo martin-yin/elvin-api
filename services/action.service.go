@@ -16,7 +16,6 @@ func GetUser(id string) (userResponse response.UserResponse, err error) {
 	return
 }
 
-
 func GetUserActions() (actionResponse []response.BehaviorsResponse, err error) {
 	err = global.GVA_DB.Model(&model.UserAction{}).Find(&actionResponse).Error
 	return

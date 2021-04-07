@@ -4,8 +4,9 @@ type PostJsErrorInfoBody struct {
 	PageUrl    string `json:"page_url"`
 	UserId     string `json:"user_id"`
 	ApiKey     string `json:"api_key"`
-	UploadType string `json:"upload_type"`
-	HappenTime string `json:"happen_time"`
+	ActionType string `json:"action_type"`
+	HappenDay  string `json:"happen_time"`
+	HappenTime int    `json:"happen_day"`
 	// 组件名称
 	ComponentName string `json:"component_name"`
 	Stack         string `json:"stack"`

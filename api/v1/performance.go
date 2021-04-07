@@ -21,7 +21,6 @@ func GetPerformance(context *gin.Context) {
 	PagePerformanceListResponse, err := services.GetLoadInfoPageList(startTime, endTime)
 	StageTimeResponse, err := services.GetStageTimeList(startTime, endTime)
 	if err != nil {
-		//global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
 		response.OkWithDetailed(response.PagePerformanceResponse{

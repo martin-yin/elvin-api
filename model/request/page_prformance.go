@@ -4,8 +4,9 @@ type PostPagePerformance struct {
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`
 	ApiKey       string  `json:"api_key"`
-	UploadType   string  `json:"upload_type"`
-	HappenTime   string  `json:"happen_time"`
+	ActionType   string  `json:"action_type"`
+	HappenTime   int     `json:"happen_time"`
+	HappenDay    string  `json:"happen_day"`
 	Redirect     float64 `json:"redirect"`
 	Appcache     float64 `json:"appcache"`
 	LookupDomain float64 `json:"lookup_domain"`

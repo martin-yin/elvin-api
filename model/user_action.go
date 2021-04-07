@@ -8,8 +8,8 @@ type UserAction struct {
 
 	UserId     string `json:"user_id"`
 	ApiKey     string `json:"api_key"`
-	HappenTime string `json:"happen_time"`
-
+	HappenTime int    `json:"happen_time"`
+	HappenDay  string `json:"happen_day"`
 	// 打开页面 发送请求 点击等等……
 	ActionType string `json:"action_type"`
 
