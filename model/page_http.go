@@ -4,6 +4,7 @@ import "danci-api/global"
 
 type PageHttp struct {
 	global.GVA_MODEL
+
 	PageUrl      string  `json:"page_url"`
 	HttpUrl      string  `json:"http_url" gorm:"index:http_url"`
 	UserId       string  `json:"user_id"`
@@ -16,7 +17,10 @@ type PageHttp struct {
 	StatusResult string  `json:"status_result"`
 	RequestText  string  `json:"request_text"`
 	ResponseText string  `json:"response_text"  gorm:"type:text"`
-	// 设备信息
+
+	IP             string `json:"ip"`
+	Device         string `json:"device"`
+	DeviceType     string `json:"device_type"`
 	Os             string `json:"os"`
 	OsVersion      string `json:"os_version"`
 	Browser        string `json:"browser"`
@@ -24,16 +28,12 @@ type PageHttp struct {
 	UA             string `json:"ua"`
 }
 
-type HttpInfoStatistical struct {
+type PageHttpStatistical struct {
 	global.GVA_MODEL
-	// 页面url
-	PageUrl string `json:"page_url"`
-	// http请求url
-	HttpUrl string `json:"http_url" gorm:"index:http_url"`
 
-	SuccessTotal int `json:"success_total"`
-
-	FailTotal int `json:"fail_total"`
-
-	Total int `json:"fail_total"`
+	PageUrl      string `json:"page_url"`
+	HttpUrl      string `json:"http_url" gorm:"index:http_url"`
+	SuccessTotal int    `json:"success_total"`
+	FailTotal    int    `json:"fail_total"`
+	Total        int    `json:"fail_total"`
 }

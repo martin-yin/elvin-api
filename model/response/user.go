@@ -1,51 +1,12 @@
 package response
 
-type UserResponse struct {
-	ID             string `json:"id"`
-	UserId         string `json:"user_id"`
-	ApiKey         string `json:"api_key"`
-	HappenTime     string `json:"happen_time" gorm:"unique"`
-	IP             string `json:"ip" gorm:"unique"`
-	Os             string `json:"os"`
-	OsVersion      string `json:"os_version"`
-	Browser        string `json:"browser"`
-	BrowserVersion string `json:"browser_version"`
-}
-
-type ActionPerformanceResponse struct {
-	PageUrl    string  `json:"page_url"`
-	Request    float64 `json:"request"`
-	DomParse   float64 `json:"dom_parse"`
-	Ttfb       float64 `json:"ttfb"`
-	LoadPage   float64 `json:"load_page"`
-	LoadEvent  float64 `json:"load_event"`
-	LoadType   string  `json:"load_type"`
-	UploadType string  `json:"upload_type"`
-	HappenTime string  `json:"happen_time"`
-}
-
-type ActionHttpResponse struct {
-	PageUrl      string  `json:"page_url"`
-	UserId       string  `json:"user_id"`
-	ApiKey       string  `json:"api_key"`
-	UploadType   string  `json:"upload_type"`
-	HappenTime   string  `json:"happen_time"`
-	HttpUrl      string  `json:"http_url"`
-	LoadTime     float64 `json:"load_time"`
-	Status       int     `json:"status"`
-	StatusText   string  `json:"status_text"`
-	StatusResult string  `json:"status_result"`
-	RequestText  string  `json:"request_text"`
-	ResponseText string  `json:"response_text"`
-}
-
-type BehaviorsResponse struct {
+type UserActionResponse struct {
 	UserId     string `json:"user_id"`
 	ApiKey     string `json:"api_key"`
 	HappenTime string `json:"happen_time"`
 	// 打开页面 发送请求 点击等等……
-	BehaviorType string `json:"behavior_type"`
-	BehaviorId   uint   `json:"behavior_id"`
+	ActionType string `json:"action_type"`
+	ActionID   uint   `json:"action_id"`
 	// 如果是打开页面的话
 	PageUrl  string `json:"page_url"`
 	LoadType string `json:"load_type"`

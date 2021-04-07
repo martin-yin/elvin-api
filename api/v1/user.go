@@ -15,23 +15,26 @@ func GetUsers(context *gin.Context) {
 	response.OkWithDetailed(responses, "获取成功", context)
 }
 
-func GetUserBehaviors(context *gin.Context) {
-	responses, err := services.GetBehaviors()
+func GetUserActions(context *gin.Context) {
+	responses, err := services.GetUserActions()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 	}
 	response.OkWithDetailed(responses, "获取成功", context)
 }
 
-func GetUserBehavior(context *gin.Context) {
-	var behaviorRequest request.BehaviorRequest
-	_ = context.BindQuery(&behaviorRequest)
+func GetUserAction(context *gin.Context) {
+	var userActionRequest request.UserActionRequest
+	_ = context.BindQuery(&userActionRequest)
+
 	var responses interface{}
 	var err error
-	if behaviorRequest.BehaviorType == "PAGE_LOAD" {
-		responses, err = services.GetBehaviorPerformance(behaviorRequest.BehaviorId)
-	} else if behaviorRequest.BehaviorType == "HTTP_LOG" {
-		responses, err = services.GetBehaviorHttp(behaviorRequest.BehaviorId)
+	if userActionRequest.ActionType == "PAGE_LOAD" {
+		responses, err = services.GetActionPerformance(userActionRequest.ActionID)
+	} else if userActionRequest.ActionType == "HTTP_LOG" {
+		responses, err = services.GetActionHttp(userActionRequest.ActionID)
+	} else if userActionRequest.ActionType == "JS_ERROR" {
+		responses, err = services.GetActionJsError(userActionRequest.ActionID)
 	}
 	//responses, err := services.GetPerformance(behaviorRequest.BehaviorId)
 	if err != nil {

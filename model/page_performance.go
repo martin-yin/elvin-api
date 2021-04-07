@@ -23,6 +23,8 @@ type PagePerformance struct {
 	LoadType     string  `json:"load_type"`
 
 	IP             string `json:"ip"`
+	Device         string `json:"device"`
+	DeviceType     string `json:"device_type"`
 	Os             string `json:"os"`
 	OsVersion      string `json:"os_version"`
 	Browser        string `json:"browser"`

@@ -14,7 +14,7 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("jsError", v1.GetJsError)
 
 		Communal.GET("users", v1.GetUsers)
-		Communal.GET("userBehavior", v1.GetUserBehavior)
-		Communal.GET("userBehaviors", v1.GetUserBehaviors)
+		Communal.GET("userAction", v1.GetUserAction)
+		Communal.GET("userActions", v1.GetUserActions)
 	}
 }

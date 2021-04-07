@@ -12,9 +12,13 @@ type PageJsError struct {
 	UploadType string `json:"upload_type"`
 	HappenTime string `json:"happen_time"`
 	// 组件名称
-	ComponentName  string `json:"componentName"`
-	Stack          string `json:"stack" gorm:"type:text"`
-	Message        string `json:"message"`
+	ComponentName string `json:"componentName"`
+	Stack         string `json:"stack" gorm:"type:text"`
+	Message       string `json:"message"`
+
+	IP             string `json:"ip"`
+	Device         string `json:"device"`
+	DeviceType     string `json:"device_type"`
 	Os             string `json:"os"`
 	OsVersion      string `json:"os_version"`
 	Browser        string `json:"browser"`

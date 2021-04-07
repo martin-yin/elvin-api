@@ -14,6 +14,9 @@ type PageResourceError struct {
 	ElementType string `json:"element_type"`
 	Status      string `json:"status"`
 
+	IP             string `json:"ip"`
+	Device         string `json:"device"`
+	DeviceType     string `json:"device_type"`
 	Os             string `json:"os"`
 	OsVersion      string `json:"os_version"`
 	Browser        string `json:"browser"`

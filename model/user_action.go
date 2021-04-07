@@ -9,11 +9,11 @@ type UserAction struct {
 	UserId     string `json:"user_id"`
 	ApiKey     string `json:"api_key"`
 	HappenTime string `json:"happen_time"`
-	IP         string `json:"ip"`
-	// 打开页面 发送请求 点击等等……
-	BehaviorType string `json:"behavior_type"`
 
-	BehaviorId uint `json:"behavior_id"`
+	// 打开页面 发送请求 点击等等……
+	ActionType string `json:"action_type"`
+
+	ActionID uint `json:"action_id"`
 	// 如果是打开页面的话
 	PageUrl  string `json:"page_url"`
 	LoadType string `json:"load_type"`

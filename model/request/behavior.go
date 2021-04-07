@@ -1,6 +1,6 @@
 package request
 
-type BehaviorRequest struct {
-	BehaviorId   string `form:"behavior_id"`
-	BehaviorType string `form:"behavior_type"`
+type UserActionRequest struct {
+	ActionID   string `form:"action_id"`
+	ActionType string `form:"action_type"`
 }

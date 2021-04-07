@@ -14,14 +14,13 @@ func CreatePagePerformance(pagePerformance model.PagePerformance) error {
 		return err
 	}
 	userActionModel := model.UserAction{
-		PageUrl:      pagePerformance.PageUrl,
-		UserId:       pagePerformance.UserId,
-		ApiKey:       pagePerformance.ApiKey,
-		HappenTime:   pagePerformance.HappenTime,
-		BehaviorType: pagePerformance.UploadType,
-		IP:           pagePerformance.IP,
-		LoadType:     pagePerformance.LoadType,
-		BehaviorId:   pagePerformance.ID,
+		PageUrl:    pagePerformance.PageUrl,
+		UserId:     pagePerformance.UserId,
+		ApiKey:     pagePerformance.ApiKey,
+		HappenTime: pagePerformance.HappenTime,
+		ActionType: pagePerformance.UploadType,
+		LoadType:   pagePerformance.LoadType,
+		ActionID:   pagePerformance.ID,
 	}
 
 	userModel := model.User{
@@ -29,13 +28,16 @@ func CreatePagePerformance(pagePerformance model.PagePerformance) error {
 		ApiKey:         pagePerformance.ApiKey,
 		HappenTime:     pagePerformance.HappenTime,
 		IP:             pagePerformance.IP,
+		Device:         pagePerformance.Device,
+		DeviceType:     pagePerformance.DeviceType,
 		Os:             pagePerformance.Os,
 		OsVersion:      pagePerformance.OsVersion,
 		Browser:        pagePerformance.Browser,
 		BrowserVersion: pagePerformance.BrowserVersion,
+		UA:             pagePerformance.UA,
 	}
 	err := CreateUser(userModel)
-	err = CreateUserBehaviorInfo(userActionModel)
+	err = CreateUserAction(userActionModel)
 	return err
 }
 
@@ -46,8 +48,9 @@ func CreateUser(user model.User) error {
 	return nil
 }
 
-func CreateUserBehaviorInfo(userBehaviorInfo model.UserAction) error {
-	if err := global.GVA_DB.Create(&userBehaviorInfo).Error; err != nil {
+func CreateUserAction(userAction model.UserAction) error {
+	if err := global.GVA_DB.Create(&userAction).Error; err != nil {
+		fmt.Print(err, "err !!!!!!!!!!!!")
 		return err
 	}
 	return nil
@@ -55,38 +58,38 @@ func CreateUserBehaviorInfo(userBehaviorInfo model.UserAction) error {
 
 // 存 http请求信息。
 func CreatePageHttpModel(pageHttp model.PageHttp) error {
-	var webhttpInfoInfoStatistical model.HttpInfoStatistical
-	err := global.GVA_DB.Model(&model.HttpInfoStatistical{}).Where("http_url = ?", pageHttp.HttpUrl).Find(&webhttpInfoInfoStatistical).Error
-	if !reflect.DeepEqual(webhttpInfoInfoStatistical, model.HttpInfoStatistical{}) {
-		webhttpInfoInfoStatistical.Total++
+	var pageHttpStatistical model.PageHttpStatistical
+	err := global.GVA_DB.Model(&model.PageHttpStatistical{}).Where("http_url = ?", pageHttp.HttpUrl).Find(&pageHttpStatistical).Error
+	if !reflect.DeepEqual(pageHttpStatistical, model.PageHttpStatistical{}) {
+		pageHttpStatistical.Total++
 		if pageHttp.Status > 200 {
-			webhttpInfoInfoStatistical.FailTotal++
+			pageHttpStatistical.FailTotal++
 		} else {
-			webhttpInfoInfoStatistical.SuccessTotal++
+			pageHttpStatistical.SuccessTotal++
 		}
 	} else {
-		webhttpInfoInfoStatistical.PageUrl = pageHttp.PageUrl
-		webhttpInfoInfoStatistical.HttpUrl = pageHttp.HttpUrl
-		webhttpInfoInfoStatistical.Total++
+		pageHttpStatistical.PageUrl = pageHttp.PageUrl
+		pageHttpStatistical.HttpUrl = pageHttp.HttpUrl
+		pageHttpStatistical.Total++
 		if pageHttp.Status > 200 {
-			webhttpInfoInfoStatistical.FailTotal++
+			pageHttpStatistical.FailTotal++
 		} else {
-			webhttpInfoInfoStatistical.SuccessTotal++
+			pageHttpStatistical.SuccessTotal++
 		}
 	}
-	err = global.GVA_DB.Save(&webhttpInfoInfoStatistical).Error
+	err = global.GVA_DB.Save(&pageHttpStatistical).Error
 	err = global.GVA_DB.Create(&pageHttp).Error
 
 	userActionModel := model.UserAction{
-		PageUrl:      pageHttp.PageUrl,
-		UserId:       pageHttp.UserId,
-		ApiKey:       pageHttp.ApiKey,
-		HappenTime:   pageHttp.HappenTime,
-		BehaviorType: pageHttp.UploadType,
-		BehaviorId:   pageHttp.ID,
-		HttpUrl:      pageHttp.HttpUrl,
+		PageUrl:    pageHttp.PageUrl,
+		UserId:     pageHttp.UserId,
+		ApiKey:     pageHttp.ApiKey,
+		HappenTime: pageHttp.HappenTime,
+		ActionType: pageHttp.UploadType,
+		ActionID:   pageHttp.ID,
+		HttpUrl:    pageHttp.HttpUrl,
 	}
-	CreateUserBehaviorInfo(userActionModel)
+	CreateUserAction(userActionModel)
 	if err != nil {
 		return err
 	}
@@ -98,16 +101,16 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError) error {
 		return err
 	}
 	userActionModel := model.UserAction{
-		PageUrl:      resourceErrorInfo.PageUrl,
-		UserId:       resourceErrorInfo.UserId,
-		ApiKey:       resourceErrorInfo.ApiKey,
-		HappenTime:   resourceErrorInfo.HappenTime,
-		BehaviorType: resourceErrorInfo.UploadType,
-		BehaviorId:   resourceErrorInfo.ID,
-		SourceUrl:    resourceErrorInfo.SourceUrl,
-		ElementType:  resourceErrorInfo.ElementType,
+		PageUrl:     resourceErrorInfo.PageUrl,
+		UserId:      resourceErrorInfo.UserId,
+		ApiKey:      resourceErrorInfo.ApiKey,
+		HappenTime:  resourceErrorInfo.HappenTime,
+		ActionType:  resourceErrorInfo.UploadType,
+		ActionID:    resourceErrorInfo.ID,
+		SourceUrl:   resourceErrorInfo.SourceUrl,
+		ElementType: resourceErrorInfo.ElementType,
 	}
-	CreateUserBehaviorInfo(userActionModel)
+	CreateUserAction(userActionModel)
 	return nil
 }
 
@@ -115,17 +118,17 @@ func CreatePageBehavior(pageBehavior model.PageBehavior) error {
 	if err := global.GVA_DB.Create(&pageBehavior).Error; err != nil {
 		return err
 	}
-	userActionModel := model.UserAction{
-		PageUrl:      pageBehavior.PageUrl,
-		UserId:       pageBehavior.UserId,
-		ApiKey:       pageBehavior.ApiKey,
-		HappenTime:   pageBehavior.HappenTime,
-		BehaviorType: pageBehavior.UploadType,
-		BehaviorId:   pageBehavior.ID,
-		ClassName:    pageBehavior.ClassName,
-		InnterText:   pageBehavior.InnterText,
-	}
-	CreateUserBehaviorInfo(userActionModel)
+	//userActionModel := model.UserAction{
+	//	PageUrl:      pageBehavior.PageUrl,
+	//	UserId:       pageBehavior.UserId,
+	//	ApiKey:       pageBehavior.ApiKey,
+	//	HappenTime:   pageBehavior.HappenTime,
+	//	BehaviorType: pageBehavior.UploadType,
+	//	BehaviorId:   pageBehavior.ID,
+	//	ClassName:    pageBehavior.ClassName,
+	//	InnterText:   pageBehavior.InnterText,
+	//}
+	//CreateUserBehaviorInfo(userActionModel)
 	return nil
 }
 
@@ -133,18 +136,17 @@ func CreatePageJsError(pageJsError model.PageJsError) error {
 	if err := global.GVA_DB.Create(&pageJsError).Error; err != nil {
 		return err
 	}
-
 	userActionModel := model.UserAction{
-		PageUrl:      pageJsError.PageUrl,
-		UserId:       pageJsError.UserId,
-		ApiKey:       pageJsError.ApiKey,
-		HappenTime:   pageJsError.HappenTime,
-		BehaviorType: pageJsError.UploadType,
-		BehaviorId:   pageJsError.ID,
-		Message:      pageJsError.Message,
-		Stack:        pageJsError.Stack,
+		PageUrl:    pageJsError.PageUrl,
+		UserId:     pageJsError.UserId,
+		ApiKey:     pageJsError.ApiKey,
+		HappenTime: pageJsError.HappenTime,
+		ActionType: pageJsError.UploadType,
+		ActionID:   pageJsError.ID,
+		Message:    pageJsError.Message,
+		Stack:      "pageJsError.Stack",
 	}
-	CreateUserBehaviorInfo(userActionModel)
+	CreateUserAction(userActionModel)
 	return nil
 }
 

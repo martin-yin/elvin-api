@@ -11,18 +11,23 @@ func GetUsers() (userResponse []response.UserResponse, err error) {
 	return
 }
 
-func GetBehaviors() (actionResponse []response.BehaviorsResponse, err error) {
+func GetUserActions() (actionResponse []response.BehaviorsResponse, err error) {
 	err = global.GVA_DB.Model(&model.UserAction{}).Find(&actionResponse).Error
 	return
 }
 
-func GetBehaviorHttp(id string) (actionResponse response.ActionHttpResponse, err error) {
+func GetActionHttp(id string) (actionResponse response.ActionHttpResponse, err error) {
 	err = global.GVA_DB.Model(&model.PageHttp{}).Where("id = ?", id).Scan(&actionResponse).Error
 	return
 }
 
-func GetBehaviorPerformance(id string) (actionResponse response.ActionPerformanceResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Where("id = ?", id).Scan(&actionResponse).Error
+func GetActionPerformance(id string) (actionPerformanceResponse response.ActionPerformanceResponse, err error) {
+	err = global.GVA_DB.Model(&model.PagePerformance{}).Where("id = ?", id).Scan(&actionPerformanceResponse).Error
+	return
+}
+
+func GetActionJsError(id string) (actionJsErrorResponse response.ActionJsErrorResponse, err error) {
+	err = global.GVA_DB.Model(&model.PageJsError{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
 	return
 }
 
