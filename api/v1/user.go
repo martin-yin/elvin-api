@@ -26,7 +26,10 @@ func GetUser(context *gin.Context) {
 }
 
 func GetUserActions(context *gin.Context) {
-	responses, err := services.GetUserActions()
+	var userActionsRequest request.UserActionsRequest
+	_ = context.BindQuery(&userActionsRequest)
+
+	responses, err := services.GetUserActions(userActionsRequest.EventID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 	}
@@ -46,6 +49,10 @@ func GetUserAction(context *gin.Context) {
 		responses, err = services.GetActionJsError(userActionRequest.ActionID)
 	} else if userActionRequest.ActionType == "RESOURCE_ERROR" {
 		responses, err = services.GetActionResourceError(userActionRequest.ActionID)
+	} else if userActionRequest.ActionType == "BEHAVIOR_INFO" {
+		responses, err = services.GetActionBehavior(userActionRequest.ActionID)
+	} else if userActionRequest.ActionType == "PAGE_VIEW" {
+		responses, err = services.GetActionPageView(userActionRequest.ActionID)
 	}
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)

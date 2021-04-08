@@ -1,17 +1,17 @@
-package request
+package model
 
-type PostJsErrorInfoBody struct {
+import "danci-api/global"
+
+type PageView struct {
+	global.GVA_MODEL
+
 	PageUrl    string `json:"page_url"`
 	UserId     string `json:"user_id"`
 	ApiKey     string `json:"api_key"`
 	ActionType string `json:"action_type"`
-	HappenDay  string `json:"happen_time"`
-	HappenTime int    `json:"happen_day"`
-	// 组件名称
-	ComponentName  string `json:"component_name"`
-	Stack          string `json:"stack"`
-	Message        string `json:"message"`
-	EventId        string `json:"event_id"`
+	HappenTime int    `json:"happen_time"`
+	HappenDay  string `json:"happen_day"`
+
 	IP             string `json:"ip"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`

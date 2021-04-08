@@ -13,6 +13,7 @@ type PostBehaviorInfoBody struct {
 	TagNameint  string `json:"tag_name"`
 	InnterText  string `json:"innter_text"`
 	// 设备信息
+	EventId        string `json:"event_id"`
 	IP             string `json:"ip"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`

@@ -15,6 +15,7 @@ type PostPageHttpBody struct {
 	RequestText  string  `json:"request_text"`
 	ResponseText string  `json:"response_text"`
 	// 设备信息
+	EventId        string `json:"event_id"`
 	IP             string `json:"ip"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`

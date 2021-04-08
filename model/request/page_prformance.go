@@ -19,6 +19,7 @@ type PostPagePerformance struct {
 	LoadEvent    float64 `json:"load_event"`
 	LoadType     string  `json:"load_type"`
 	// 设备信息
+	EventId        string `json:"event_id"`
 	IP             string `json:"ip"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`

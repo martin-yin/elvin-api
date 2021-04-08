@@ -10,25 +10,26 @@ import (
 
 func CreatePagePerformance(context *gin.Context) {
 	var pagePerformanceBody request.PostPagePerformance
-	err := context.BindJSON(&pagePerformanceBody)
+	_ = context.BindJSON(&pagePerformanceBody)
 	pagePerformanceModel := model.PagePerformance{
-		PageUrl:        pagePerformanceBody.PageUrl,
-		UserId:         pagePerformanceBody.UserId,
-		ApiKey:         pagePerformanceBody.ApiKey,
-		ActionType:     pagePerformanceBody.ActionType,
-		HappenTime:     pagePerformanceBody.HappenTime,
-		HappenDay:      pagePerformanceBody.HappenDay,
-		Redirect:       pagePerformanceBody.Redirect,
-		Appcache:       pagePerformanceBody.Appcache,
-		LookupDomain:   pagePerformanceBody.LookupDomain,
-		Tcp:            pagePerformanceBody.Tcp,
-		SslT:           pagePerformanceBody.SslT,
-		Request:        pagePerformanceBody.Request,
-		DomParse:       pagePerformanceBody.DomParse,
-		Ttfb:           pagePerformanceBody.Ttfb,
-		LoadPage:       pagePerformanceBody.LoadPage,
-		LoadEvent:      pagePerformanceBody.LoadEvent,
-		LoadType:       pagePerformanceBody.LoadType,
+		PageUrl:      pagePerformanceBody.PageUrl,
+		UserId:       pagePerformanceBody.UserId,
+		ApiKey:       pagePerformanceBody.ApiKey,
+		ActionType:   pagePerformanceBody.ActionType,
+		HappenTime:   pagePerformanceBody.HappenTime,
+		HappenDay:    pagePerformanceBody.HappenDay,
+		Redirect:     pagePerformanceBody.Redirect,
+		Appcache:     pagePerformanceBody.Appcache,
+		LookupDomain: pagePerformanceBody.LookupDomain,
+		Tcp:          pagePerformanceBody.Tcp,
+		SslT:         pagePerformanceBody.SslT,
+		Request:      pagePerformanceBody.Request,
+		DomParse:     pagePerformanceBody.DomParse,
+		Ttfb:         pagePerformanceBody.Ttfb,
+		LoadPage:     pagePerformanceBody.LoadPage,
+		LoadEvent:    pagePerformanceBody.LoadEvent,
+		LoadType:     pagePerformanceBody.LoadType,
+
 		IP:             context.ClientIP(),
 		Device:         pagePerformanceBody.Device,
 		DeviceType:     pagePerformanceBody.DeviceType,
@@ -38,13 +39,7 @@ func CreatePagePerformance(context *gin.Context) {
 		BrowserVersion: pagePerformanceBody.BrowserVersion,
 		UA:             pagePerformanceBody.UA,
 	}
-
-	if err != nil {
-		response.FailWithMessage(err.Error(), context)
-		return
-	}
-
-	if err := services.CreatePagePerformance(pagePerformanceModel); err != nil {
+	if err := services.CreatePagePerformance(pagePerformanceModel, pagePerformanceBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -80,7 +75,7 @@ func CreateHttpInfo(context *gin.Context) {
 		UA:             pageHttpBody.UA,
 	}
 
-	if err := services.CreatePageHttpModel(webHttpInfoModel); err != nil {
+	if err := services.CreatePageHttpModel(webHttpInfoModel, pageHttpBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -111,7 +106,7 @@ func CreateResourcesError(context *gin.Context) {
 		UA:             pageResourceErroBody.UA,
 	}
 
-	if err := services.CreateResourcesError(resourceErrorInfoModel); err != nil {
+	if err := services.CreateResourcesError(resourceErrorInfoModel, pageResourceErroBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -121,7 +116,6 @@ func CreateResourcesError(context *gin.Context) {
 func CreatePageBehavior(context *gin.Context) {
 	var behaviorInfoBody request.PostBehaviorInfoBody
 	_ = context.BindJSON(&behaviorInfoBody)
-
 	pageBehaviorInfoModel := model.PageBehavior{
 		PageUrl:     behaviorInfoBody.PageUrl,
 		UserId:      behaviorInfoBody.UserId,
@@ -145,7 +139,7 @@ func CreatePageBehavior(context *gin.Context) {
 		UA:             behaviorInfoBody.UA,
 	}
 
-	if err := services.CreatePageBehavior(pageBehaviorInfoModel); err != nil {
+	if err := services.CreatePageBehavior(pageBehaviorInfoModel, behaviorInfoBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
@@ -174,7 +168,35 @@ func CreatePageJsError(context *gin.Context) {
 		BrowserVersion: jsErrorInfoBody.BrowserVersion,
 		UA:             jsErrorInfoBody.UA,
 	}
-	if err := services.CreatePageJsError(jsErrorInfoModel); err != nil {
+	if err := services.CreatePageJsError(jsErrorInfoModel, jsErrorInfoBody.EventId); err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
+	response.Ok(context)
+}
+
+func CreatePageView(context *gin.Context) {
+	var pageViewBody request.PostPageViewBody
+	_ = context.BindJSON(&pageViewBody)
+
+	pageViewModel := model.PageView{
+		PageUrl:    pageViewBody.PageUrl,
+		UserId:     pageViewBody.UserId,
+		ApiKey:     pageViewBody.ApiKey,
+		ActionType: pageViewBody.ActionType,
+		HappenTime: pageViewBody.HappenTime,
+		HappenDay:  pageViewBody.HappenDay,
+
+		IP:             context.ClientIP(),
+		Device:         pageViewBody.Device,
+		DeviceType:     pageViewBody.DeviceType,
+		Os:             pageViewBody.Os,
+		OsVersion:      pageViewBody.OsVersion,
+		Browser:        pageViewBody.Browser,
+		BrowserVersion: pageViewBody.BrowserVersion,
+		UA:             pageViewBody.UA,
+	}
+	if err := services.CreatePageView(pageViewModel, pageViewBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}

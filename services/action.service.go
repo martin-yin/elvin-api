@@ -16,8 +16,8 @@ func GetUser(id string) (userResponse response.UserResponse, err error) {
 	return
 }
 
-func GetUserActions() (actionResponse []response.BehaviorsResponse, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Find(&actionResponse).Error
+func GetUserActions(eventId string) (actionResponse []response.BehaviorsResponse, err error) {
+	err = global.GVA_DB.Model(&model.UserAction{}).Where("event_id = ?", eventId).Order("happen_time").Find(&actionResponse).Error
 	return
 }
 
@@ -38,6 +38,16 @@ func GetActionJsError(id string) (actionJsErrorResponse response.ActionJsErrorRe
 
 func GetActionResourceError(id string) (actionResourceErrorResponse response.ActionResourceErrorResponse, err error) {
 	err = global.GVA_DB.Model(&model.PageResourceError{}).Where("id = ?", id).Scan(&actionResourceErrorResponse).Error
+	return
+}
+
+func GetActionBehavior(id string) (actionPageBehaviorResponse response.ActionPageBehaviorResponse, err error) {
+	err = global.GVA_DB.Model(&model.PageBehavior{}).Where("id = ?", id).Scan(&actionPageBehaviorResponse).Error
+	return
+}
+
+func GetActionPageView(id string) (actionPageViewResponse response.ActionPageViewResponse, err error) {
+	err = global.GVA_DB.Model(&model.PageView{}).Where("id = ?", id).Scan(&actionPageViewResponse).Error
 	return
 }
 

@@ -29,7 +29,7 @@ func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaRes
 }
 
 func GetStageTimeList(startTime string, endTime string) (stageTimeList []response.StageTimeResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("DATE_FORMAT(happen_time, \"%H:%i\") AS time_key, "+
+	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, \"%H:%i\") AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
 		"round( AVG( appcache ), 2 ) AS appcache,"+
 		"round( AVG( lookup_domain ), 2 ) AS lookup_domain,"+

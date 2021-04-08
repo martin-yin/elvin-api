@@ -13,5 +13,6 @@ func InitReport(Router *gin.RouterGroup) {
 		WebPageReport.POST("resourceError", v1.CreateResourcesError)
 		WebPageReport.POST("behavior", v1.CreatePageBehavior)
 		WebPageReport.POST("jsError", v1.CreatePageJsError)
+		WebPageReport.POST("pageView", v1.CreatePageView)
 	}
 }

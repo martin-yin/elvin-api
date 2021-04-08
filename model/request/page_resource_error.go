@@ -10,6 +10,7 @@ type PostPageResourceErroBody struct {
 	SourceUrl   string `json:"source_url"`
 	ElementType string `json:"element_type"`
 	Status      string `json:"status"`
+	EventId     string `json:"event_id"`
 	// 设备信息
 	IP             string `json:"ip"`
 	Device         string `json:"device"`

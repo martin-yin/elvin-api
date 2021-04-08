@@ -17,7 +17,7 @@ type UserAction struct {
 	// 如果是打开页面的话
 	PageUrl  string `json:"page_url"`
 	LoadType string `json:"load_type"`
-
+	EventId  string `json:"event_id"`
 	// 如果是 http请求的话
 	HttpUrl string `json:"http_url"`
 

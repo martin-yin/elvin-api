@@ -10,3 +10,7 @@ type UserActionRequest struct {
 type UserRequest struct {
 	ID string `form:"id"`
 }
+
+type UserActionsRequest struct {
+	EventID string `form:"event_id"`
+}
