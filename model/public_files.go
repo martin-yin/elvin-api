@@ -1,15 +1,11 @@
 package model
 
-import "danci-api/global"
-
-// 用户行为记录
-type User struct {
-	global.GVA_MODEL
+type PublicFiles struct {
 	UserId         string `json:"user_id"`
 	ApiKey         string `json:"api_key"`
-	HappenTime     int    `json:"happen_time" gorm:"unique"`
+	ActionType     string `json:"action_type"`
+	HappenTime     int    `json:"happen_time"`
 	HappenDay      string `json:"happen_day"`
-	EventId        string `json:"event_id"`
 	IP             string `json:"ip"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`

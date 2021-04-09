@@ -3,10 +3,8 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
-	"danci-api/model/response"
 	"fmt"
 	"reflect"
-	"time"
 )
 
 func CreatePagePerformance(pagePerformance model.PagePerformance, eventId string) error {
@@ -15,30 +13,34 @@ func CreatePagePerformance(pagePerformance model.PagePerformance, eventId string
 	}
 	userActionModel := model.UserAction{
 		PageUrl:    pagePerformance.PageUrl,
-		UserId:     pagePerformance.UserId,
-		ApiKey:     pagePerformance.ApiKey,
-		HappenTime: pagePerformance.HappenTime,
-		HappenDay:  pagePerformance.HappenDay,
-		ActionType: pagePerformance.ActionType,
+		UserId:     pagePerformance.PublicFiles.UserId,
+		ApiKey:     pagePerformance.PublicFiles.ApiKey,
+		HappenTime: pagePerformance.PublicFiles.HappenTime,
+		HappenDay:  pagePerformance.PublicFiles.HappenDay,
+		ActionType: pagePerformance.PublicFiles.ActionType,
 		LoadType:   pagePerformance.LoadType,
 		EventId:    eventId,
 		ActionID:   pagePerformance.ID,
 	}
 
 	userModel := model.User{
-		UserId:         pagePerformance.UserId,
-		ApiKey:         pagePerformance.ApiKey,
-		HappenTime:     pagePerformance.HappenTime,
-		HappenDay:      pagePerformance.HappenDay,
+		UserId:         pagePerformance.PublicFiles.UserId,
+		ApiKey:         pagePerformance.PublicFiles.ApiKey,
+		HappenTime:     pagePerformance.PublicFiles.HappenTime,
+		HappenDay:      pagePerformance.PublicFiles.HappenDay,
 		EventId:        eventId,
-		IP:             pagePerformance.IP,
-		Device:         pagePerformance.Device,
-		DeviceType:     pagePerformance.DeviceType,
-		Os:             pagePerformance.Os,
-		OsVersion:      pagePerformance.OsVersion,
-		Browser:        pagePerformance.Browser,
-		BrowserVersion: pagePerformance.BrowserVersion,
-		UA:             pagePerformance.UA,
+		IP:             pagePerformance.PublicFiles.IP,
+		Device:         pagePerformance.PublicFiles.Device,
+		DeviceType:     pagePerformance.PublicFiles.DeviceType,
+		Os:             pagePerformance.PublicFiles.Os,
+		OsVersion:      pagePerformance.PublicFiles.OsVersion,
+		Browser:        pagePerformance.PublicFiles.Browser,
+		BrowserVersion: pagePerformance.PublicFiles.BrowserVersion,
+		UA:             pagePerformance.PublicFiles.UA,
+		Nation: pagePerformance.PublicFiles.Nation,
+		Province: pagePerformance.PublicFiles.Province,
+		City: pagePerformance.PublicFiles.City,
+		District: pagePerformance.PublicFiles.District,
 	}
 	err := CreateUser(userModel)
 	err = CreateUserAction(userActionModel)
@@ -87,12 +89,12 @@ func CreatePageHttpModel(pageHttp model.PageHttp, eventId string) error {
 
 	userActionModel := model.UserAction{
 		PageUrl:    pageHttp.PageUrl,
-		UserId:     pageHttp.UserId,
-		ApiKey:     pageHttp.ApiKey,
+		UserId:     pageHttp.PublicFiles.UserId,
+		ApiKey:     pageHttp.PublicFiles.ApiKey,
 		EventId:    eventId,
-		HappenTime: pageHttp.HappenTime,
-		HappenDay:  pageHttp.HappenDay,
-		ActionType: pageHttp.ActionType,
+		HappenTime: pageHttp.PublicFiles.HappenTime,
+		HappenDay:  pageHttp.PublicFiles.HappenDay,
+		ActionType: pageHttp.PublicFiles.ActionType,
 		ActionID:   pageHttp.ID,
 		HttpUrl:    pageHttp.HttpUrl,
 	}
@@ -109,11 +111,11 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError, eventId str
 	}
 	userActionModel := model.UserAction{
 		PageUrl:     resourceErrorInfo.PageUrl,
-		UserId:      resourceErrorInfo.UserId,
-		ApiKey:      resourceErrorInfo.ApiKey,
-		HappenTime:  resourceErrorInfo.HappenTime,
-		HappenDay:   resourceErrorInfo.HappenDay,
-		ActionType:  resourceErrorInfo.ActionType,
+		UserId:      resourceErrorInfo.PublicFiles.UserId,
+		ApiKey:      resourceErrorInfo.PublicFiles.ApiKey,
+		HappenTime:  resourceErrorInfo.PublicFiles.HappenTime,
+		HappenDay:   resourceErrorInfo.PublicFiles.HappenDay,
+		ActionType:  resourceErrorInfo.PublicFiles.ActionType,
 		ActionID:    resourceErrorInfo.ID,
 		EventId:     eventId,
 		SourceUrl:   resourceErrorInfo.SourceUrl,
@@ -129,10 +131,10 @@ func CreatePageBehavior(pageBehavior model.PageBehavior, eventId string) error {
 	}
 	userActionModel := model.UserAction{
 		PageUrl:    pageBehavior.PageUrl,
-		UserId:     pageBehavior.UserId,
-		ApiKey:     pageBehavior.ApiKey,
-		HappenTime: pageBehavior.HappenTime,
-		ActionType: pageBehavior.ActionType,
+		UserId:     pageBehavior.PublicFiles.UserId,
+		ApiKey:     pageBehavior.PublicFiles.ApiKey,
+		HappenTime: pageBehavior.PublicFiles.HappenTime,
+		ActionType: pageBehavior.PublicFiles.ActionType,
 		ActionID:   pageBehavior.ID,
 		EventId:    eventId,
 		ClassName:  pageBehavior.ClassName,
@@ -148,11 +150,11 @@ func CreatePageJsError(pageJsError model.PageJsError, eventId string) error {
 	}
 	userActionModel := model.UserAction{
 		PageUrl:    pageJsError.PageUrl,
-		UserId:     pageJsError.UserId,
-		ApiKey:     pageJsError.ApiKey,
-		HappenTime: pageJsError.HappenTime,
-		HappenDay:  pageJsError.HappenDay,
-		ActionType: pageJsError.ActionType,
+		UserId:     pageJsError.PublicFiles.UserId,
+		ApiKey:     pageJsError.PublicFiles.ApiKey,
+		HappenTime: pageJsError.PublicFiles.HappenTime,
+		HappenDay:  pageJsError.PublicFiles.HappenDay,
+		ActionType: pageJsError.PublicFiles.ActionType,
 		ActionID:   pageJsError.ID,
 		Message:    pageJsError.Message,
 		Stack:      "pageJsError.Stack",
@@ -168,11 +170,11 @@ func CreatePageView(pageView model.PageView, eventId string) error {
 	}
 	userActionModel := model.UserAction{
 		PageUrl:    pageView.PageUrl,
-		UserId:     pageView.UserId,
-		ApiKey:     pageView.ApiKey,
-		HappenTime: pageView.HappenTime,
-		HappenDay:  pageView.HappenDay,
-		ActionType: pageView.ActionType,
+		UserId:     pageView.PublicFiles.UserId,
+		ApiKey:     pageView.PublicFiles.ApiKey,
+		HappenTime: pageView.PublicFiles.HappenTime,
+		HappenDay:  pageView.PublicFiles.HappenDay,
+		ActionType: pageView.PublicFiles.ActionType,
 		ActionID:   pageView.ID,
 		EventId:    eventId,
 	}
@@ -181,31 +183,31 @@ func CreatePageView(pageView model.PageView, eventId string) error {
 	return nil
 }
 
-func getTodayStartAndEndTime() (startTime string, endTime string) {
-	startTime = time.Now().Format("2006-01-02 00:00")
-	endTime = (time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 23, 59, 59, 0, time.Now().Location())).Format("2006-01-02 15:04:05")
-	return startTime, endTime
-}
+//func getTodayStartAndEndTime() (startTime string, endTime string) {
+//	startTime = time.Now().Format("2006-01-02 00:00")
+//	endTime = (time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), 23, 59, 59, 0, time.Now().Location())).Format("2006-01-02 15:04:05")
+//	return startTime, endTime
+//}
 
 // 获取资源错误
-func GetWebResourceErrorInfo() *response.PageResourcesResponse {
-	var resourcesList []response.ResourcesListResponse
-	var resourcesQuota response.ResourcesQuotaResponse
-	startTime, endTime := getTodayStartAndEndTime()
-
-	err := global.GVA_DB.Model(&model.PageResourceError{}).Select("source_url AS page_source_url, "+
-		"COUNT( source_url ) AS source_count, "+
-		"COUNT( DISTINCT user_id ) user_count, "+
-		"element_type, "+
-		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM page_resource_errors WHERE page_resource_errors.source_url = page_source_url ) AS page_url_count"+
-		"").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList)
-
-	err = global.GVA_DB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
-		"COUNT(page_url) as error_page, "+
-		"COUNT(DISTINCT user_id) as error_user").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
-	fmt.Print(err, "err!")
-	return &response.PageResourcesResponse{
-		ResourcesList:  resourcesList,
-		ResourcesQuota: resourcesQuota,
-	}
-}
+//func GetWebResourceErrorInfo() *response.PageResourcesResponse {
+//	var resourcesList []response.ResourcesListResponse
+//	var resourcesQuota response.ResourcesQuotaResponse
+//	startTime, endTime := getTodayStartAndEndTime()
+//
+//	err := global.GVA_DB.Model(&model.PageResourceError{}).Select("source_url AS page_source_url, "+
+//		"COUNT( source_url ) AS source_count, "+
+//		"COUNT( DISTINCT user_id ) user_count, "+
+//		"element_type, "+
+//		"( SELECT COUNT( DISTINCT page_url ) AS page_url_count FROM page_resource_errors WHERE page_resource_errors.source_url = page_source_url ) AS page_url_count"+
+//		"").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_source_url").Find(&resourcesList)
+//
+//	err = global.GVA_DB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
+//		"COUNT(page_url) as error_page, "+
+//		"COUNT(DISTINCT user_id) as error_user").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Find(&resourcesQuota)
+//	fmt.Print(err, "err!")
+//	return &response.PageResourcesResponse{
+//		ResourcesList:  resourcesList,
+//		ResourcesQuota: resourcesQuota,
+//	}
+//}

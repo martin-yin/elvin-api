@@ -124,7 +124,6 @@ type ActionPageViewResponse struct {
 	HappenTime     int    `json:"happen_time"`
 	HappenDay      string `json:"happen_day"`
 	ActionType     string `json:"action_type"`
-
 	IP             string `json:"ip"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`

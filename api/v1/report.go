@@ -5,20 +5,22 @@ import (
 	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
+	"danci-api/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func CreatePagePerformance(context *gin.Context) {
 	var pagePerformanceBody request.PostPagePerformance
-	_ = context.BindJSON(&pagePerformanceBody)
+	var publicFiles model.PublicFiles
+	files, _ := context.Get("public_files")
+	err := utils.StructToJsonToStruct(files, &publicFiles)
+	err = context.BindJSON(&pagePerformanceBody)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
 	pagePerformanceModel := model.PagePerformance{
 		PageUrl:      pagePerformanceBody.PageUrl,
-		UserId:       pagePerformanceBody.UserId,
-		ApiKey:       pagePerformanceBody.ApiKey,
-		ActionType:   pagePerformanceBody.ActionType,
-		HappenTime:   pagePerformanceBody.HappenTime,
-		HappenDay:    pagePerformanceBody.HappenDay,
-		Redirect:     pagePerformanceBody.Redirect,
 		Appcache:     pagePerformanceBody.Appcache,
 		LookupDomain: pagePerformanceBody.LookupDomain,
 		Tcp:          pagePerformanceBody.Tcp,
@@ -29,15 +31,8 @@ func CreatePagePerformance(context *gin.Context) {
 		LoadPage:     pagePerformanceBody.LoadPage,
 		LoadEvent:    pagePerformanceBody.LoadEvent,
 		LoadType:     pagePerformanceBody.LoadType,
-
-		IP:             context.ClientIP(),
-		Device:         pagePerformanceBody.Device,
-		DeviceType:     pagePerformanceBody.DeviceType,
-		Os:             pagePerformanceBody.Os,
-		OsVersion:      pagePerformanceBody.OsVersion,
-		Browser:        pagePerformanceBody.Browser,
-		BrowserVersion: pagePerformanceBody.BrowserVersion,
-		UA:             pagePerformanceBody.UA,
+		Redirect:     pagePerformanceBody.Redirect,
+		PublicFiles:  publicFiles,
 	}
 	if err := services.CreatePagePerformance(pagePerformanceModel, pagePerformanceBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
@@ -49,14 +44,16 @@ func CreatePagePerformance(context *gin.Context) {
 // 存储HTTP请求
 func CreateHttpInfo(context *gin.Context) {
 	var pageHttpBody request.PostPageHttpBody
-	_ = context.BindJSON(&pageHttpBody)
+	var publicFiles model.PublicFiles
+	files, _ := context.Get("public_files")
+	err := utils.StructToJsonToStruct(files, &publicFiles)
+	err = context.BindJSON(&pageHttpBody)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
 	webHttpInfoModel := model.PageHttp{
 		PageUrl:      pageHttpBody.PageUrl,
-		UserId:       pageHttpBody.UserId,
-		ApiKey:       pageHttpBody.ApiKey,
-		ActionType:   pageHttpBody.ActionType,
-		HappenTime:   pageHttpBody.HappenTime,
-		HappenDay:    pageHttpBody.HappenDay,
 		HttpUrl:      pageHttpBody.HttpUrl,
 		LoadTime:     pageHttpBody.LoadTime,
 		Status:       pageHttpBody.Status,
@@ -64,15 +61,7 @@ func CreateHttpInfo(context *gin.Context) {
 		StatusResult: pageHttpBody.StatusResult,
 		RequestText:  pageHttpBody.RequestText,
 		ResponseText: pageHttpBody.ResponseText,
-
-		IP:             context.ClientIP(),
-		Device:         pageHttpBody.Device,
-		DeviceType:     pageHttpBody.DeviceType,
-		Os:             pageHttpBody.Os,
-		OsVersion:      pageHttpBody.OsVersion,
-		Browser:        pageHttpBody.Browser,
-		BrowserVersion: pageHttpBody.BrowserVersion,
-		UA:             pageHttpBody.UA,
+		PublicFiles:  publicFiles,
 	}
 
 	if err := services.CreatePageHttpModel(webHttpInfoModel, pageHttpBody.EventId); err != nil {
@@ -84,28 +73,21 @@ func CreateHttpInfo(context *gin.Context) {
 
 func CreateResourcesError(context *gin.Context) {
 	var pageResourceErroBody request.PostPageResourceErroBody
-	_ = context.BindJSON(&pageResourceErroBody)
-
-	resourceErrorInfoModel := model.PageResourceError{
-		PageUrl:        pageResourceErroBody.PageUrl,
-		UserId:         pageResourceErroBody.UserId,
-		ApiKey:         pageResourceErroBody.ApiKey,
-		HappenTime:     pageResourceErroBody.HappenTime,
-		HappenDay:      pageResourceErroBody.HappenDay,
-		ActionType:     pageResourceErroBody.ActionType,
-		SourceUrl:      pageResourceErroBody.SourceUrl,
-		ElementType:    pageResourceErroBody.ElementType,
-		Status:         pageResourceErroBody.Status,
-		IP:             context.ClientIP(),
-		Device:         pageResourceErroBody.Device,
-		DeviceType:     pageResourceErroBody.DeviceType,
-		Os:             pageResourceErroBody.Os,
-		OsVersion:      pageResourceErroBody.OsVersion,
-		Browser:        pageResourceErroBody.Browser,
-		BrowserVersion: pageResourceErroBody.BrowserVersion,
-		UA:             pageResourceErroBody.UA,
+	var publicFiles model.PublicFiles
+	files, _ := context.Get("public_files")
+	err := utils.StructToJsonToStruct(files, &publicFiles)
+	err = context.BindJSON(&pageResourceErroBody)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
 	}
-
+	resourceErrorInfoModel := model.PageResourceError{
+		PageUrl:     pageResourceErroBody.PageUrl,
+		SourceUrl:   pageResourceErroBody.SourceUrl,
+		ElementType: pageResourceErroBody.ElementType,
+		Status:      pageResourceErroBody.Status,
+		PublicFiles: publicFiles,
+	}
 	if err := services.CreateResourcesError(resourceErrorInfoModel, pageResourceErroBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -115,30 +97,23 @@ func CreateResourcesError(context *gin.Context) {
 
 func CreatePageBehavior(context *gin.Context) {
 	var behaviorInfoBody request.PostBehaviorInfoBody
-	_ = context.BindJSON(&behaviorInfoBody)
+	var publicFiles model.PublicFiles
+	files, _ := context.Get("public_files")
+	err := utils.StructToJsonToStruct(files, &publicFiles)
+	err = context.BindJSON(&behaviorInfoBody)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
 	pageBehaviorInfoModel := model.PageBehavior{
 		PageUrl:     behaviorInfoBody.PageUrl,
-		UserId:      behaviorInfoBody.UserId,
-		ApiKey:      behaviorInfoBody.ApiKey,
-		HappenTime:  behaviorInfoBody.HappenTime,
-		HappenDay:   behaviorInfoBody.HappenDay,
-		ActionType:  behaviorInfoBody.ActionType,
 		ClassName:   behaviorInfoBody.ClassName,
 		Placeholder: behaviorInfoBody.Placeholder,
 		InputValue:  behaviorInfoBody.InputValue,
 		TagNameint:  behaviorInfoBody.TagNameint,
 		InnterText:  behaviorInfoBody.InnterText,
-
-		IP:             context.ClientIP(),
-		Device:         behaviorInfoBody.Device,
-		DeviceType:     behaviorInfoBody.DeviceType,
-		Os:             behaviorInfoBody.Os,
-		OsVersion:      behaviorInfoBody.OsVersion,
-		Browser:        behaviorInfoBody.Browser,
-		BrowserVersion: behaviorInfoBody.BrowserVersion,
-		UA:             behaviorInfoBody.UA,
+		PublicFiles: publicFiles,
 	}
-
 	if err := services.CreatePageBehavior(pageBehaviorInfoModel, behaviorInfoBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -148,25 +123,20 @@ func CreatePageBehavior(context *gin.Context) {
 
 func CreatePageJsError(context *gin.Context) {
 	var jsErrorInfoBody request.PostJsErrorInfoBody
-	_ = context.BindJSON(&jsErrorInfoBody)
+	var publicFiles model.PublicFiles
+	files, _ := context.Get("public_files")
+	err := utils.StructToJsonToStruct(files, &publicFiles)
+	err = context.BindJSON(&jsErrorInfoBody)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
 	jsErrorInfoModel := model.PageJsError{
-		PageUrl:        jsErrorInfoBody.PageUrl,
-		UserId:         jsErrorInfoBody.UserId,
-		ApiKey:         jsErrorInfoBody.ApiKey,
-		HappenTime:     jsErrorInfoBody.HappenTime,
-		HappenDay:      jsErrorInfoBody.HappenDay,
-		ActionType:     jsErrorInfoBody.ActionType,
-		ComponentName:  jsErrorInfoBody.ComponentName,
-		Stack:          jsErrorInfoBody.Stack,
-		Message:        jsErrorInfoBody.Message,
-		IP:             context.ClientIP(),
-		Device:         jsErrorInfoBody.Device,
-		DeviceType:     jsErrorInfoBody.DeviceType,
-		Os:             jsErrorInfoBody.Os,
-		OsVersion:      jsErrorInfoBody.OsVersion,
-		Browser:        jsErrorInfoBody.Browser,
-		BrowserVersion: jsErrorInfoBody.BrowserVersion,
-		UA:             jsErrorInfoBody.UA,
+		PageUrl:       jsErrorInfoBody.PageUrl,
+		ComponentName: jsErrorInfoBody.ComponentName,
+		Stack:         jsErrorInfoBody.Stack,
+		Message:       jsErrorInfoBody.Message,
+		PublicFiles:   publicFiles,
 	}
 	if err := services.CreatePageJsError(jsErrorInfoModel, jsErrorInfoBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
@@ -177,24 +147,17 @@ func CreatePageJsError(context *gin.Context) {
 
 func CreatePageView(context *gin.Context) {
 	var pageViewBody request.PostPageViewBody
-	_ = context.BindJSON(&pageViewBody)
-
+	var publicFiles model.PublicFiles
+	files, _ := context.Get("public_files")
+	err := utils.StructToJsonToStruct(files, &publicFiles)
+	err = context.BindJSON(&pageViewBody)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
 	pageViewModel := model.PageView{
-		PageUrl:    pageViewBody.PageUrl,
-		UserId:     pageViewBody.UserId,
-		ApiKey:     pageViewBody.ApiKey,
-		ActionType: pageViewBody.ActionType,
-		HappenTime: pageViewBody.HappenTime,
-		HappenDay:  pageViewBody.HappenDay,
-
-		IP:             context.ClientIP(),
-		Device:         pageViewBody.Device,
-		DeviceType:     pageViewBody.DeviceType,
-		Os:             pageViewBody.Os,
-		OsVersion:      pageViewBody.OsVersion,
-		Browser:        pageViewBody.Browser,
-		BrowserVersion: pageViewBody.BrowserVersion,
-		UA:             pageViewBody.UA,
+		PageUrl:     pageViewBody.PageUrl,
+		PublicFiles: publicFiles,
 	}
 	if err := services.CreatePageView(pageViewModel, pageViewBody.EventId); err != nil {
 		response.FailWithMessage(err.Error(), context)
