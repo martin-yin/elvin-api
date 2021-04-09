@@ -37,10 +37,10 @@ func CreatePagePerformance(pagePerformance model.PagePerformance, eventId string
 		Browser:        pagePerformance.PublicFiles.Browser,
 		BrowserVersion: pagePerformance.PublicFiles.BrowserVersion,
 		UA:             pagePerformance.PublicFiles.UA,
-		Nation: pagePerformance.PublicFiles.Nation,
-		Province: pagePerformance.PublicFiles.Province,
-		City: pagePerformance.PublicFiles.City,
-		District: pagePerformance.PublicFiles.District,
+		Nation:         pagePerformance.PublicFiles.Nation,
+		Province:       pagePerformance.PublicFiles.Province,
+		City:           pagePerformance.PublicFiles.City,
+		District:       pagePerformance.PublicFiles.District,
 	}
 	err := CreateUser(userModel)
 	err = CreateUserAction(userActionModel)
@@ -126,22 +126,21 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError, eventId str
 }
 
 func CreatePageBehavior(pageBehavior model.PageBehavior, eventId string) error {
-	if err := global.GVA_DB.Create(&pageBehavior).Error; err != nil {
-		return err
-	}
-	userActionModel := model.UserAction{
-		PageUrl:    pageBehavior.PageUrl,
-		UserId:     pageBehavior.PublicFiles.UserId,
-		ApiKey:     pageBehavior.PublicFiles.ApiKey,
-		HappenTime: pageBehavior.PublicFiles.HappenTime,
-		ActionType: pageBehavior.PublicFiles.ActionType,
-		ActionID:   pageBehavior.ID,
-		EventId:    eventId,
-		ClassName:  pageBehavior.ClassName,
-		InnterText: pageBehavior.InnterText,
-	}
-	CreateUserAction(userActionModel)
-	return nil
+	err := global.GVA_DB.Create(&pageBehavior).Error
+	fmt.Println(err, "eerrrrrrrrrrrrrrr")
+	//userActionModel := model.UserAction{
+	//	PageUrl:    pageBehavior.PageUrl,
+	//	UserId:     pageBehavior.PublicFiles.UserId,
+	//	ApiKey:     pageBehavior.PublicFiles.ApiKey,
+	//	HappenTime: pageBehavior.PublicFiles.HappenTime,
+	//	ActionType: pageBehavior.PublicFiles.ActionType,
+	//	ActionID:   pageBehavior.ID,
+	//	EventId:    eventId,
+	//	ClassName:  pageBehavior.ClassName,
+	//	InnterText: pageBehavior.InnterText,
+	//}
+	//CreateUserAction(userActionModel)
+	return err
 }
 
 func CreatePageJsError(pageJsError model.PageJsError, eventId string) error {

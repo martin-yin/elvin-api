@@ -18,8 +18,8 @@ type User struct {
 	Browser        string `json:"browser"`
 	BrowserVersion string `json:"browser_version"`
 	UA             string `json:"ua"`
-	Nation   string `json:"nation"`
-	Province string `json:"province"`
-	City     string `json:"city"`
-	District string `json:"district"`
+	Nation         string `json:"nation"`
+	Province       string `json:"province"`
+	City           string `json:"city"`
+	District       string `json:"district"`
 }
