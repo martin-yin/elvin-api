@@ -3,11 +3,23 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
+	"danci-api/model/request"
 	"danci-api/model/response"
 )
 
-func GetUsers() (userResponse []response.UserResponse, err error) {
-	err = global.GVA_DB.Model(&model.User{}).Find(&userResponse).Error
+
+type WhereSql struct {
+	sql string
+}
+
+func GetUsers(usersParam request.UsersRequest) (userResponse []response.UserResponse, err error) {
+	whereQuery := "from_unixtime(happen_time / 1000, '%Y-%m-%d %H:%i') between ? And ?"
+	if usersParam.UserId != "" {
+		whereQuery = whereQuery + " And user_id = ?"
+	}
+	startSearchTime := usersParam.SearchDate + " " + usersParam.SearchHour
+	endSearchTime := usersParam.SearchDate + " 23:59:59"
+	err = global.GVA_DB.Model(&model.User{}).Where(whereQuery, startSearchTime, endSearchTime, usersParam.UserId).Find(&userResponse).Error
 	return
 }
 

@@ -8,7 +8,9 @@ import (
 )
 
 func GetUsers(context *gin.Context) {
-	responses, err := services.GetUsers()
+	var userRequest request.UsersRequest
+	err := context.BindQuery(&userRequest)
+	responses, err := services.GetUsers(userRequest)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 	}

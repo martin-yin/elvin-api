@@ -3,7 +3,6 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
-	"fmt"
 	"reflect"
 )
 
@@ -57,7 +56,6 @@ func CreateUser(user model.User) error {
 
 func CreateUserAction(userAction model.UserAction) error {
 	if err := global.GVA_DB.Create(&userAction).Error; err != nil {
-		fmt.Print(err, "err !!!!!!!!!!!!")
 		return err
 	}
 	return nil
@@ -121,25 +119,24 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError, eventId str
 		SourceUrl:   resourceErrorInfo.SourceUrl,
 		ElementType: resourceErrorInfo.ElementType,
 	}
-	CreateUserAction(userActionModel)
-	return nil
+	err := CreateUserAction(userActionModel)
+	return err
 }
 
 func CreatePageBehavior(pageBehavior model.PageBehavior, eventId string) error {
 	err := global.GVA_DB.Create(&pageBehavior).Error
-	fmt.Println(err, "eerrrrrrrrrrrrrrr")
-	//userActionModel := model.UserAction{
-	//	PageUrl:    pageBehavior.PageUrl,
-	//	UserId:     pageBehavior.PublicFiles.UserId,
-	//	ApiKey:     pageBehavior.PublicFiles.ApiKey,
-	//	HappenTime: pageBehavior.PublicFiles.HappenTime,
-	//	ActionType: pageBehavior.PublicFiles.ActionType,
-	//	ActionID:   pageBehavior.ID,
-	//	EventId:    eventId,
-	//	ClassName:  pageBehavior.ClassName,
-	//	InnterText: pageBehavior.InnterText,
-	//}
-	//CreateUserAction(userActionModel)
+	userActionModel := model.UserAction{
+		PageUrl:    pageBehavior.PageUrl,
+		UserId:     pageBehavior.PublicFiles.UserId,
+		ApiKey:     pageBehavior.PublicFiles.ApiKey,
+		HappenTime: pageBehavior.PublicFiles.HappenTime,
+		ActionType: pageBehavior.PublicFiles.ActionType,
+		ActionID:   pageBehavior.ID,
+		EventId:    eventId,
+		ClassName:  pageBehavior.ClassName,
+		InnterText: pageBehavior.InnterText,
+	}
+	CreateUserAction(userActionModel)
 	return err
 }
 
@@ -178,8 +175,7 @@ func CreatePageView(pageView model.PageView, eventId string) error {
 		EventId:    eventId,
 	}
 	err := CreateUserAction(userActionModel)
-	fmt.Print(err, "!!!!!!!!!!!!!!!!!!")
-	return nil
+	return err
 }
 
 //func getTodayStartAndEndTime() (startTime string, endTime string) {

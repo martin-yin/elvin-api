@@ -29,3 +29,10 @@ type PostPagePerformance struct {
 	BrowserVersion string `json:"browser_version"`
 	UA             string `json:"ua"`
 }
+
+
+type QueryPagePerformance struct {
+	TimeGrain string `form:"time_grain"`
+	StartTime string `form:"start_time"`
+	EndTime string `form:"end_time"`
+}

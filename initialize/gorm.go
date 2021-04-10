@@ -5,8 +5,6 @@ import (
 	"danci-api/initialize/internal"
 	"danci-api/model"
 	"os"
-	"time"
-
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -77,7 +75,6 @@ func GormMysql() *gorm.DB {
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(m.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(m.MaxOpenConns)
-		sqlDB.SetConnMaxLifetime(time.Hour)
 		return db
 	}
 }

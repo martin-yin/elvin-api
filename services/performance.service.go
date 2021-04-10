@@ -28,8 +28,18 @@ func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaRes
 	return
 }
 
-func GetStageTimeList(startTime string, endTime string) (stageTimeList []response.StageTimeResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, \"%H:%i\") AS time_key, "+
+func GetStageTimeList(startTime string, endTime string, timeGrain string) (stageTimeList []response.StageTimeResponse, err error) {
+	query := ""
+	if timeGrain == "minute" {
+		query = query + "'%H:%i'"
+	}
+	if timeGrain == "hour" {
+		query = query + "'%H'"
+	}
+	if timeGrain == "day" {
+		query = query + "'%m %d'"
+	}
+	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, "+ query + ") AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
 		"round( AVG( appcache ), 2 ) AS appcache,"+
 		"round( AVG( lookup_domain ), 2 ) AS lookup_domain,"+

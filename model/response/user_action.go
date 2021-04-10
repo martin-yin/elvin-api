@@ -13,6 +13,10 @@ type UserResponse struct {
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`
 	EventId        string `json:"event_id"`
+	Nation         string `json:"nation"`
+	Province       string `json:"province"`
+	City           string `json:"city"`
+	District       string `json:"district"`
 }
 
 type ActionPerformanceResponse struct {

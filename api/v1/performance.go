@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
 	"fmt"
@@ -15,11 +16,12 @@ func getTodayStartAndEndTime() (startTime string, endTime string) {
 }
 
 func GetPerformance(context *gin.Context) {
-	startTime, endTime := getTodayStartAndEndTime()
-	StackResponse, err := services.GetStackPerformance(startTime, endTime)
-	QuotaResponse, err := services.GetQuotaData(startTime, endTime)
-	PagePerformanceListResponse, err := services.GetLoadInfoPageList(startTime, endTime)
-	StageTimeResponse, err := services.GetStageTimeList(startTime, endTime)
+	var queryPagePerformance request.QueryPagePerformance
+	err := context.BindQuery(&queryPagePerformance)
+	StackResponse, err := services.GetStackPerformance(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
+	QuotaResponse, err := services.GetQuotaData(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
+	PagePerformanceListResponse, err := services.GetLoadInfoPageList(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
+	StageTimeResponse, err := services.GetStageTimeList(queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
