@@ -26,13 +26,26 @@ func GetHttpInfo(context *gin.Context) {
 
 func GetHttpStage(context *gin.Context) {
 	var queryPagePerformance request.QueryPagePerformance
-	err := context.BindQuery(&queryPagePerformance)
-	HttpStageTimeResponse, err := services.GetHttpStageTime(queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain, queryPagePerformance.StageType)
-	if err != nil {
-		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+	_ = context.BindQuery(&queryPagePerformance)
+
+	if queryPagePerformance.StageType == "success" {
+		HttpStageTimeResponse, err := services.GetHttpStageTimeSuccess(queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
+		if err != nil {
+			response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+		} else {
+			response.OkWithDetailed(response.PageHttpStage{
+				HttpStageTimeResponse: HttpStageTimeResponse,
+			}, "获取成功", context)
+		}
 	} else {
-		response.OkWithDetailed(response.PageHttpStage{
-			HttpStageTimeResponse: HttpStageTimeResponse,
-		}, "获取成功", context)
+		HttpStageTimeResponseError, err := services.GetHttpStageTimeError(queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
+		if err != nil {
+			response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+		} else {
+			response.OkWithDetailed(response.PageHttpStageError{
+				HttpStageTimeResponseError: HttpStageTimeResponseError,
+			}, "获取成功", context)
+		}
 	}
+
 }

@@ -34,5 +34,5 @@ type QueryPagePerformance struct {
 	TimeGrain string `form:"time_grain"`
 	StartTime string `form:"start_time"`
 	EndTime   string `form:"end_time"`
-	StageType string `from:"stage_type"`
+	StageType string `form:"stage_type"`
 }
