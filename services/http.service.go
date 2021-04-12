@@ -34,6 +34,7 @@ func GetHttpStageTime(startTime string, endTime string, timeGrain string) (httpS
 	query := ""
 	startQuery := ""
 	endQuery := ""
+
 	if timeGrain == "minute" {
 		query = query + "'%H:%i'"
 		startQuery = "CONCAT(" + "'" + startTime + " '" + ", time_key, ':00')," + startQuery
@@ -50,6 +51,12 @@ func GetHttpStageTime(startTime string, endTime string, timeGrain string) (httpS
 		endQuery = "CONCAT(" + "'" + endTime[0:5] + "'" + ", time_key, '23:59:59')," + endQuery
 	}
 
+	//if stageType == "success" {
+	//
+	//} else {
+	//
+	//}
+
 	err = global.GVA_DB.Model(&model.PageHttp{}).Select(""+
 		"FROM_UNIXTIME( happen_time / 1000, "+query+") AS time_key,"+
 		"COUNT( * ) AS total, "+
@@ -60,7 +67,7 @@ func GetHttpStageTime(startTime string, endTime string, timeGrain string) (httpS
 		"(SELECT round( AVG( load_time ), 2 ) AS load_time WHERE page_https.`status` BETWEEN 200 AND 305 "+
 		"AND from_unixtime( page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s' ) BETWEEN date_format("+startQuery+"'%Y-%m-%d %H:%i:%s') "+
 		"AND date_format("+endQuery+"'%Y-%m-%d %H:%i:%s')"+
-		"Group By http_url) AS load_time").Group("time_key").Where("from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime + " 00:00:00", endTime+ " 23:59:59").Find(&httpStageTime).Error
+		"Group By http_url) AS load_time").Group("time_key").Where("from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime+" 00:00:00", endTime+" 23:59:59").Find(&httpStageTime).Error
 	return
 }
 

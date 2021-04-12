@@ -20,12 +20,16 @@ type HttpQuotaResponse struct {
 type HttpStageTimeResponse struct {
 	TimeKey     string  `json:"time_key"`
 	Total       int     `json:"total"`
-	SuccessRate float64 `json:"success_rate"`
+	RequestRate float64 `json:"request_rate"`
+	FailRate    float64 `json:"fail_rate"`
 	LoadTime    float64 `json:"load_time"`
 }
 
 type PageHttpResponse struct {
-	HttpListResponse      []HttpListResponse      `json:"http_info_list"`
-	HttpQuotaResponse     HttpQuotaResponse       `json:"http_quota"`
+	HttpListResponse  []HttpListResponse `json:"http_info_list"`
+	HttpQuotaResponse HttpQuotaResponse  `json:"http_quota"`
+}
+
+type PageHttpStage struct {
 	HttpStageTimeResponse []HttpStageTimeResponse `json:"http_stagetime"`
 }
