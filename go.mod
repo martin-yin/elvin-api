@@ -21,9 +21,9 @@ require (
 	github.com/shirou/gopsutil v3.21.2+incompatible
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.5.1 // indirect
-	github.com/swaggo/gin-swagger v1.3.0
 	github.com/tencentyun/cos-go-sdk-v5 v0.7.22
 	github.com/tklauser/go-sysconf v0.3.5 // indirect
+	github.com/ugorji/go v1.1.13 // indirect
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.10.0
 	gopkg.in/ini.v1 v1.62.0 // indirect
