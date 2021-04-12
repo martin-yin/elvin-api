@@ -4,6 +4,7 @@ import (
 	"danci-api/global"
 	"danci-api/model"
 	"danci-api/model/response"
+	"fmt"
 )
 
 func GetStackPerformance(startTime string, endTime string) (stackData response.StackResponse, err error) {
@@ -24,7 +25,8 @@ func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaRes
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_page),2) as load_page, "+
 		"Count(*) as Pv ").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData).Error
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("CONCAT(round((SELECT COUNT(*) as pv FROM page_performances WHERE page_performances.load_page < 2000) / Count( * ) * 100, 2), '%')  AS Score").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData.Fast).Error
+	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("COUNT( * ) AS fast").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData.Fast).Error
+	quotaData.Fast = Decimal(quotaData.Fast/quotaData.Pv) * 100
 	return
 }
 
@@ -34,12 +36,17 @@ func GetStageTimeList(startTime string, endTime string, timeGrain string) (stage
 		query = query + "'%H:%i'"
 	}
 	if timeGrain == "hour" {
-		query = query + "'%H'"
+		query = query + "'%m-%d %H'"
 	}
 	if timeGrain == "day" {
-		query = query + "'%m %d'"
+		query = query + "'%m-%d'"
 	}
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, "+ query + ") AS time_key, "+
+
+	fmt.Print(query)
+	fmt.Print(startTime, "start_time \n")
+	fmt.Print(endTime, "endTime \n")
+
+	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, "+query+") AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
 		"round( AVG( appcache ), 2 ) AS appcache,"+
 		"round( AVG( lookup_domain ), 2 ) AS lookup_domain,"+

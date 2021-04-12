@@ -30,9 +30,8 @@ type PostPagePerformance struct {
 	UA             string `json:"ua"`
 }
 
-
 type QueryPagePerformance struct {
 	TimeGrain string `form:"time_grain"`
 	StartTime string `form:"start_time"`
-	EndTime string `form:"end_time"`
+	EndTime   string `form:"end_time"`
 }

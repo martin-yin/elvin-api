@@ -10,13 +10,22 @@ type HttpListResponse struct {
 }
 
 type HttpQuotaResponse struct {
-	Total        int `json:"total"`
-	LoadTime     int `json:"load_time"`
-	SuccessTotal int `json:"success_total"`
-	ErrorUser    int `json:"error_user"`
+	Total        float64 `json:"total"`
+	LoadTime     float64 `json:"load_time"`
+	SuccessTotal float64 `json:"success_total"`
+	ErrorUser    float64 `json:"error_user"`
+	SuccessRate  float64 `json:"success_rate"`
+}
+
+type HttpStageTimeResponse struct {
+	TimeKey     string  `json:"time_key"`
+	Total       int     `json:"total"`
+	SuccessRate float64 `json:"success_rate"`
+	LoadTime    float64 `json:"load_time"`
 }
 
 type PageHttpResponse struct {
-	HttpListResponse  []HttpListResponse `json:"http_info_list"`
-	HttpQuotaResponse HttpQuotaResponse  `json:"http_quota"`
+	HttpListResponse      []HttpListResponse      `json:"http_info_list"`
+	HttpQuotaResponse     HttpQuotaResponse       `json:"http_quota"`
+	HttpStageTimeResponse []HttpStageTimeResponse `json:"http_stagetime"`
 }

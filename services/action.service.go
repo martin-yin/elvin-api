@@ -7,7 +7,6 @@ import (
 	"danci-api/model/response"
 )
 
-
 type WhereSql struct {
 	sql string
 }
@@ -19,7 +18,7 @@ func GetUsers(usersParam request.UsersRequest) (userResponse []response.UserResp
 	}
 	startSearchTime := usersParam.SearchDate + " " + usersParam.SearchHour
 	endSearchTime := usersParam.SearchDate + " 23:59:59"
-	err = global.GVA_DB.Model(&model.User{}).Where(whereQuery, startSearchTime, endSearchTime, usersParam.UserId).Find(&userResponse).Error
+	err = global.GVA_DB.Model(&model.User{}).Where(whereQuery, startSearchTime, endSearchTime, usersParam.UserId).Group("happen_time desc").Find(&userResponse).Error
 	return
 }
 

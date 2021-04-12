@@ -38,8 +38,8 @@ type QuotaResponse struct {
 	Ttfb     float64 `json:"ttfb"`
 	DomParse float64 `json:"dom_parse"`
 	LoadPage float64 `json:"load_page"`
-	Pv       int     `json:"pv"`
-	Fast     string  `json:"fast"`
+	Pv       float64 `json:"pv"`
+	Fast     float64 `json:"fast"`
 }
 
 type PagePerformanceListResponse struct {

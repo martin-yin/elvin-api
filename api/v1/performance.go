@@ -18,10 +18,14 @@ func getTodayStartAndEndTime() (startTime string, endTime string) {
 func GetPerformance(context *gin.Context) {
 	var queryPagePerformance request.QueryPagePerformance
 	err := context.BindQuery(&queryPagePerformance)
+	queryPagePerformance.StartTime = queryPagePerformance.StartTime + " 00:00:00"
+	queryPagePerformance.EndTime = queryPagePerformance.EndTime + " 23:59:59"
+
 	StackResponse, err := services.GetStackPerformance(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 	QuotaResponse, err := services.GetQuotaData(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 	PagePerformanceListResponse, err := services.GetLoadInfoPageList(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 	StageTimeResponse, err := services.GetStageTimeList(queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
+
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
