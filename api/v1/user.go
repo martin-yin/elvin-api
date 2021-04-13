@@ -30,12 +30,15 @@ func GetUser(context *gin.Context) {
 func GetUserActions(context *gin.Context) {
 	var userActionsRequest request.UserActionsRequest
 	_ = context.BindQuery(&userActionsRequest)
-
-	responses, err := services.GetUserActions(userActionsRequest.EventID)
+	actionResponse, err := services.GetUserActions(userActionsRequest.EventID)
+	actionStatisticsResponse, err := services.GetUserActionsStatistics(userActionsRequest.EventID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 	}
-	response.OkWithDetailed(responses, "获取成功", context)
+	response.OkWithDetailed(response.UserActionsResponse{
+		BehaviorsResponse:  actionResponse,
+		BehaviorsStatisticsResponse: actionStatisticsResponse,
+	},  "获取成功", context)
 }
 
 func GetUserAction(context *gin.Context) {
