@@ -26,7 +26,10 @@ func GetQuotaData(startTime string, endTime string) (quotaData response.QuotaRes
 		"round(AVG(load_page),2) as load_page, "+
 		"Count(*) as Pv ").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData).Error
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("COUNT( * ) AS fast").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&quotaData.Fast).Error
-	quotaData.Fast = Decimal(quotaData.Fast/quotaData.Pv) * 100
+
+	if quotaData.Fast != 0 {
+		quotaData.Fast  = Decimal(quotaData.Fast/quotaData.Pv) * 100
+	}
 	return
 }
 
