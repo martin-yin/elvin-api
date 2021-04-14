@@ -14,7 +14,6 @@ func GetHttpInfo(context *gin.Context) {
 	HttpInfoListResponse, err := services.GetHttpInfoList(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 	HttpQuotaResponse, err := services.GetHttpQuota(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 	if err != nil {
-		//global.GVA_LOG.Error("获取失败!", zap.Any("err", err))
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
 		response.OkWithDetailed(response.PageHttpResponse{

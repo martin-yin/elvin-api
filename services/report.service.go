@@ -67,7 +67,7 @@ func CreatePageHttpModel(pageHttp model.PageHttp, eventId string) error {
 	err := global.GVA_DB.Model(&model.PageHttpStatistical{}).Where("http_url = ?", pageHttp.HttpUrl).Find(&pageHttpStatistical).Error
 	if !reflect.DeepEqual(pageHttpStatistical, model.PageHttpStatistical{}) {
 		pageHttpStatistical.Total++
-		if pageHttp.Status > 200 {
+		if pageHttp.Status > 304 {
 			pageHttpStatistical.FailTotal++
 		} else {
 			pageHttpStatistical.SuccessTotal++
@@ -76,7 +76,7 @@ func CreatePageHttpModel(pageHttp model.PageHttp, eventId string) error {
 		pageHttpStatistical.PageUrl = pageHttp.PageUrl
 		pageHttpStatistical.HttpUrl = pageHttp.HttpUrl
 		pageHttpStatistical.Total++
-		if pageHttp.Status > 200 {
+		if pageHttp.Status > 304 {
 			pageHttpStatistical.FailTotal++
 		} else {
 			pageHttpStatistical.SuccessTotal++

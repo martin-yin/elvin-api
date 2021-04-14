@@ -16,7 +16,7 @@ func writeFile(path string, data []byte) {
 	// 如果文件夹不存在，预先创建文件夹
 	if lastSeparator := strings.LastIndex(path, "/"); lastSeparator != -1 {
 		dirPath := path[:lastSeparator]
-		if _, err := os.Stat(dirPath); err != nil && os.IsNotExist(err) {
+		if _, err := os.Stat(dirPath); err != nil && os.IsNotEwriteFilexist(err) {
 			os.MkdirAll(dirPath, os.ModePerm)
 		}
 	}
