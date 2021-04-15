@@ -32,7 +32,6 @@ func GetUserActions(eventId string) (actionResponse []response.BehaviorsResponse
 	return
 }
 
-
 func GetUserActionsStatistics(eventId string) (actionStatisticsResponse []response.BehaviorsStatisticsResponse, err error) {
 	err = global.GVA_DB.Model(&model.UserAction{}).Select("action_type, count(*) as total").Where("event_id = ?", eventId).Group("action_type").Find(&actionStatisticsResponse).Error
 	return

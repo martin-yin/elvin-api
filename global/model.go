@@ -5,7 +5,7 @@ import (
 )
 
 type GVA_MODEL struct {
-	ID        uint `gorm:"primarykey"`
+	ID        uint ``
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

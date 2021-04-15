@@ -21,8 +21,7 @@ func PublicFields() gin.HandlerFunc {
 		var publicFiles model.PublicFiles
 		_ = json.Unmarshal(body, &publicFiles)
 		ip := context.ClientIP()
-		resp, err := http.Get("https://apis.map.qq.com/ws/location/v1/ip?ip=" + ip + "&key=TFNBZ-STIKX-JQ242-TNUNK-4NWCT-CLF7S")
-		fmt.Println(err, "request error!!!!!!!!!!!!!!!!!!!!!!!")
+		resp, err := http.Get("https://apis.map.qq.com/ws/location/v1/ip?ip=114.104.87.101&key=TFNBZ-STIKX-JQ242-TNUNK-4NWCT-CLF7S")
 		txMapbody, err := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
 		var txMapResponse response.TxMapResponse

@@ -36,9 +36,9 @@ func GetUserActions(context *gin.Context) {
 		response.FailWithMessage(err.Error(), context)
 	}
 	response.OkWithDetailed(response.UserActionsResponse{
-		BehaviorsResponse:  actionResponse,
+		BehaviorsResponse:           actionResponse,
 		BehaviorsStatisticsResponse: actionStatisticsResponse,
-	},  "获取成功", context)
+	}, "获取成功", context)
 }
 
 func GetUserAction(context *gin.Context) {

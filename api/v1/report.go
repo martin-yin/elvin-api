@@ -1,11 +1,13 @@
 package v1
 
 import (
+	"danci-api/global"
 	"danci-api/model"
 	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
 	"danci-api/utils"
+	"encoding/json"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,7 +16,7 @@ func CreatePagePerformance(context *gin.Context) {
 	var publicFiles model.PublicFiles
 	files, _ := context.Get("public_files")
 	err := utils.StructToJsonToStruct(files, &publicFiles)
-	err = context.BindJSON(&pagePerformanceBody)
+	err = context.ShouldBindJSON(&pagePerformanceBody)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -34,10 +36,8 @@ func CreatePagePerformance(context *gin.Context) {
 		Redirect:     pagePerformanceBody.Redirect,
 		PublicFiles:  publicFiles,
 	}
-	if err := services.CreatePagePerformance(pagePerformanceModel, pagePerformanceBody.EventId); err != nil {
-		response.FailWithMessage(err.Error(), context)
-		return
-	}
+	res, _ := json.Marshal(pagePerformanceModel)
+	global.GVA_REDIS.LPush("performance", res)
 	response.Ok(context)
 }
 
@@ -52,7 +52,7 @@ func CreateHttpInfo(context *gin.Context) {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	webHttpInfoModel := model.PageHttp{
+	pageHttpModel := model.PageHttp{
 		PageUrl:      pageHttpBody.PageUrl,
 		HttpUrl:      pageHttpBody.HttpUrl,
 		LoadTime:     pageHttpBody.LoadTime,
@@ -63,11 +63,12 @@ func CreateHttpInfo(context *gin.Context) {
 		ResponseText: pageHttpBody.ResponseText,
 		PublicFiles:  publicFiles,
 	}
-
-	if err := services.CreatePageHttpModel(webHttpInfoModel, pageHttpBody.EventId); err != nil {
-		response.FailWithMessage(err.Error(), context)
-		return
-	}
+	res, _ := json.Marshal(pageHttpModel)
+	global.GVA_REDIS.LPush("http", res)
+	//if err := services.CreatePageHttpModel(webHttpInfoModel, pageHttpBody.EventId); err != nil {
+	//	response.FailWithMessage(err.Error(), context)
+	//	return
+	//}
 	response.Ok(context)
 }
 

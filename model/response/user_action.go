@@ -163,11 +163,10 @@ type BehaviorsResponse struct {
 
 type BehaviorsStatisticsResponse struct {
 	ActionType string `json:"action_type"`
-	Total string `json:"total"`
+	Total      string `json:"total"`
 }
 
-
 type UserActionsResponse struct {
-	BehaviorsResponse []BehaviorsResponse `json:"user_actions_list"`
+	BehaviorsResponse           []BehaviorsResponse           `json:"user_actions_list"`
 	BehaviorsStatisticsResponse []BehaviorsStatisticsResponse `json:"user_action_statistics"`
 }

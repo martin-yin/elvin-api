@@ -6,44 +6,44 @@ import (
 	"reflect"
 )
 
-func CreatePagePerformance(pagePerformance model.PagePerformance, eventId string) error {
+func CreatePagePerformance(pagePerformance *[]model.PagePerformance) error {
 	if err := global.GVA_DB.Create(&pagePerformance).Error; err != nil {
 		return err
 	}
-	userActionModel := model.UserAction{
-		PageUrl:    pagePerformance.PageUrl,
-		UserId:     pagePerformance.PublicFiles.UserId,
-		ApiKey:     pagePerformance.PublicFiles.ApiKey,
-		HappenTime: pagePerformance.PublicFiles.HappenTime,
-		HappenDay:  pagePerformance.PublicFiles.HappenDay,
-		ActionType: pagePerformance.PublicFiles.ActionType,
-		LoadType:   pagePerformance.LoadType,
-		EventId:    eventId,
-		ActionID:   pagePerformance.ID,
-	}
-
-	userModel := model.User{
-		UserId:         pagePerformance.PublicFiles.UserId,
-		ApiKey:         pagePerformance.PublicFiles.ApiKey,
-		HappenTime:     pagePerformance.PublicFiles.HappenTime,
-		HappenDay:      pagePerformance.PublicFiles.HappenDay,
-		EventId:        eventId,
-		IP:             pagePerformance.PublicFiles.IP,
-		Device:         pagePerformance.PublicFiles.Device,
-		DeviceType:     pagePerformance.PublicFiles.DeviceType,
-		Os:             pagePerformance.PublicFiles.Os,
-		OsVersion:      pagePerformance.PublicFiles.OsVersion,
-		Browser:        pagePerformance.PublicFiles.Browser,
-		BrowserVersion: pagePerformance.PublicFiles.BrowserVersion,
-		UA:             pagePerformance.PublicFiles.UA,
-		Nation:         pagePerformance.PublicFiles.Nation,
-		Province:       pagePerformance.PublicFiles.Province,
-		City:           pagePerformance.PublicFiles.City,
-		District:       pagePerformance.PublicFiles.District,
-	}
-	err := CreateUser(userModel)
-	err = CreateUserAction(userActionModel)
-	return err
+	return nil;
+	//userActionModel := model.UserAction{
+	//	PageUrl:    pagePerformance.PageUrl,
+	//	UserId:     pagePerformance.PublicFiles.UserId,
+	//	ApiKey:     pagePerformance.PublicFiles.ApiKey,
+	//	HappenTime: pagePerformance.PublicFiles.HappenTime,
+	//	HappenDay:  pagePerformance.PublicFiles.HappenDay,
+	//	ActionType: pagePerformance.PublicFiles.ActionType,
+	//	LoadType:   pagePerformance.LoadType,
+	//	EventId:    eventId,
+	//	ActionID:   pagePerformance.ID,
+	//}
+	//
+	//userModel := model.User{
+	//	UserId:         pagePerformance.PublicFiles.UserId,
+	//	ApiKey:         pagePerformance.PublicFiles.ApiKey,
+	//	HappenTime:     pagePerformance.PublicFiles.HappenTime,
+	//	HappenDay:      pagePerformance.PublicFiles.HappenDay,
+	//	EventId:        eventId,
+	//	IP:             pagePerformance.PublicFiles.IP,
+	//	Device:         pagePerformance.PublicFiles.Device,
+	//	DeviceType:     pagePerformance.PublicFiles.DeviceType,
+	//	Os:             pagePerformance.PublicFiles.Os,
+	//	OsVersion:      pagePerformance.PublicFiles.OsVersion,
+	//	Browser:        pagePerformance.PublicFiles.Browser,
+	//	BrowserVersion: pagePerformance.PublicFiles.BrowserVersion,
+	//	UA:             pagePerformance.PublicFiles.UA,
+	//	Nation:         pagePerformance.PublicFiles.Nation,
+	//	Province:       pagePerformance.PublicFiles.Province,
+	//	City:           pagePerformance.PublicFiles.City,
+	//	District:       pagePerformance.PublicFiles.District,
+	//}
+	//err := CreateUser(userModel)
+	//err = CreateUserAction(userActionModel)
 }
 
 func CreateUser(user model.User) error {
