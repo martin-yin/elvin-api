@@ -18,15 +18,21 @@ func reportHttpData() {
 
 }
 
-// pageview
-func reportPageViewData() {
-
-}
-
 // pageJsError
 func reportPageJsError() {
 
 }
+
+// 资源报错
+func reportResourceError() {
+
+}
+
+// 点击事件
+func reportPageBehavior() {
+
+}
+
 
 func reportPerformanceData() {
 	var pagePerformanceBody model.PagePerformance
