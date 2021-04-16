@@ -3,12 +3,9 @@ package middleware
 import (
 	"bytes"
 	"danci-api/model"
-	"danci-api/model/response"
 	"encoding/json"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
-	"net/http"
 )
 
 func PublicFields() gin.HandlerFunc {
@@ -20,18 +17,7 @@ func PublicFields() gin.HandlerFunc {
 		context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 		var publicFiles model.PublicFiles
 		_ = json.Unmarshal(body, &publicFiles)
-		ip := context.ClientIP()
-		resp, err := http.Get("https://apis.map.qq.com/ws/location/v1/ip?ip=114.104.87.101&key=TFNBZ-STIKX-JQ242-TNUNK-4NWCT-CLF7S")
-		txMapbody, err := ioutil.ReadAll(resp.Body)
-		defer resp.Body.Close()
-		var txMapResponse response.TxMapResponse
-		err = json.Unmarshal(txMapbody, &txMapResponse)
-		fmt.Println(err)
-		publicFiles.IP = ip
-		publicFiles.Nation = txMapResponse.Result.AdInfo.Nation
-		publicFiles.Province = txMapResponse.Result.AdInfo.Province
-		publicFiles.City = txMapResponse.Result.AdInfo.City
-		publicFiles.District = txMapResponse.Result.AdInfo.District
+		publicFiles.IP = "58.243.220.37"
 		context.Set("public_files", publicFiles)
 		context.Next()
 	}

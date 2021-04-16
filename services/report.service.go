@@ -6,11 +6,11 @@ import (
 	"reflect"
 )
 
-func CreatePagePerformance(pagePerformance *[]model.PagePerformance) error {
+func CreatePagePerformance(pagePerformance *model.PagePerformance) error {
 	if err := global.GVA_DB.Create(&pagePerformance).Error; err != nil {
 		return err
 	}
-	return nil;
+	return nil
 	//userActionModel := model.UserAction{
 	//	PageUrl:    pagePerformance.PageUrl,
 	//	UserId:     pagePerformance.PublicFiles.UserId,
