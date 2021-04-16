@@ -3,47 +3,46 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
-	"reflect"
 )
 
-func CreatePagePerformance(pagePerformance *model.PagePerformance) error {
+func CreatePagePerformance(pagePerformance *model.PagePerformance, eventId string) error {
 	if err := global.GVA_DB.Create(&pagePerformance).Error; err != nil {
 		return err
 	}
-	return nil
-	//userActionModel := model.UserAction{
-	//	PageUrl:    pagePerformance.PageUrl,
-	//	UserId:     pagePerformance.PublicFiles.UserId,
-	//	ApiKey:     pagePerformance.PublicFiles.ApiKey,
-	//	HappenTime: pagePerformance.PublicFiles.HappenTime,
-	//	HappenDay:  pagePerformance.PublicFiles.HappenDay,
-	//	ActionType: pagePerformance.PublicFiles.ActionType,
-	//	LoadType:   pagePerformance.LoadType,
-	//	EventId:    eventId,
-	//	ActionID:   pagePerformance.ID,
-	//}
-	//
-	//userModel := model.User{
-	//	UserId:         pagePerformance.PublicFiles.UserId,
-	//	ApiKey:         pagePerformance.PublicFiles.ApiKey,
-	//	HappenTime:     pagePerformance.PublicFiles.HappenTime,
-	//	HappenDay:      pagePerformance.PublicFiles.HappenDay,
-	//	EventId:        eventId,
-	//	IP:             pagePerformance.PublicFiles.IP,
-	//	Device:         pagePerformance.PublicFiles.Device,
-	//	DeviceType:     pagePerformance.PublicFiles.DeviceType,
-	//	Os:             pagePerformance.PublicFiles.Os,
-	//	OsVersion:      pagePerformance.PublicFiles.OsVersion,
-	//	Browser:        pagePerformance.PublicFiles.Browser,
-	//	BrowserVersion: pagePerformance.PublicFiles.BrowserVersion,
-	//	UA:             pagePerformance.PublicFiles.UA,
-	//	Nation:         pagePerformance.PublicFiles.Nation,
-	//	Province:       pagePerformance.PublicFiles.Province,
-	//	City:           pagePerformance.PublicFiles.City,
-	//	District:       pagePerformance.PublicFiles.District,
-	//}
-	//err := CreateUser(userModel)
-	//err = CreateUserAction(userActionModel)
+	userActionModel := model.UserAction{
+		PageUrl:    pagePerformance.PageUrl,
+		UserId:     pagePerformance.PublicFiles.UserId,
+		ApiKey:     pagePerformance.PublicFiles.ApiKey,
+		HappenTime: pagePerformance.PublicFiles.HappenTime,
+		HappenDay:  pagePerformance.PublicFiles.HappenDay,
+		ActionType: pagePerformance.PublicFiles.ActionType,
+		LoadType:   pagePerformance.LoadType,
+		EventId:    eventId,
+		ActionID:   pagePerformance.ID,
+	}
+
+	userModel := model.User{
+		UserId:         pagePerformance.PublicFiles.UserId,
+		ApiKey:         pagePerformance.PublicFiles.ApiKey,
+		HappenTime:     pagePerformance.PublicFiles.HappenTime,
+		HappenDay:      pagePerformance.PublicFiles.HappenDay,
+		EventId:        eventId,
+		IP:             pagePerformance.PublicFiles.IP,
+		Device:         pagePerformance.PublicFiles.Device,
+		DeviceType:     pagePerformance.PublicFiles.DeviceType,
+		Os:             pagePerformance.PublicFiles.Os,
+		OsVersion:      pagePerformance.PublicFiles.OsVersion,
+		Browser:        pagePerformance.PublicFiles.Browser,
+		BrowserVersion: pagePerformance.PublicFiles.BrowserVersion,
+		UA:             pagePerformance.PublicFiles.UA,
+		Nation:         pagePerformance.PublicFiles.Nation,
+		Province:       pagePerformance.PublicFiles.Province,
+		City:           pagePerformance.PublicFiles.City,
+		District:       pagePerformance.PublicFiles.District,
+	}
+	err := CreateUser(userModel)
+	err = CreateUserAction(userActionModel)
+	return err
 }
 
 func CreateUser(user model.User) error {
@@ -63,27 +62,27 @@ func CreateUserAction(userAction model.UserAction) error {
 
 // 存 http请求信息。
 func CreatePageHttpModel(pageHttp model.PageHttp, eventId string) error {
-	var pageHttpStatistical model.PageHttpStatistical
-	err := global.GVA_DB.Model(&model.PageHttpStatistical{}).Where("http_url = ?", pageHttp.HttpUrl).Find(&pageHttpStatistical).Error
-	if !reflect.DeepEqual(pageHttpStatistical, model.PageHttpStatistical{}) {
-		pageHttpStatistical.Total++
-		if pageHttp.Status > 304 {
-			pageHttpStatistical.FailTotal++
-		} else {
-			pageHttpStatistical.SuccessTotal++
-		}
-	} else {
-		pageHttpStatistical.PageUrl = pageHttp.PageUrl
-		pageHttpStatistical.HttpUrl = pageHttp.HttpUrl
-		pageHttpStatistical.Total++
-		if pageHttp.Status > 304 {
-			pageHttpStatistical.FailTotal++
-		} else {
-			pageHttpStatistical.SuccessTotal++
-		}
-	}
-	err = global.GVA_DB.Save(&pageHttpStatistical).Error
-	err = global.GVA_DB.Create(&pageHttp).Error
+	//var pageHttpStatistical model.PageHttpStatistical
+	//err := global.GVA_DB.Model(&model.PageHttpStatistical{}).Where("http_url = ?", pageHttp.HttpUrl).Find(&pageHttpStatistical).Error
+	//if !reflect.DeepEqual(pageHttpStatistical, model.PageHttpStatistical{}) {
+	//	pageHttpStatistical.Total++
+	//	if pageHttp.Status > 304 {
+	//		pageHttpStatistical.FailTotal++
+	//	} else {
+	//		pageHttpStatistical.SuccessTotal++
+	//	}
+	//} else {
+	//	pageHttpStatistical.PageUrl = pageHttp.PageUrl
+	//	pageHttpStatistical.HttpUrl = pageHttp.HttpUrl
+	//	pageHttpStatistical.Total++
+	//	if pageHttp.Status > 304 {
+	//		pageHttpStatistical.FailTotal++
+	//	} else {
+	//		pageHttpStatistical.SuccessTotal++
+	//	}
+	//}
+	//err = global.GVA_DB.Save(&pageHttpStatistical).Error
+	err := global.GVA_DB.Create(&pageHttp).Error
 
 	userActionModel := model.UserAction{
 		PageUrl:    pageHttp.PageUrl,

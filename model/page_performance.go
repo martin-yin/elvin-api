@@ -17,6 +17,7 @@ type PagePerformance struct {
 	Ttfb         float64     `json:"ttfb"`
 	LoadPage     float64     `json:"load_page"`
 	LoadEvent    float64     `json:"load_event"`
+	EventId      string      `json:"event_id"`
 	LoadType     string      `json:"load_type"`
 	PublicFiles  PublicFiles `json:"public_files" gorm:"embedded"`
 	//UserId         string `json:"user_id"`

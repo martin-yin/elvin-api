@@ -7,6 +7,7 @@ type PublicFiles struct {
 	HappenTime     int    `json:"happen_time"`
 	HappenDay      string `json:"happen_day"`
 	IP             string `json:"ip"`
+	EventId        string `json:"event_id"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`
 	Os             string `json:"os"`

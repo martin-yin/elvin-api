@@ -3,12 +3,14 @@ package initialize
 import (
 	"danci-api/global"
 	"danci-api/model"
+	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"sync"
 	"time"
 )
 
@@ -18,81 +20,144 @@ func InitReportData() {
 	reportPerformanceData()
 }
 
-// http请求写入
-func reportHttpData() {
-
-}
-
-// pageJsError
-func reportPageJsError() {
-}
-
-// 资源报错
-func reportResourceError() {
-}
-
-// 点击事件
-func reportPageBehavior() {
-}
-
+// 页面性能
 func reportPerformanceData() {
-	//var pagePerformanceBodyList []model.PagePerformance
-	ticker := time.NewTicker(1 * time.Second)
-	performanceChannel := make(chan string)
-	//var wg sync.WaitGroup
+	ticker := time.NewTicker(10 * time.Second)
+	var wg sync.WaitGroup
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				pipe := global.GVA_REDIS.TxPipeline()
-				getValue := pipe.LRange("performance", 0, 1)
+				getValue := pipe.LRange("reportdata", 0, 500)
 				_, err := pipe.Exec()
 				if err != nil {
 					return
 				}
 				if len(getValue.Val()) > 0 {
-					for _, value := range getValue.Val() {
-						// 向channel 中写入数据。
-						performanceChannel <- value
+					for _, performance := range getValue.Val() {
+						wg.Add(1)
+						go func(performance string) {
+							var publicFiles model.PublicFiles
+							json.Unmarshal([]byte(performance), &publicFiles)
+							publicFiles.IP = "58.243.220.37"
+							addressInfo := GetIpAddressInfo(publicFiles.IP)
+							publicFiles.Nation = addressInfo.Nation
+							publicFiles.City = addressInfo.City
+							publicFiles.District = addressInfo.District
+							publicFiles.Province = addressInfo.Province
+							if publicFiles.ActionType == "PAGE_LOAD" {
+								var pagePerformanceBody request.PostPagePerformance
+								json.Unmarshal([]byte(performance), &pagePerformanceBody)
+								createPerformance(pagePerformanceBody, publicFiles)
+							} else if publicFiles.ActionType == "HTTP_LOG" {
+								var pageHttpBody request.PostPageHttpBody
+								json.Unmarshal([]byte(performance), &pageHttpBody)
+								createHttp(pageHttpBody, publicFiles)
+							} else if publicFiles.ActionType == "PAGE_VIEW" {
+								var pageViewBody request.PostPageViewBody
+								json.Unmarshal([]byte(performance), &pageViewBody)
+								createPageView(pageViewBody, publicFiles)
+							} else if publicFiles.ActionType == "BEHAVIOR_INFO" {
+								var behaviorInfoBody request.PostBehaviorInfoBody
+								json.Unmarshal([]byte(performance), &behaviorInfoBody)
+								CreatePageBehavior(behaviorInfoBody, publicFiles)
+							} else if publicFiles.ActionType == "RESOURCE_ERROR" {
+								var pageResourceErroBody request.PostPageResourceErroBody
+								json.Unmarshal([]byte(performance), &pageResourceErroBody)
+								createResourcesError(pageResourceErroBody, publicFiles)
+							}
+							wg.Done()
+						}(performance)
 					}
-					global.GVA_REDIS.LTrim("performance", 1, -1)
+					wg.Wait()
+					global.GVA_REDIS.LTrim("reportdata", 500, -1)
 				}
-			}
-		}
-	}()
-
-	go func() {
-		for performance := range performanceChannel {
-			var pagePerformanceBody model.PagePerformance
-			json.Unmarshal([]byte(performance), &pagePerformanceBody)
-			addressInfo := GetIpAddressInfo(pagePerformanceBody.PublicFiles.IP)
-			pagePerformanceBody.PublicFiles.Nation = addressInfo.Nation
-			pagePerformanceBody.PublicFiles.City = addressInfo.City
-			pagePerformanceBody.PublicFiles.District = addressInfo.District
-			pagePerformanceBody.PublicFiles.Province = addressInfo.Province
-			pagePerformanceModel := model.PagePerformance{
-				PageUrl:      pagePerformanceBody.PageUrl,
-				Appcache:     pagePerformanceBody.Appcache,
-				LookupDomain: pagePerformanceBody.LookupDomain,
-				Tcp:          pagePerformanceBody.Tcp,
-				SslT:         pagePerformanceBody.SslT,
-				Request:      pagePerformanceBody.Request,
-				DomParse:     pagePerformanceBody.DomParse,
-				Ttfb:         pagePerformanceBody.Ttfb,
-				LoadPage:     pagePerformanceBody.LoadPage,
-				LoadEvent:    pagePerformanceBody.LoadEvent,
-				LoadType:     pagePerformanceBody.LoadType,
-				Redirect:     pagePerformanceBody.Redirect,
-				PublicFiles:  pagePerformanceBody.PublicFiles,
-			}
-			if err := services.CreatePagePerformance(&pagePerformanceModel); err != nil {
-				fmt.Print(err, "!!!!!!!!!!!!")
 			}
 		}
 	}()
 }
 
+func createPerformance(performanceBody request.PostPagePerformance, publicFiles model.PublicFiles) {
+	pagePerformanceModel := model.PagePerformance{
+		PageUrl:      performanceBody.PageUrl,
+		Appcache:     performanceBody.Appcache,
+		LookupDomain: performanceBody.LookupDomain,
+		Tcp:          performanceBody.Tcp,
+		SslT:         performanceBody.SslT,
+		Request:      performanceBody.Request,
+		DomParse:     performanceBody.DomParse,
+		Ttfb:         performanceBody.Ttfb,
+		LoadPage:     performanceBody.LoadPage,
+		LoadEvent:    performanceBody.LoadEvent,
+		LoadType:     performanceBody.LoadType,
+		Redirect:     performanceBody.Redirect,
+		PublicFiles:  publicFiles,
+	}
+	if err := services.CreatePagePerformance(&pagePerformanceModel, publicFiles.EventId); err != nil {
+		fmt.Print(err, "!!!!!!!!!!!!")
+	}
+}
+
+func createHttp(pageHttpBody request.PostPageHttpBody, publicFiles model.PublicFiles) {
+	HttpInfoModel := model.PageHttp{
+		PageUrl:      pageHttpBody.PageUrl,
+		HttpUrl:      pageHttpBody.HttpUrl,
+		LoadTime:     pageHttpBody.LoadTime,
+		Status:       pageHttpBody.Status,
+		StatusText:   pageHttpBody.StatusText,
+		StatusResult: pageHttpBody.StatusResult,
+		RequestText:  pageHttpBody.RequestText,
+		ResponseText: pageHttpBody.ResponseText,
+		PublicFiles:  publicFiles,
+	}
+	if err := services.CreatePageHttpModel(HttpInfoModel, pageHttpBody.EventId); err != nil {
+		fmt.Print(err, "!!!!!!!!!!!!")
+	}
+}
+
+func createResourcesError(pageResourceErroBody request.PostPageResourceErroBody,  publicFiles model.PublicFiles) {
+	resourceErrorInfoModel := model.PageResourceError{
+		PageUrl:     pageResourceErroBody.PageUrl,
+		SourceUrl:   pageResourceErroBody.SourceUrl,
+		ElementType: pageResourceErroBody.ElementType,
+		Status:      pageResourceErroBody.Status,
+		PublicFiles: publicFiles,
+	}
+	if err := services.CreateResourcesError(resourceErrorInfoModel, pageResourceErroBody.EventId); err != nil {
+		fmt.Print(err, "!!!!!!!!!!!!")
+	}
+}
+
+func createPageView(pageViewBody request.PostPageViewBody, publicFiles model.PublicFiles) {
+	pageViewModel := model.PageView{
+		PageUrl:     pageViewBody.PageUrl,
+		PublicFiles: publicFiles,
+	}
+	if err := services.CreatePageView(pageViewModel, pageViewBody.EventId); err != nil {
+		fmt.Print(err, "!!!!!!!!!!!!")
+	}
+}
+
+func CreatePageBehavior(behaviorInfoBody request.PostBehaviorInfoBody, publicFiles model.PublicFiles) {
+	pageBehaviorInfoModel := model.PageBehavior{
+		PageUrl:     behaviorInfoBody.PageUrl,
+		ClassName:   behaviorInfoBody.ClassName,
+		Placeholder: behaviorInfoBody.Placeholder,
+		InputValue:  behaviorInfoBody.InputValue,
+		TagNameint:  behaviorInfoBody.TagNameint,
+		InnterText:  behaviorInfoBody.InnterText,
+		PublicFiles: publicFiles,
+	}
+	if err := services.CreatePageBehavior(pageBehaviorInfoModel, behaviorInfoBody.EventId); err != nil {
+		fmt.Print(err, "!!!!!!!!!!!!")
+	}
+}
+
 func GetIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
+	if ip == "" {
+		return
+	}
 	var txMapResponse response.TxMapResponse
 	adinfoStr := global.GVA_REDIS.HGet("ipAddress", ip)
 	if len(adinfoStr.Val()) != 0 {
@@ -106,9 +171,9 @@ func GetIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 		if err != nil {
 			return
 		}
-		txMapbody, err := ioutil.ReadAll(resp.Body)
+		txMapResponsebody, err := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
-		err = json.Unmarshal(txMapbody, &txMapResponse)
+		err = json.Unmarshal(txMapResponsebody, &txMapResponse)
 		txMapResponseStr, err := json.Marshal(&txMapResponse.Result.AdInfo)
 		global.GVA_REDIS.HSet("ipAddress", ip, txMapResponseStr)
 		return txMapResponse.Result.AdInfo

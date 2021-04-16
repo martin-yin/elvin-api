@@ -17,7 +17,6 @@ func main() {
 		defer db.Close()
 	}
 	initialize.InitReportData()
-	//initialize.GetIpAddressInfo("58.243.220.37")
 	core.RunWindowsServer()
 
 }
