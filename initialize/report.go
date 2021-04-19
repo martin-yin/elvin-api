@@ -15,21 +15,17 @@ import (
 )
 
 //
-func InitReportData() {
-	// 这里开始跑定时任务去写数据
-	reportPerformanceData()
-}
 
 // 页面性能
-func reportPerformanceData() {
-	ticker := time.NewTicker(10 * time.Second)
+func InitReportData() {
+	ticker := time.NewTicker(1 * time.Second)
 	var wg sync.WaitGroup
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				pipe := global.GVA_REDIS.TxPipeline()
-				getValue := pipe.LRange("reportdata", 0, 500)
+				getValue := pipe.LRange("reportData", 0, 500)
 				_, err := pipe.Exec()
 				if err != nil {
 					return
@@ -41,7 +37,7 @@ func reportPerformanceData() {
 							var publicFiles model.PublicFiles
 							json.Unmarshal([]byte(performance), &publicFiles)
 							publicFiles.IP = "58.243.220.37"
-							addressInfo := GetIpAddressInfo(publicFiles.IP)
+							addressInfo := getIpAddressInfo(publicFiles.IP)
 							publicFiles.Nation = addressInfo.Nation
 							publicFiles.City = addressInfo.City
 							publicFiles.District = addressInfo.District
@@ -66,16 +62,33 @@ func reportPerformanceData() {
 								var pageResourceErroBody request.PostPageResourceErroBody
 								json.Unmarshal([]byte(performance), &pageResourceErroBody)
 								createResourcesError(pageResourceErroBody, publicFiles)
+							} else if publicFiles.ActionType == "JS_ERROR" {
+								var jsErrorBody request.PostJsErrorBody
+								json.Unmarshal([]byte(performance), &jsErrorBody)
+								createJsError(jsErrorBody, publicFiles)
 							}
 							wg.Done()
 						}(performance)
 					}
 					wg.Wait()
-					global.GVA_REDIS.LTrim("reportdata", 500, -1)
+					global.GVA_REDIS.LTrim("reportData", 500, -1)
 				}
 			}
 		}
 	}()
+}
+
+func createJsError(jsErrorBody request.PostJsErrorBody, publicFiles model.PublicFiles) {
+	jsErrorModel := model.PageJsError{
+		PageUrl:       jsErrorBody.PageUrl,
+		ComponentName: jsErrorBody.ComponentName,
+		Stack:         jsErrorBody.Stack,
+		Message:       jsErrorBody.Message,
+		PublicFiles:   publicFiles,
+	}
+	if err := services.CreatePageJsError(jsErrorModel, jsErrorBody.EventId); err != nil {
+		fmt.Print(err, "!!!!!!!!!")
+	}
 }
 
 func createPerformance(performanceBody request.PostPagePerformance, publicFiles model.PublicFiles) {
@@ -116,7 +129,7 @@ func createHttp(pageHttpBody request.PostPageHttpBody, publicFiles model.PublicF
 	}
 }
 
-func createResourcesError(pageResourceErroBody request.PostPageResourceErroBody,  publicFiles model.PublicFiles) {
+func createResourcesError(pageResourceErroBody request.PostPageResourceErroBody, publicFiles model.PublicFiles) {
 	resourceErrorInfoModel := model.PageResourceError{
 		PageUrl:     pageResourceErroBody.PageUrl,
 		SourceUrl:   pageResourceErroBody.SourceUrl,
@@ -154,7 +167,7 @@ func CreatePageBehavior(behaviorInfoBody request.PostBehaviorInfoBody, publicFil
 	}
 }
 
-func GetIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
+func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 	if ip == "" {
 		return
 	}

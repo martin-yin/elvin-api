@@ -59,8 +59,8 @@ mysql:
   db-name: 'push_platform'
   username: 'root'
   password: 'root'
-  max-idle-conns: 10
-  max-open-conns: 100
+  max-idle-conns: 0
+  max-open-conns: 0
   log-mode: false
   log-zap: false
 

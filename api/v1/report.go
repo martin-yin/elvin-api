@@ -2,11 +2,8 @@ package v1
 
 import (
 	"danci-api/global"
-	"danci-api/model"
 	"danci-api/model/request"
 	"danci-api/model/response"
-	"danci-api/services"
-	"danci-api/utils"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +20,6 @@ func CreatePagePerformance(context *gin.Context) {
 	response.Ok(context)
 }
 
-// 存储HTTP请求
 func CreateHttpInfo(context *gin.Context) {
 	var pageHttpBody request.PostPageHttpBody
 	err := context.BindJSON(&pageHttpBody)
@@ -61,26 +57,15 @@ func CreatePageBehavior(context *gin.Context) {
 }
 
 func CreatePageJsError(context *gin.Context) {
-	var jsErrorInfoBody request.PostJsErrorInfoBody
-	var publicFiles model.PublicFiles
-	files, _ := context.Get("public_files")
-	err := utils.StructToJsonToStruct(files, &publicFiles)
-	err = context.BindJSON(&jsErrorInfoBody)
+	var jsErrorBody request.PostJsErrorBody
+	err := context.BindJSON(&jsErrorBody)
+	jsErrorBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	jsErrorInfoModel := model.PageJsError{
-		PageUrl:       jsErrorInfoBody.PageUrl,
-		ComponentName: jsErrorInfoBody.ComponentName,
-		Stack:         jsErrorInfoBody.Stack,
-		Message:       jsErrorInfoBody.Message,
-		PublicFiles:   publicFiles,
-	}
-	if err := services.CreatePageJsError(jsErrorInfoModel, jsErrorInfoBody.EventId); err != nil {
-		response.FailWithMessage(err.Error(), context)
-		return
-	}
+	res, _ := json.Marshal(jsErrorBody)
+	global.GVA_REDIS.LPush("reportData", res)
 	response.Ok(context)
 }
 

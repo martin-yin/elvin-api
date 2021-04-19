@@ -19,6 +19,13 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("userAction", v1.GetUserAction)
 		Communal.GET("userActions", v1.GetUserActions)
 
+		Communal.GET("project", v1.GetPorjectList)
+
+		//Communal.GET("projectList", v1.GetUserActions)
+		// 先去判断是否登录？
+		// 如果没有登陆的话，先去登录，然后在登录中判断这个admin id 是否存在项目，如果没有项目的话，提示下no_project，
+		// 创建项目之后 返回首页。提示下他咋接入项目等等……
+
 		Communal.GET("getHttp404", func(context *gin.Context) {
 			context.JSON(404, gin.H{"message": "hello world"})
 		})

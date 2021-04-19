@@ -3,6 +3,7 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
+	"reflect"
 )
 
 func CreatePagePerformance(pagePerformance *model.PagePerformance, eventId string) error {
@@ -62,27 +63,28 @@ func CreateUserAction(userAction model.UserAction) error {
 
 // 存 http请求信息。
 func CreatePageHttpModel(pageHttp model.PageHttp, eventId string) error {
-	//var pageHttpStatistical model.PageHttpStatistical
-	//err := global.GVA_DB.Model(&model.PageHttpStatistical{}).Where("http_url = ?", pageHttp.HttpUrl).Find(&pageHttpStatistical).Error
-	//if !reflect.DeepEqual(pageHttpStatistical, model.PageHttpStatistical{}) {
-	//	pageHttpStatistical.Total++
-	//	if pageHttp.Status > 304 {
-	//		pageHttpStatistical.FailTotal++
-	//	} else {
-	//		pageHttpStatistical.SuccessTotal++
-	//	}
-	//} else {
-	//	pageHttpStatistical.PageUrl = pageHttp.PageUrl
-	//	pageHttpStatistical.HttpUrl = pageHttp.HttpUrl
-	//	pageHttpStatistical.Total++
-	//	if pageHttp.Status > 304 {
-	//		pageHttpStatistical.FailTotal++
-	//	} else {
-	//		pageHttpStatistical.SuccessTotal++
-	//	}
-	//}
-	//err = global.GVA_DB.Save(&pageHttpStatistical).Error
-	err := global.GVA_DB.Create(&pageHttp).Error
+	var pageHttpStatistical model.PageHttpStatistical
+	err := global.GVA_DB.Model(&model.PageHttpStatistical{}).Where("http_url = ? And happen_day = ? ", pageHttp.HttpUrl, pageHttp.PublicFiles.HappenDay).Find(&pageHttpStatistical).Error
+	if !reflect.DeepEqual(pageHttpStatistical, model.PageHttpStatistical{}) {
+		pageHttpStatistical.Total++
+		if pageHttp.Status > 304 {
+			pageHttpStatistical.FailTotal++
+		} else {
+			pageHttpStatistical.SuccessTotal++
+		}
+	} else {
+		pageHttpStatistical.PageUrl = pageHttp.PageUrl
+		pageHttpStatistical.HttpUrl = pageHttp.HttpUrl
+		pageHttpStatistical.Total++
+		if pageHttp.Status > 304 {
+			pageHttpStatistical.FailTotal++
+		} else {
+			pageHttpStatistical.SuccessTotal++
+		}
+	}
+	pageHttpStatistical.HappenDay = pageHttp.PublicFiles.HappenDay;
+	err = global.GVA_DB.Save(&pageHttpStatistical).Error
+	err = global.GVA_DB.Create(&pageHttp).Error
 
 	userActionModel := model.UserAction{
 		PageUrl:    pageHttp.PageUrl,

@@ -59,7 +59,7 @@ func GetStageTimeList(startTime string, endTime string, timeGrain string) (stage
 		"round( AVG( ttfb ), 2 ) AS ttfb,"+
 		"round( AVG( load_event ), 2 ) AS load_event,"+
 		"round( AVG( load_page ), 2 ) AS load_page,"+
-		"COUNT(*) as Pv ").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("time_key").Scan(&stageTimeList).Error
+		"COUNT(*) as Pv ").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("time_key").Find(&stageTimeList).Error
 	return
 }
 
@@ -72,6 +72,6 @@ func GetLoadInfoPageList(startTime string, endTime string) (pagePerformanceList 
 		"load_event, "+
 		"load_type, "+
 		"load_page, "+
-		"COUNT(*) as pv ").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Scan(&pagePerformanceList).Error
+		"COUNT(*) as pv ").Where("from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Group("page_url").Find(&pagePerformanceList).Error
 	return
 }
