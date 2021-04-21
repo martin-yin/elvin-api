@@ -9,5 +9,5 @@ type Project struct {
 	Logo        string `json:"logo"`
 	TeamId      string `json:"team_id"`
 	AdminId     string `json:"admin_id"`
-	MonitorId string `json:"monitor_id"`
+	MonitorId   string `json:"monitor_id"`
 }

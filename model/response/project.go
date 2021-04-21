@@ -1,12 +1,12 @@
 package response
 
 type ProjectResponse struct {
-	ID           string `json:"id"`
-	MonitorId string `json:"monitor_id"`
-	AdminId      string `json:"admin_id"`
-	ProjectName  string `json:"project_name"`
-	ProjectType  string `json:"project_type"`
-	Logo         string `json:"logo"`
+	ID          string `json:"id"`
+	MonitorId   string `json:"monitor_id"`
+	AdminId     string `json:"admin_id"`
+	ProjectName string `json:"project_name"`
+	ProjectType string `json:"project_type"`
+	Logo        string `json:"logo"`
 }
 
 type HomeStatisticsDataProjectResponse struct {

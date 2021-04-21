@@ -3,7 +3,7 @@ package request
 type PostJsErrorBody struct {
 	PageUrl    string `json:"page_url"`
 	UserId     string `json:"user_id"`
-	MonitorId   string `json:"monitor_id"`
+	MonitorId  string `json:"monitor_id"`
 	ActionType string `json:"action_type"`
 	HappenDay  string `json:"happen_time"`
 	HappenTime int    `json:"happen_day"`

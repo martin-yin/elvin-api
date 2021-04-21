@@ -21,10 +21,10 @@ func GetPerformance(context *gin.Context) {
 	queryPagePerformance.StartTime = queryPagePerformance.StartTime + " 00:00:00"
 	queryPagePerformance.EndTime = queryPagePerformance.EndTime + " 23:59:59"
 
-	StackResponse, err := services.GetStackPerformance(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
-	QuotaResponse, err := services.GetQuotaData(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
-	PagePerformanceListResponse, err := services.GetLoadInfoPageList(queryPagePerformance.StartTime, queryPagePerformance.EndTime)
-	StageTimeResponse, err := services.GetStageTimeList(queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
+	StackResponse, err := services.GetStackPerformance(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
+	QuotaResponse, err := services.GetQuotaData(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
+	PagePerformanceListResponse, err := services.GetLoadInfoPageList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
+	StageTimeResponse, err := services.GetStageTimeList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
 
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)

@@ -3,7 +3,7 @@ package request
 type PostPageHttpBody struct {
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`
-	MonitorId   string `json:"monitor_id"`
+	MonitorId    string  `json:"monitor_id"`
 	ActionType   string  `json:"action_type"`
 	HappenTime   int     `json:"happen_time"`
 	HappenDay    string  `json:"happen_day"`
@@ -29,3 +29,11 @@ type PostPageHttpBody struct {
 // httpinfo get请求参数
 //type GetHttpInfoParams struct {
 //}
+
+type QueryPageHttp struct {
+	TimeGrain string `form:"time_grain"`
+	StartTime string `form:"start_time"`
+	EndTime   string `form:"end_time"`
+	StageType string `form:"stage_type"`
+	MonitorId string `form:"monitor_id"`
+}

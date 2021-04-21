@@ -8,22 +8,23 @@ import (
 	"strconv"
 )
 
-func GetHttpInfoList(startTime string, endTime string) (httpInfoList []response.HttpListResponse, err error) {
+func GetHttpInfoList(monitorId string, startTime string, endTime string) (httpInfoList []response.HttpListResponse, err error) {
+	sqlWhere := `from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?`
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
 	err = global.GVA_DB.Model(&model.PageHttp{}).Select("page_https.http_url, "+
 		"page_https.page_url, "+
 		"round( AVG( load_time ), 2 ) AS load_time, "+
-		"total, fail_total, success_total").Where("from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTimes, endTimes).Joins("LEFT JOIN page_http_statisticals statisticals ON statisticals.http_url = page_https.http_url").Where("page_https.`status` != 0 ").Group("http_url").Find(&httpInfoList).Error
+		"total, fail_total, success_total").Where(sqlWhere, startTimes, endTimes, monitorId).Joins("LEFT JOIN page_http_statisticals statisticals ON statisticals.http_url = page_https.http_url").Where("page_https.`status` != 0 ").Group("http_url").Find(&httpInfoList).Error
 	return
 }
 
-func GetHttpQuota(startTime string, endTime string) (httpQuota response.HttpQuotaResponse, err error) {
+func GetHttpQuota(monitorId string, startTime string, endTime string) (httpQuota response.HttpQuotaResponse, err error) {
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("round(AVG( load_time )) AS load_time, COUNT(*) AS total").Where("page_https.`status` != 0 And from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTimes, endTimes).Find(&httpQuota).Error
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT(DISTINCT user_id) as error_user").Where("page_https.`status` > 305 And from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTimes, endTimes).Find(&httpQuota.ErrorUser).Error
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT(*) AS success_total ").Where("page_https.`status` BETWEEN 200 AND 305 And from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTimes, endTimes).Find(&httpQuota.SuccessTotal).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("round(AVG( load_time )) AS load_time, COUNT(*) AS total").Where("page_https.`status` != 0 And from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?", startTimes, endTimes, monitorId).Find(&httpQuota).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT(DISTINCT user_id) as error_user").Where("page_https.`status` > 305 And from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?", startTimes, endTimes, monitorId).Find(&httpQuota.ErrorUser).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT(*) AS success_total ").Where("page_https.`status` BETWEEN 200 AND 305 And from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?", startTimes, endTimes, monitorId).Find(&httpQuota.SuccessTotal).Error
 	if httpQuota.SuccessTotal != 0 {
 		httpQuota.SuccessRate = Decimal(httpQuota.SuccessTotal/httpQuota.Total) * 100
 	}

@@ -6,7 +6,7 @@ import "danci-api/global"
 type User struct {
 	global.GVA_MODEL
 	UserId         string `json:"user_id"`
-	MonitorId   string `json:"monitor_id"`
+	MonitorId      string `json:"monitor_id"`
 	HappenTime     int    `json:"happen_time" gorm:"unique"`
 	HappenDay      string `json:"happen_day"`
 	EventId        string `json:"event_id"`
