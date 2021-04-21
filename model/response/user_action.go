@@ -3,7 +3,7 @@ package response
 type UserResponse struct {
 	ID             string `json:"id"`
 	UserId         string `json:"user_id"`
-	ApiKey         string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	HappenTime     string `json:"happen_time" gorm:"unique"`
 	IP             string `json:"ip" gorm:"unique"`
 	Os             string `json:"os"`
@@ -41,7 +41,7 @@ type ActionPerformanceResponse struct {
 type ActionHttpResponse struct {
 	PageUrl        string  `json:"page_url"`
 	UserId         string  `json:"user_id"`
-	ApiKey         string  `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	ActionType     string  `json:"action_type"`
 	HappenTime     string  `json:"happen_time"`
 	HttpUrl        string  `json:"http_url"`
@@ -63,7 +63,7 @@ type ActionHttpResponse struct {
 type ActionJsErrorResponse struct {
 	PageUrl    string `json:"page_url"`
 	UserId     string `json:"user_id"`
-	ApiKey     string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	ActionType string `json:"action_type"`
 	HappenTime string `json:"happen_time"`
 	// 组件名称
@@ -83,7 +83,7 @@ type ActionJsErrorResponse struct {
 type ActionResourceErrorResponse struct {
 	PageUrl        string `json:"page_url"`
 	UserId         string `json:"user_id"`
-	ApiKey         string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	ActionType     string `json:"action_type"`
 	HappenTime     string `json:"happen_time"`
 	SourceUrl      string `json:"source_url"`
@@ -102,7 +102,7 @@ type ActionResourceErrorResponse struct {
 type ActionPageBehaviorResponse struct {
 	PageUrl        string `json:"page_url"`
 	UserId         string `json:"user_id"`
-	ApiKey         string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	HappenTime     int    `json:"happen_time"`
 	HappenDay      string `json:"happen_day"`
 	ActionType     string `json:"action_type"`
@@ -124,7 +124,7 @@ type ActionPageBehaviorResponse struct {
 type ActionPageViewResponse struct {
 	PageUrl        string `json:"page_url"`
 	UserId         string `json:"user_id"`
-	ApiKey         string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	HappenTime     int    `json:"happen_time"`
 	HappenDay      string `json:"happen_day"`
 	ActionType     string `json:"action_type"`
@@ -140,7 +140,7 @@ type ActionPageViewResponse struct {
 
 type BehaviorsResponse struct {
 	UserId     string `json:"user_id"`
-	ApiKey     string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	HappenTime string `json:"happen_time"`
 	// 打开页面 发送请求 点击等等……
 	ActionType string `json:"action_type"`

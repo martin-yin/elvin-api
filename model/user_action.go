@@ -6,7 +6,7 @@ import "danci-api/global"
 type UserAction struct {
 	global.GVA_MODEL
 	UserId     string `json:"user_id"`
-	ApiKey     string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	HappenTime int    `json:"happen_time"`
 	HappenDay  string `json:"happen_day"`
 	// 打开页面 发送请求 点击等等……

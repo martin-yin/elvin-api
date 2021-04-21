@@ -13,7 +13,7 @@ func CreatePagePerformance(pagePerformance *model.PagePerformance, eventId strin
 	userActionModel := model.UserAction{
 		PageUrl:    pagePerformance.PageUrl,
 		UserId:     pagePerformance.PublicFiles.UserId,
-		ApiKey:     pagePerformance.PublicFiles.ApiKey,
+		MonitorId:     pagePerformance.PublicFiles.MonitorId,
 		HappenTime: pagePerformance.PublicFiles.HappenTime,
 		HappenDay:  pagePerformance.PublicFiles.HappenDay,
 		ActionType: pagePerformance.PublicFiles.ActionType,
@@ -24,7 +24,7 @@ func CreatePagePerformance(pagePerformance *model.PagePerformance, eventId strin
 
 	userModel := model.User{
 		UserId:         pagePerformance.PublicFiles.UserId,
-		ApiKey:         pagePerformance.PublicFiles.ApiKey,
+		MonitorId:         pagePerformance.PublicFiles.MonitorId,
 		HappenTime:     pagePerformance.PublicFiles.HappenTime,
 		HappenDay:      pagePerformance.PublicFiles.HappenDay,
 		EventId:        eventId,
@@ -82,14 +82,14 @@ func CreatePageHttpModel(pageHttp model.PageHttp, eventId string) error {
 			pageHttpStatistical.SuccessTotal++
 		}
 	}
-	pageHttpStatistical.HappenDay = pageHttp.PublicFiles.HappenDay;
+	pageHttpStatistical.HappenDay = pageHttp.PublicFiles.HappenDay
 	err = global.GVA_DB.Save(&pageHttpStatistical).Error
 	err = global.GVA_DB.Create(&pageHttp).Error
 
 	userActionModel := model.UserAction{
 		PageUrl:    pageHttp.PageUrl,
 		UserId:     pageHttp.PublicFiles.UserId,
-		ApiKey:     pageHttp.PublicFiles.ApiKey,
+		MonitorId:     pageHttp.PublicFiles.MonitorId,
 		EventId:    eventId,
 		HappenTime: pageHttp.PublicFiles.HappenTime,
 		HappenDay:  pageHttp.PublicFiles.HappenDay,
@@ -111,7 +111,7 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError, eventId str
 	userActionModel := model.UserAction{
 		PageUrl:     resourceErrorInfo.PageUrl,
 		UserId:      resourceErrorInfo.PublicFiles.UserId,
-		ApiKey:      resourceErrorInfo.PublicFiles.ApiKey,
+		MonitorId:      resourceErrorInfo.PublicFiles.MonitorId,
 		HappenTime:  resourceErrorInfo.PublicFiles.HappenTime,
 		HappenDay:   resourceErrorInfo.PublicFiles.HappenDay,
 		ActionType:  resourceErrorInfo.PublicFiles.ActionType,
@@ -129,7 +129,7 @@ func CreatePageBehavior(pageBehavior model.PageBehavior, eventId string) error {
 	userActionModel := model.UserAction{
 		PageUrl:    pageBehavior.PageUrl,
 		UserId:     pageBehavior.PublicFiles.UserId,
-		ApiKey:     pageBehavior.PublicFiles.ApiKey,
+		MonitorId:     pageBehavior.PublicFiles.MonitorId,
 		HappenTime: pageBehavior.PublicFiles.HappenTime,
 		ActionType: pageBehavior.PublicFiles.ActionType,
 		ActionID:   pageBehavior.ID,
@@ -148,7 +148,7 @@ func CreatePageJsError(pageJsError model.PageJsError, eventId string) error {
 	userActionModel := model.UserAction{
 		PageUrl:    pageJsError.PageUrl,
 		UserId:     pageJsError.PublicFiles.UserId,
-		ApiKey:     pageJsError.PublicFiles.ApiKey,
+		MonitorId:     pageJsError.PublicFiles.MonitorId,
 		HappenTime: pageJsError.PublicFiles.HappenTime,
 		HappenDay:  pageJsError.PublicFiles.HappenDay,
 		ActionType: pageJsError.PublicFiles.ActionType,
@@ -168,7 +168,7 @@ func CreatePageView(pageView model.PageView, eventId string) error {
 	userActionModel := model.UserAction{
 		PageUrl:    pageView.PageUrl,
 		UserId:     pageView.PublicFiles.UserId,
-		ApiKey:     pageView.PublicFiles.ApiKey,
+		MonitorId:     pageView.PublicFiles.MonitorId,
 		HappenTime: pageView.PublicFiles.HappenTime,
 		HappenDay:  pageView.PublicFiles.HappenDay,
 		ActionType: pageView.PublicFiles.ActionType,

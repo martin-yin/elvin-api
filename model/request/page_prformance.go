@@ -3,7 +3,7 @@ package request
 type PostPagePerformance struct {
 	PageUrl      string  `json:"page_url"`
 	UserId       string  `json:"user_id"`
-	ApiKey       string  `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	ActionType   string  `json:"action_type"`
 	HappenTime   int     `json:"happen_time"`
 	HappenDay    string  `json:"happen_day"`

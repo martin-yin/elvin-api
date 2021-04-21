@@ -2,7 +2,7 @@ package response
 
 type UserActionResponse struct {
 	UserId     string `json:"user_id"`
-	ApiKey     string `json:"api_key"`
+	MonitorId   string `json:"monitor_id"`
 	HappenTime string `json:"happen_time"`
 	// 打开页面 发送请求 点击等等……
 	ActionType string `json:"action_type"`

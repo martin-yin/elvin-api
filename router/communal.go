@@ -18,8 +18,7 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("user", v1.GetUser)
 		Communal.GET("userAction", v1.GetUserAction)
 		Communal.GET("userActions", v1.GetUserActions)
-
-		Communal.GET("project", v1.GetPorjectList)
+		Communal.GET("projects", v1.GetProjectList)
 
 		//Communal.GET("projectList", v1.GetUserActions)
 		// 先去判断是否登录？

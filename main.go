@@ -18,5 +18,4 @@ func main() {
 	}
 	initialize.InitReportData()
 	core.RunWindowsServer()
-
 }

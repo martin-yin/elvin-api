@@ -23,4 +23,6 @@ type PageHttpStatistical struct {
 	FailTotal    int    `json:"fail_total"`
 	Total        int    `json:"fail_total"`
 	HappenDay    string `json:"happen_day"`
+
+
 }

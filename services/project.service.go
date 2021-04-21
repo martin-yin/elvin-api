@@ -7,13 +7,8 @@ import (
 	"fmt"
 )
 
-func GetHomeProjectStatisticsData() {
-	var projectList []response.HomeStatisticsDataProjectResponse
-	fmt.Println(projectList)
-}
-
-
-func GetProjectList() (projectList []response.ProjectResponse){
+func GetProjectList() (projectList []response.ProjectResponse) {
 	global.GVA_DB.Model(&model.Project{}).Find(&projectList)
-	return
+	fmt.Println(projectList, "projectList!!")
+	return projectList
 }
