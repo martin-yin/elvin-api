@@ -12,3 +12,9 @@ func GetProjectList() (projectList []response.ProjectResponse) {
 	fmt.Println(projectList, "projectList!!")
 	return projectList
 }
+
+
+func GetProjectErrorInfo() {
+	// 计算有多少个用户
+	// 计算有多少个用户
+}

@@ -28,7 +28,7 @@ func GetHttpStage(context *gin.Context) {
 	_ = context.BindQuery(&queryPageHttp)
 
 	if queryPageHttp.StageType == "success" {
-		HttpStageTimeResponse, err := services.GetHttpStageTimeSuccess(queryPageHttp.StartTime, queryPageHttp.EndTime, queryPageHttp.TimeGrain)
+		HttpStageTimeResponse, err := services.GetHttpStageTimeSuccess(queryPageHttp.StartTime, queryPageHttp.EndTime)
 		if err != nil {
 			response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 		} else {

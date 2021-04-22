@@ -5,16 +5,12 @@ type HttpListResponse struct {
 	HttpUrl      string  `json:"http_url"`
 	LoadTime     float64 `json:"load_time"`
 	Total        int     `json:"total"`
-	FailTotal    int     `json:"fail_total"`
-	SuccessTotal int     `json:"success_total"`
+	UserTotal int 	`json:"user_total"`
 }
 
 type HttpQuotaResponse struct {
 	Total        float64 `json:"total"`
 	LoadTime     float64 `json:"load_time"`
-	SuccessTotal float64 `json:"success_total"`
-	ErrorUser    float64 `json:"error_user"`
-	SuccessRate  float64 `json:"success_rate"`
 }
 
 type HttpStageTimeResponse struct {

@@ -43,5 +43,9 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.POST("postHttp304", func(context *gin.Context) {
 			context.JSON(304, gin.H{"message": "hello world"})
 		})
+
+		Communal.POST("postHttp200", func(context *gin.Context) {
+			context.JSON(200, gin.H{"message": "hello world"})
+		})
 	}
 }

@@ -10,3 +10,9 @@ func GetProjectList(context *gin.Context) {
 	projectList := services.GetProjectList()
 	response.OkWithDetailed(projectList, "获取成功", context)
 }
+
+
+func GetProjectErrorInfo(context *gin.Context) {
+	//projectList := services.GetProjectErrorInfo()
+	//response.OkWithDetailed(projectList, "获取成功", context)
+}
