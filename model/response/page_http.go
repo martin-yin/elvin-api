@@ -1,16 +1,16 @@
 package response
 
 type HttpListResponse struct {
-	PageUrl      string  `json:"page_url"`
-	HttpUrl      string  `json:"http_url"`
-	LoadTime     float64 `json:"load_time"`
-	Total        int     `json:"total"`
-	UserTotal int 	`json:"user_total"`
+	PageUrl   string  `json:"page_url"`
+	HttpUrl   string  `json:"http_url"`
+	LoadTime  float64 `json:"load_time"`
+	Total     int     `json:"total"`
+	UserTotal int     `json:"user_total"`
 }
 
 type HttpQuotaResponse struct {
-	Total        float64 `json:"total"`
-	LoadTime     float64 `json:"load_time"`
+	Total    float64 `json:"total"`
+	LoadTime float64 `json:"load_time"`
 }
 
 type HttpStageTimeResponse struct {
@@ -38,4 +38,16 @@ type PageHttpStage struct {
 
 type PageHttpStageError struct {
 	HttpStageTimeResponseError []HttpStageTimeResponseError `json:"http_stagetime"`
+}
+
+type HttpErrorQuotaResponse struct {
+	Error400  float64 `json:"error_400"`
+	Error404  int     `json:"error_404"`
+	Error500  int     `json:"error_500"`
+	ErrorUser int     `json:"error_user"`
+}
+
+type PageHttpErrorResponse struct {
+	HttpListResponse       []HttpListResponse     `json:"http_error_list"`
+	HttpErrorQuotaResponse HttpErrorQuotaResponse `json:"http_error_quota"`
 }

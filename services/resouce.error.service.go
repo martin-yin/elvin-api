@@ -16,7 +16,7 @@ func GetResourcesInfoList(monitorId string, startTime string, endTime string) (r
 	return
 }
 
-func GetResourcesQuota(monitorId string,startTime string, endTime string) (resourcesQuota response.ResourcesQuotaResponse, err error) {
+func GetResourcesQuota(monitorId string, startTime string, endTime string) (resourcesQuota response.ResourcesQuotaResponse, err error) {
 	err = global.GVA_DB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
 		"COUNT(page_url) as error_page, "+
 		"COUNT(DISTINCT user_id) as error_user").Where("from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?", startTime, endTime, monitorId).Find(&resourcesQuota).Error

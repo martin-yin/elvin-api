@@ -26,10 +26,6 @@ type PostPageHttpBody struct {
 	UA             string `json:"ua"`
 }
 
-// httpinfo get请求参数
-//type GetHttpInfoParams struct {
-//}
-
 type QueryPageHttp struct {
 	TimeGrain string `form:"time_grain"`
 	StartTime string `form:"start_time"`

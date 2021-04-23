@@ -20,6 +20,8 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("userActions", v1.GetUserActions)
 		Communal.GET("projects", v1.GetProjectList)
 
+		Communal.GET("http-error", v1.GetHttpErrorInfo)
+
 		//Communal.GET("projectList", v1.GetUserActions)
 		// 先去判断是否登录？
 		// 如果没有登陆的话，先去登录，然后在登录中判断这个admin id 是否存在项目，如果没有项目的话，提示下no_project，

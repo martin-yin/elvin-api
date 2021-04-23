@@ -5,8 +5,9 @@ import (
 	"danci-api/model/response"
 	"danci-api/services"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func getTodayStartAndEndTime() (startTime string, endTime string) {
