@@ -5,7 +5,9 @@ type HttpListResponse struct {
 	HttpUrl   string  `json:"http_url"`
 	LoadTime  float64 `json:"load_time"`
 	Total     int     `json:"total"`
+	Status    int     `json:"status"`
 	UserTotal int     `json:"user_total"`
+	ErrorUser int     `json:"error_user"`
 }
 
 type HttpQuotaResponse struct {

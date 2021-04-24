@@ -50,6 +50,7 @@ func GetHttpErrorInfo(monitorId string, startTime string, endTime string) (httpE
 	err = global.GVA_DB.Model(&model.PageHttp{}).Select("Count(*) as error_400").Where(publicSqlWhere+" and status = ?", startTime+" 00:00:00", endTime+" 23:59:59", monitorId, 400).Scan(&httpError.HttpErrorQuotaResponse.Error400).Error
 	err = global.GVA_DB.Model(&model.PageHttp{}).Select("Count(*) as error_404").Where(publicSqlWhere+" and status = ?", startTime+" 00:00:00", endTime+" 23:59:59", monitorId, 404).Scan(&httpError.HttpErrorQuotaResponse.Error404).Error
 	err = global.GVA_DB.Model(&model.PageHttp{}).Select("Count(*) as error_500").Where(publicSqlWhere+" and status = ?", startTime+" 00:00:00", endTime+" 23:59:59", monitorId, 500).Scan(&httpError.HttpErrorQuotaResponse.Error500).Error
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("http_url, Count(http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time").Where(publicSqlWhere+" And status != 200", startTime+" 00:00:00", endTime+" 23:59:59", monitorId).Group("http_url").Find(&httpError.HttpListResponse).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("Count(DISTINCT user_id) as error_user").Where(publicSqlWhere+" and status = ?", startTime+" 00:00:00", endTime+" 23:59:59", monitorId, 500).Scan(&httpError.HttpErrorQuotaResponse.ErrorUser).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("http_url, Count(http_url) as total, Count(DISTINCT user_id) as error_user, status, round( AVG( load_time ), 2 ) AS load_time").Where(publicSqlWhere+" And status = 400 or status = 404 or status = 500", startTime+" 00:00:00", endTime+" 23:59:59", monitorId).Group("http_url").Find(&httpError.HttpListResponse).Error
 	return
 }
