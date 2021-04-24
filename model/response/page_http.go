@@ -1,7 +1,6 @@
 package response
 
 type HttpListResponse struct {
-	PageUrl   string  `json:"page_url"`
 	HttpUrl   string  `json:"http_url"`
 	LoadTime  float64 `json:"load_time"`
 	Total     int     `json:"total"`
@@ -13,6 +12,10 @@ type HttpListResponse struct {
 type HttpQuotaResponse struct {
 	Total    float64 `json:"total"`
 	LoadTime float64 `json:"load_time"`
+	// 请求成功的条数
+	SuccessTotal float64 `json:"success_total"`
+	// 请求的用户个数
+	ErrorUser int `json:"error_user"`
 }
 
 type HttpStageTimeResponse struct {
