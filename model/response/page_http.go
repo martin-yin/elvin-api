@@ -33,7 +33,7 @@ type HttpStageTimeResponseError struct {
 }
 
 type PageHttpResponse struct {
-	HttpListResponse  []HttpListResponse `json:"http_info_list"`
+	HttpListResponse  []HttpListResponse `json:"http_list"`
 	HttpQuotaResponse HttpQuotaResponse  `json:"http_quota"`
 }
 

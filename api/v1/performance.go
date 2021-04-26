@@ -26,6 +26,7 @@ func GetPerformance(context *gin.Context) {
 	QuotaResponse, err := services.GetQuotaData(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 	PagePerformanceListResponse, err := services.GetLoadInfoPageList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 	StageTimeResponse, err := services.GetStageTimeList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
+	RankingHttListResponse, err := services.GetRankingList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
 
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
@@ -35,6 +36,7 @@ func GetPerformance(context *gin.Context) {
 			StackResponse:               StackResponse,
 			PagePerformanceListResponse: PagePerformanceListResponse,
 			StageTimeResponse:           StageTimeResponse,
+			RankingHttListResponse: RankingHttListResponse,
 		}, "获取成功", context)
 	}
 }

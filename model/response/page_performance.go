@@ -3,8 +3,15 @@ package response
 type PagePerformanceResponse struct {
 	QuotaResponse               QuotaResponse                 `json:"quota"`
 	StackResponse               StackResponse                 `json:"stack"`
-	PagePerformanceListResponse []PagePerformanceListResponse `json:"load_page_info_list"`
+	PagePerformanceListResponse []PagePerformanceListResponse `json:"page_list"`
 	StageTimeResponse           []StageTimeResponse           `json:"stage_time"`
+	RankingHttListResponse  []RankingHttpListResponse `json:"ranking_http"`
+}
+
+type RankingHttpListResponse struct {
+	PageUrl string `json:"page_url"`
+	Total string `json:"total"`
+	LoadPage string `json:"load_page"`
 }
 
 type StageTimeResponse struct {

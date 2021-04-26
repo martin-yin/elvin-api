@@ -16,12 +16,6 @@ func GetHttpInfoList(monitorId string, startTime string, endTime string) (httpIn
 	return
 }
 
-//Total    float64 `json:"total"`
-//LoadTime float64 `json:"load_time"`
-//// 请求成功的条数
-//SuccessTotal float64 `json:"success_total"`
-//// 请求的用户个数
-//ErrorUser int `json:"error_user"`
 func GetHttpQuota(monitorId string, startTime string, endTime string) (httpQuota response.HttpQuotaResponse, err error) {
 	sqlWhere := `from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?  `
 	startTimes := startTime + " 00:00:00"
