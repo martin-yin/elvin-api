@@ -17,7 +17,8 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("users", v1.GetUsers)
 		Communal.GET("user", v1.GetUser)
 		Communal.GET("userAction", v1.GetUserAction)
-		Communal.GET("userActions", v1.GetUserActions)
+		Communal.GET("usersActionsStatistics", v1.GetUsersActionsStatistics)
+		Communal.GET("usersActionList", v1.GetUserActionList)
 		Communal.GET("projects", v1.GetProjectList)
 
 		Communal.GET("http-error", v1.GetHttpErrorInfo)

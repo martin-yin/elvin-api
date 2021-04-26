@@ -2,7 +2,7 @@ package response
 
 type PageResourcesResponse struct {
 	ResourcesList  []ResourcesListResponse `json:"resources_list"`
-	ResourcesQuota ResourcesQuotaResponse  `json:"resources_quota"`
+	ResourcesQuota ResourcesQuotaResponse  `json:"quota"`
 }
 
 type ResourcesListResponse struct {

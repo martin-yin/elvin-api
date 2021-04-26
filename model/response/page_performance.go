@@ -5,12 +5,12 @@ type PagePerformanceResponse struct {
 	StackResponse               StackResponse                 `json:"stack"`
 	PagePerformanceListResponse []PagePerformanceListResponse `json:"page_list"`
 	StageTimeResponse           []StageTimeResponse           `json:"stage_time"`
-	RankingHttListResponse  []RankingHttpListResponse `json:"ranking_http"`
+	RankingHttListResponse      []RankingHttpListResponse     `json:"ranking_http"`
 }
 
 type RankingHttpListResponse struct {
-	PageUrl string `json:"page_url"`
-	Total string `json:"total"`
+	PageUrl  string `json:"page_url"`
+	Total    string `json:"total"`
 	LoadPage string `json:"load_page"`
 }
 

@@ -20,11 +20,11 @@ func GetHttpQuota(monitorId string, startTime string, endTime string) (httpQuota
 	sqlWhere := `from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?  `
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("round(AVG( load_time )) AS load_time, status, COUNT(*) AS total").Where(sqlWhere , startTimes, endTimes, monitorId).Find(&httpQuota).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("round(AVG( load_time )) AS load_time, status, COUNT(*) AS total").Where(sqlWhere, startTimes, endTimes, monitorId).Find(&httpQuota).Error
 	// 查询错误影响的用户
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select(" Count(DISTINCT user_id) as error_user, status ").Where(sqlWhere + " and status > 400", startTimes, endTimes, monitorId).Find(&httpQuota).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select(" Count(DISTINCT user_id) as error_user, status ").Where(sqlWhere+" and status > 400", startTimes, endTimes, monitorId).Find(&httpQuota).Error
 	// 查询成功的条数
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT(*) AS success_total, status").Where(sqlWhere + " and status < 400", startTimes, endTimes, monitorId).Scan(&httpQuota).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT(*) AS success_total, status").Where(sqlWhere+" and status < 400", startTimes, endTimes, monitorId).Scan(&httpQuota).Error
 	return
 }
 

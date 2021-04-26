@@ -36,7 +36,7 @@ func GetPerformance(context *gin.Context) {
 			StackResponse:               StackResponse,
 			PagePerformanceListResponse: PagePerformanceListResponse,
 			StageTimeResponse:           StageTimeResponse,
-			RankingHttListResponse: RankingHttListResponse,
+			RankingHttListResponse:      RankingHttListResponse,
 		}, "获取成功", context)
 	}
 }

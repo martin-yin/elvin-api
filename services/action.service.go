@@ -27,12 +27,17 @@ func GetUser(id string) (userResponse response.UserResponse, err error) {
 	return
 }
 
-func GetUserActions(eventId string) (actionResponse []response.BehaviorsResponse, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Where("event_id = ?", eventId).Order("happen_time").Find(&actionResponse).Error
+func GetUserActions(eventId string, page int, limit int) (actionResponse []response.ActionsResponse, err error) {
+	err = global.GVA_DB.Model(&model.UserAction{}).Where("event_id = ?", eventId).Order("happen_time").Limit(limit).Offset((page - 1) * limit).Find(&actionResponse).Error
 	return
 }
 
-func GetUserActionsStatistics(eventId string) (actionStatisticsResponse []response.BehaviorsStatisticsResponse, err error) {
+func GetUserActionsTotal(eventId string) (total int, err error) {
+	err = global.GVA_DB.Model(&model.UserAction{}).Select("count(*) as total").Where("event_id = ?", eventId).Order("happen_time").Find(&total).Error
+	return
+}
+
+func GetUserActionsStatistics(eventId string) (actionStatisticsResponse []response.ActionsStatisticsResponse, err error) {
 	err = global.GVA_DB.Model(&model.UserAction{}).Select("action_type, count(*) as total").Where("event_id = ?", eventId).Group("action_type").Find(&actionStatisticsResponse).Error
 	return
 }

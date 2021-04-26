@@ -27,17 +27,29 @@ func GetUser(context *gin.Context) {
 	response.OkWithDetailed(responses, "获取成功", context)
 }
 
-func GetUserActions(context *gin.Context) {
+func GetUsersActionsStatistics(context *gin.Context) {
 	var userActionsRequest request.UserActionsRequest
 	_ = context.BindQuery(&userActionsRequest)
-	actionResponse, err := services.GetUserActions(userActionsRequest.EventID)
 	actionStatisticsResponse, err := services.GetUserActionsStatistics(userActionsRequest.EventID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 	}
+	response.OkWithDetailed(actionStatisticsResponse, "获取成功", context)
+}
+
+
+func GetUserActionList(context *gin.Context) {
+	var userActionsRequest request.UserActionsRequest
+	_ = context.BindQuery(&userActionsRequest)
+	actionResponse, err := services.GetUserActions(userActionsRequest.EventID, userActionsRequest.Page, userActionsRequest.Limit)
+	total, err := services.GetUserActionsTotal(userActionsRequest.EventID);
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+	}
 	response.OkWithDetailed(response.UserActionsResponse{
-		BehaviorsResponse:           actionResponse,
-		BehaviorsStatisticsResponse: actionStatisticsResponse,
+		ActionsResponse:           actionResponse,
+		Total: total,
+		Page: userActionsRequest.Page,
 	}, "获取成功", context)
 }
 

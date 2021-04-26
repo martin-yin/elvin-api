@@ -138,7 +138,7 @@ type ActionPageViewResponse struct {
 	UA             string `json:"ua"`
 }
 
-type BehaviorsResponse struct {
+type ActionsResponse struct {
 	UserId     string `json:"user_id"`
 	MonitorId  string `json:"monitor_id"`
 	HappenTime string `json:"happen_time"`
@@ -161,12 +161,13 @@ type BehaviorsResponse struct {
 	InnterText string `json:"innter_text" gorm:"type:text"`
 }
 
-type BehaviorsStatisticsResponse struct {
+type ActionsStatisticsResponse struct {
 	ActionType string `json:"action_type"`
 	Total      string `json:"total"`
 }
 
 type UserActionsResponse struct {
-	BehaviorsResponse           []BehaviorsResponse           `json:"user_actions_list"`
-	BehaviorsStatisticsResponse []BehaviorsStatisticsResponse `json:"user_action_statistics"`
+	ActionsResponse           []ActionsResponse           `json:"user_actions_list"`
+	Total int `json:"total"`
+	Page int `json:"page"`
 }
