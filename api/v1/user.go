@@ -37,19 +37,18 @@ func GetUsersActionsStatistics(context *gin.Context) {
 	response.OkWithDetailed(actionStatisticsResponse, "获取成功", context)
 }
 
-
 func GetUserActionList(context *gin.Context) {
 	var userActionsRequest request.UserActionsRequest
 	_ = context.BindQuery(&userActionsRequest)
 	actionResponse, err := services.GetUserActions(userActionsRequest.EventID, userActionsRequest.Page, userActionsRequest.Limit)
-	total, err := services.GetUserActionsTotal(userActionsRequest.EventID);
+	total, err := services.GetUserActionsTotal(userActionsRequest.EventID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 	}
 	response.OkWithDetailed(response.UserActionsResponse{
-		ActionsResponse:           actionResponse,
-		Total: total,
-		Page: userActionsRequest.Page,
+		ActionsResponse: actionResponse,
+		Total:           total,
+		Page:            userActionsRequest.Page,
 	}, "获取成功", context)
 }
 

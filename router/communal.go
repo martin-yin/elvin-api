@@ -18,6 +18,8 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("user", v1.GetUser)
 		Communal.GET("userAction", v1.GetUserAction)
 		Communal.GET("usersActionsStatistics", v1.GetUsersActionsStatistics)
+		Communal.GET("surveyStatistics", v1.GetSurveyStatisticsData)
+		Communal.GET("surveyPerformance", v1.GetSurveyPerformance)
 		Communal.GET("usersActionList", v1.GetUserActionList)
 		Communal.GET("projects", v1.GetProjectList)
 

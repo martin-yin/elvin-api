@@ -167,7 +167,7 @@ type ActionsStatisticsResponse struct {
 }
 
 type UserActionsResponse struct {
-	ActionsResponse           []ActionsResponse           `json:"user_actions_list"`
-	Total int `json:"total"`
-	Page int `json:"page"`
+	ActionsResponse []ActionsResponse `json:"user_actions_list"`
+	Total           int               `json:"total"`
+	Page            int               `json:"page"`
 }
