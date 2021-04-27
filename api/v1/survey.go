@@ -20,7 +20,7 @@ func GetSurveyStatisticsData(context *gin.Context) {
 	}
 }
 
-func GetSurveyPerformance(context *gin.Context)  {
+func GetSurveyPerformance(context *gin.Context) {
 	var querySuvey request.QueryPagePerformance
 	err := context.BindQuery(&querySuvey)
 	startTime, endTime := getTodayStartAndEndTime()

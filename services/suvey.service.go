@@ -13,13 +13,12 @@ func GetSurveyStatisticsData(startTime string, endTime string, monitorId string)
 	return
 }
 
-
-func GetSurveyPerformance(startTime string, endTime string, monitorId string) (surveyPerformancesResponse []response.SurveyPerformancesResponse, err error){
+func GetSurveyPerformance(startTime string, endTime string, monitorId string) (surveyPerformancesResponse []response.SurveyPerformancesResponse, err error) {
 	sqlWhere := "from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ? "
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("FROM_UNIXTIME( happen_time / 1000, '%H:%i') AS time_key, round( AVG( load_page ), 2 ) AS load_page").Where(sqlWhere, startTime, endTime, monitorId).Group("time_key").Find(&surveyPerformancesResponse).Error
 	return
 }
 
 func GetHttp(startTime string, endTime string, monitorId string) {
-	
+
 }
