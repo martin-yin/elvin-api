@@ -36,7 +36,6 @@ func InitReportData() {
 						go func(performance string) {
 							var publicFiles model.PublicFiles
 							json.Unmarshal([]byte(performance), &publicFiles)
-							publicFiles.IP = "58.243.220.37"
 							addressInfo := getIpAddressInfo(publicFiles.IP)
 							publicFiles.Nation = addressInfo.Nation
 							publicFiles.City = addressInfo.City

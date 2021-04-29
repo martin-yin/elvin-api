@@ -17,7 +17,7 @@ func PublicFields() gin.HandlerFunc {
 		context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 		var publicFiles model.PublicFiles
 		_ = json.Unmarshal(body, &publicFiles)
-		publicFiles.IP = "58.243.220.37"
+		publicFiles.IP = context.ClientIP()
 		context.Set("public_files", publicFiles)
 		context.Next()
 	}
