@@ -18,7 +18,7 @@ import (
 
 // 页面性能
 func InitReportData() {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(10 * time.Second)
 	var wg sync.WaitGroup
 	go func() {
 		for {

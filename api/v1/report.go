@@ -11,6 +11,7 @@ import (
 func CreatePagePerformance(context *gin.Context) {
 	var pagePerformanceBody request.PostPagePerformance
 	err := context.ShouldBindJSON(&pagePerformanceBody)
+	pagePerformanceBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -23,6 +24,7 @@ func CreatePagePerformance(context *gin.Context) {
 func CreateHttpInfo(context *gin.Context) {
 	var pageHttpBody request.PostPageHttpBody
 	err := context.BindJSON(&pageHttpBody)
+	pageHttpBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -35,6 +37,7 @@ func CreateHttpInfo(context *gin.Context) {
 func CreateResourcesError(context *gin.Context) {
 	var pageResourceErroBody request.PostPageResourceErroBody
 	err := context.BindJSON(&pageResourceErroBody)
+	pageResourceErroBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -47,6 +50,7 @@ func CreateResourcesError(context *gin.Context) {
 func CreatePageBehavior(context *gin.Context) {
 	var behaviorBody request.PostBehaviorInfoBody
 	err := context.BindJSON(&behaviorBody)
+	behaviorBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -72,6 +76,7 @@ func CreatePageJsError(context *gin.Context) {
 func CreatePageView(context *gin.Context) {
 	var pageViewBody request.PostPageViewBody
 	err := context.BindJSON(&pageViewBody)
+	pageViewBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"danci-api/model"
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 )
@@ -17,7 +18,8 @@ func PublicFields() gin.HandlerFunc {
 		context.Request.Body = ioutil.NopCloser(bytes.NewBuffer(body))
 		var publicFiles model.PublicFiles
 		_ = json.Unmarshal(body, &publicFiles)
-		publicFiles.IP = context.ClientIP()
+		publicFiles.IP = "58.243.220.37"
+		fmt.Println(publicFiles.IP, "publicFiles.IP")
 		context.Set("public_files", publicFiles)
 		context.Next()
 	}
