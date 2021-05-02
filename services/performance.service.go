@@ -39,7 +39,7 @@ func GetRankingList(monitorId string, startTime string, endTime string) (Ranking
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select(
 		"page_url, "+
 			"round( AVG( load_page ), 2 ) AS load_page, "+
-			"COUNT(*) as total").Where(sqlWhere, startTime, endTime, monitorId).Group("page_url").Order("load_page desc").Find(&RankingHttListResponse).Error
+			"COUNT(*) as total").Where(sqlWhere, startTime, endTime, monitorId).Group("page_url").Order("load_page desc").Order("load_page desc").Limit(8).Find(&RankingHttListResponse).Error
 	return
 }
 

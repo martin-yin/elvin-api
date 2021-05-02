@@ -12,7 +12,7 @@ func GetHttpInfoList(monitorId string, startTime string, endTime string) (httpIn
 	sqlWhere := `from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ? and status = 200`
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("http_url, Count(DISTINCT http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time").Where(sqlWhere, startTimes, endTimes, monitorId).Group("http_url").Find(&httpInfoList).Debug().Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("http_url, Count(DISTINCT http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time").Where(sqlWhere, startTimes, endTimes, monitorId).Group("http_url").Order("load_time desc").Limit(8).Find(&httpInfoList).Error
 	return
 }
 

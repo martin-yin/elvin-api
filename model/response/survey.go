@@ -13,7 +13,8 @@ type SurveyPUvData struct {
 	TimeKey string `json:"time_key"`
 }
 
-type SurveyPerformancesResponse struct {
-	LoadPage float64 `json:"load_page"`
-	TimeKey  string  `json:"time_key"`
+type JsErrorData struct {
+	User      int `json:"user"`
+	JsError      int `json:"js_error"`
+	TimeKey string `json:"time_key"`
 }
