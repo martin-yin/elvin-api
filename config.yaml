@@ -54,11 +54,11 @@ captcha:
 
 # mysql connect configuration
 mysql:
-  path: '175.27.128.133:3306'
+  path: '127.0.0.1:3306'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
-  db-name: 'api.dancin.cn'
-  username: 'api.dancin.cn'
-  password: 'api.dancin.cn'
+  db-name: 'push_platform'
+  username: 'root'
+  password: 'root'
   max-idle-conns: 0
   max-open-conns: 0
   log-mode: false

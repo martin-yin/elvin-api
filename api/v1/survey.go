@@ -32,7 +32,7 @@ func GetSurveyPUvData(context *gin.Context) {
 	}
 }
 
-func GetSurveyJsErrorData(context *gin.Context){
+func GetSurveyJsErrorData(context *gin.Context) {
 	var querySuvey request.QueryPagePerformance
 	err := context.BindQuery(&querySuvey)
 	startTime, endTime := getTodayStartAndEndTime()

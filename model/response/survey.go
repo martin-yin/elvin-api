@@ -8,13 +8,13 @@ type SurveyStatisticsResponse struct {
 }
 
 type SurveyPUvData struct {
-	Pv      int `json:"pv"`
-	UV      int `json:"uv"`
+	Pv      int    `json:"pv"`
+	UV      int    `json:"uv"`
 	TimeKey string `json:"time_key"`
 }
 
 type JsErrorData struct {
-	User      int `json:"user"`
-	JsError      int `json:"js_error"`
+	User    int    `json:"user"`
+	JsError int    `json:"js_error"`
 	TimeKey string `json:"time_key"`
 }

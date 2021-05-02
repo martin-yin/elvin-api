@@ -15,7 +15,7 @@ func GetSurveyStatisticsData(startTime string, endTime string, monitorId string)
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select(" round( AVG( load_page ), 2 ) AS load_page").Where(`from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`, startTime, endTime, monitorId).Find(&surveyStatisticsResponse.LoadPage).Error
 	err = global.GVA_DB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources").Where(`from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`, startTime, endTime, monitorId).Find(&surveyStatisticsResponse.Resources).Error
 	err = global.GVA_DB.Model(&model.PageJsError{}).Select("COUNT( DISTINCT id ) as js_error").Where(`from_unixtime(page_js_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`, startTime, endTime, monitorId).Find(&surveyStatisticsResponse.JsError).Error
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(`from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?` + " AND page_https.status >= 400", startTime, endTime, monitorId).Find(&surveyStatisticsResponse.HttpError).Error
+	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(`from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`+" AND page_https.status >= 400", startTime, endTime, monitorId).Find(&surveyStatisticsResponse.HttpError).Error
 	return
 }
 
@@ -30,5 +30,3 @@ func GetSurveyJsErrorData(startTime string, endTime string, monitorId string) (s
 	err = global.GVA_DB.Model(&model.PageView{}).Select("FROM_UNIXTIME( happen_time / 1000, '%H:%i') AS time_key, COUNT( DISTINCT user_id ) as user, COUNT( DISTINCT id ) as js_error").Where(sqlWhere, startTime, endTime, monitorId).Group("time_key").Scan(&surveyJsErrorData).Error
 	return
 }
-
-
