@@ -72,8 +72,8 @@ func InitReportData() {
 	cron2 := cron.New(cron.WithSeconds())
 	cron2.AddFunc("*/10 * * * * * ", reportDataWrite)
 
-	//cron2.AddFunc("0 0 0 1 * ?  ", func() {
-	cron2.AddFunc("*/10 * * * * * ", func() {
+	//cron2.AddFunc("0 0 0 1 * ?  ", func() {    这个是正式得，每天凌晨调用一次。
+	cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
 		projectList := services.GetProjectList()
 		actionType := [7]string{"PAGE_LOAD", "HTTP_ERROR_LOG", "HTTP_LOG" , "RESOURCE_ERROR", "BEHAVIOR_INFO", "PAGE_VIEW", "JS_ERROR"}
 		var reportData []model.ReportDayStatistic
