@@ -5,7 +5,6 @@ import (
 	"danci-api/model/request"
 	"danci-api/model/response"
 	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
@@ -30,9 +29,6 @@ func Auth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		fmt.Println(claims, "claims")
-		// 判断登录状态
-		// 然后取出来这个登录用户的team id，用来获取项目列表。
 		c.Set("claims", claims)
 		c.Next()
 	}

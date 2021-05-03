@@ -1,6 +1,9 @@
 package utils
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 func JSONToStruct(str string, v interface{}) error {
 	err := json.Unmarshal([]byte(str), &v)
@@ -28,5 +31,19 @@ func StructToJsonToStruct(v interface{}, o interface{}) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// interface 转 json 在转换成 struct
+func InterfaceToJsonToStruct(v interface{}, o interface{}) error {
+	resByre, err := json.Marshal(v)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal([]byte(resByre), &o)
+	if err != nil {
+		return err
+	}
+	fmt.Println(o, "oooooooooooooooooooo")
 	return nil
 }

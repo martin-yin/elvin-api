@@ -21,7 +21,7 @@ func GetSurveyStatisticsData(startTime string, endTime string, monitorId string)
 
 func GetSurveyPUvData(startTime string, endTime string, monitorId string) (surveyPUvData []response.SurveyPUvData, err error) {
 	sqlWhere := "from_unixtime(page_views.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ? "
-	err = global.GVA_DB.Model(&model.PageView{}).Select("FROM_UNIXTIME( happen_time / 1000, '%H:%i') AS time_key, COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(sqlWhere, startTime, endTime, monitorId).Group("time_key").Scan(&surveyPUvData).Error
+	err = global.GVA_DB.Model(&model.PageView{}).Select("FROM_UNIXTIME( happen_time / 1000, '%H:%i') AS time_key, COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(sqlWhere, startTime, endTime, monitorId).Group("time_key").Find(&surveyPUvData).Error
 	return
 }
 
