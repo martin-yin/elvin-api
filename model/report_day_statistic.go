@@ -8,5 +8,5 @@ type ReportDayStatistic struct {
 	ActionType string `json:"action_type"`
 	MonitorId  string `json:"monitor_id"`
 	Day        string `json:"day"`
-	Count      string    `json:"count"`
+	Count      string `json:"count"`
 }

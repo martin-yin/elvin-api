@@ -44,7 +44,7 @@ system:
   addr: 8889
   db-type: 'mysql'
   oss-type: 'local'    # 控制oss选择走本期还是 七牛等其他仓 自行增加其他oss仓可以在 server/utils/upload/upload.go 中 NewOss函数配置
-  use-multipoint: true
+  use-multipoint: false
 
 # captcha configuration
 captcha:
@@ -56,9 +56,9 @@ captcha:
 mysql:
   path: '127.0.0.1:3306'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
-  db-name: 'api.dancin.cn'
-  username: 'api.dancin.cn'
-  password: 'api.dancin.cn'
+  db-name: 'push_platform'
+  username: 'root'
+  password: 'root'
   max-idle-conns: 0
   max-open-conns: 0
   log-mode: false

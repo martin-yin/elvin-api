@@ -21,6 +21,7 @@ func Routers() *gin.Engine {
 	ApiGroup := Router.Group("")
 	router.InitReport(ApiGroup)
 	router.InitCommunal(ApiGroup)
+	router.InitAdmin(ApiGroup)
 	global.GVA_LOG.Info("router register success")
 	return Router
 }

@@ -2,11 +2,12 @@ package router
 
 import (
 	v1 "danci-api/api/v1"
+	"danci-api/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func InitCommunal(Router *gin.RouterGroup) {
-	Communal := Router.Group("communal")
+	Communal := Router.Group("communal").Use(middleware.Auth())
 	{
 		Communal.GET("performance", v1.GetPerformance)
 		Communal.GET("http", v1.GetHttpInfo)
@@ -23,14 +24,12 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("surveyJsError", v1.GetSurveyJsErrorData)
 		Communal.GET("usersActionList", v1.GetUserActionList)
 		Communal.GET("projects", v1.GetProjectList)
-
 		Communal.GET("http-error", v1.GetHttpErrorInfo)
 
 		//Communal.GET("projectList", v1.GetUserActions)
 		// 先去判断是否登录？
 		// 如果没有登陆的话，先去登录，然后在登录中判断这个admin id 是否存在项目，如果没有项目的话，提示下no_project，
 		// 创建项目之后 返回首页。提示下他咋接入项目等等……
-
 		Communal.GET("getHttp404", func(context *gin.Context) {
 			context.JSON(404, gin.H{"message": "hello world"})
 		})

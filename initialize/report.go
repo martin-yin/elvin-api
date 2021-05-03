@@ -8,15 +8,12 @@ import (
 	"danci-api/services"
 	"encoding/json"
 	"fmt"
-	"github.com/robfig/cron/v3"
 	"io/ioutil"
 	"net/http"
 	"sync"
-	"time"
 )
 
-func reportDataWrite()  {
-	fmt.Print("开始从redis 读数据！ \n")
+func reportDataWrite() {
 	var wg sync.WaitGroup
 	pipe := global.GVA_REDIS.TxPipeline()
 	getValue := pipe.LRange("reportData", 0, 500)
@@ -67,35 +64,36 @@ func reportDataWrite()  {
 		global.GVA_REDIS.LTrim("reportData", 500, -1)
 	}
 }
+
 // 页面性能
 func InitReportData() {
-	cron2 := cron.New(cron.WithSeconds())
-	cron2.AddFunc("*/10 * * * * * ", reportDataWrite)
+	//cron2 := cron.New(cron.WithSeconds())
+	//cron2.AddFunc("*/10 * * * * * ", reportDataWrite)
 
 	//cron2.AddFunc("0 0 0 1 * ?  ", func() {    这个是正式得，每天凌晨调用一次。
-	cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
-		projectList := services.GetProjectList()
-		actionType := [7]string{"PAGE_LOAD", "HTTP_ERROR_LOG", "HTTP_LOG" , "RESOURCE_ERROR", "BEHAVIOR_INFO", "PAGE_VIEW", "JS_ERROR"}
-		var reportData []model.ReportDayStatistic
-		startTime := time.Now().Format("2006-01-02")
-		for _, value := range projectList {
-			for _, action :=range actionType {
-				keyName := startTime + value.MonitorId + action;
-				count := global.GVA_REDIS.Get(keyName).Val()
-				if count != "" {
-					reportData = append(reportData, model.ReportDayStatistic{
-						ActionType: "PAGE_LOAD",
-						MonitorId: value.MonitorId,
-						Day: startTime,
-						Count: global.GVA_REDIS.Get(keyName).Val(),
-					})
-					global.GVA_REDIS.Del(keyName)
-				}
-			}
-		}
-		services.CreateReportDay(reportData)
-	})
-	cron2.Start()
+	//cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
+	//	projectList := services.GetProjectList()
+	//	actionType := [7]string{"PAGE_LOAD", "HTTP_ERROR_LOG", "HTTP_LOG" , "RESOURCE_ERROR", "BEHAVIOR_INFO", "PAGE_VIEW", "JS_ERROR"}
+	//	var reportData []model.ReportDayStatistic
+	//	startTime := time.Now().Format("2006-01-02")
+	//	for _, value := range projectList {
+	//		for _, action :=range actionType {
+	//			keyName := startTime + value.MonitorId + action;
+	//			count := global.GVA_REDIS.Get(keyName).Val()
+	//			if count != "" {
+	//				reportData = append(reportData, model.ReportDayStatistic{
+	//					ActionType: "PAGE_LOAD",
+	//					MonitorId: value.MonitorId,
+	//					Day: startTime,
+	//					Count: global.GVA_REDIS.Get(keyName).Val(),
+	//				})
+	//				global.GVA_REDIS.Del(keyName)
+	//			}
+	//		}
+	//	}
+	//	services.CreateReportDay(reportData)
+	//})
+	//cron2.Start()
 }
 
 func createJsError(jsErrorBody request.PostJsErrorBody, publicFiles model.PublicFiles) {
