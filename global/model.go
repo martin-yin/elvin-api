@@ -5,7 +5,7 @@ import (
 )
 
 type GVA_MODEL struct {
-	ID        uint ``
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID        uint `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }

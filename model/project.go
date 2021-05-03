@@ -8,5 +8,6 @@ type Project struct {
 	ProjectType string `json:"project_type"`
 	Logo        string `json:"logo"`
 	MonitorId   string `json:"monitor_id"`
-	AdminId     uint   `json:"admin_id"`
+	AdminID     uint   `json:"admin_id"`
+	TeamID uint `json:"team_id"`
 }

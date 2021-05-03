@@ -16,7 +16,5 @@ func GetProjectList(context *gin.Context) {
 		projectList := services.GetProjectList(customClaims.ID)
 		response.OkWithDetailed(projectList, "获取成功", context)
 		return
-	} else {
-		//response.OkWithDetailed([], "获取失败", context)
 	}
 }

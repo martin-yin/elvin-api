@@ -9,5 +9,9 @@ func InitAdmin(Router *gin.RouterGroup) {
 	Admin := Router.Group("admin")
 	{
 		Admin.POST("adminLogin", v1.AdminLogin)
+		Admin.GET("teamList", v1.GetTeamList)
+		Admin.GET("createTeam", v1.CreateTeam)
+
+
 	}
 }
