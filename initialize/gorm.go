@@ -28,18 +28,18 @@ func Gorm() *gorm.DB {
 
 func MysqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
-		//model.PageBehavior{},
-		//model.PageHttp{},
-		//model.PageJsError{},
-		//model.PagePerformance{},
-		//model.PageResourceError{},
-		//model.UserAction{},
-		//model.User{},
-		//model.PageView{},
+		model.PageBehavior{},
+		model.PageHttp{},
+		model.PageJsError{},
+		model.PagePerformance{},
+		model.PageResourceError{},
+		model.UserAction{},
+		model.User{},
+		model.PageView{},
 		model.Admin{},
 		model.Team{},
 		model.Project{},
-		//model.ReportDayStatistic{},
+		model.ReportDayStatistic{},
 	)
 	if err != nil {
 		global.GVA_LOG.Error("register table failed", zap.Any("err", err))

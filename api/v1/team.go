@@ -6,7 +6,6 @@ import (
 	"danci-api/model/response"
 	"danci-api/services"
 	"danci-api/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
@@ -57,8 +56,6 @@ func AddTeamProject(context *gin.Context) {
 		var customClaims request.CustomClaims
 		utils.InterfaceToJsonToStruct(claims, &customClaims)
 		_ = context.ShouldBind(&addTeamProjectParams)
-
-		fmt.Println(addTeamProjectParams, "addTeamProjectParams")
 		team, err := services.FindTeam(addTeamProjectParams.TeamId)
 		if err != nil {
 			response.FailWithMessage("没有查询到团队！", context)

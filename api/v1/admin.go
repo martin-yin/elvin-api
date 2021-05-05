@@ -29,6 +29,7 @@ func RegisterAdmin(context *gin.Context) {
 	user, err := services.RegisterAdmin(model.Admin{
 		UserName: adminParam.Username,
 		Password: adminParam.Password,
+		NickName: adminParam.Nickname,
 	})
 	if err != nil {
 		response.FailWithMessage("管理员创建失败！", context)
