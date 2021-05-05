@@ -26,37 +26,36 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("projects", v1.GetProjectList)
 		Communal.GET("http-error", v1.GetHttpErrorInfo)
 
-		// 创建项目
+		// 获取团队列表
+		Communal.GET("teamList", v1.GetTeamList)
+		// 创建团队
 		Communal.POST("createTeam", v1.CreateTeam)
+		// 团队绑定管理员
 		Communal.POST("bindTeamAdmins", v1.BindTeamAdmins)
-
+		// 创建团队项目
 		Communal.POST("addTeamProject", v1.AddTeamProject)
 
-		//Communal.GET("projectList", v1.GetUserActions)
-		// 先去判断是否登录？
-		// 如果没有登陆的话，先去登录，然后在登录中判断这个admin id 是否存在项目，如果没有项目的话，提示下no_project，
-		// 创建项目之后 返回首页。提示下他咋接入项目等等……
-		Communal.GET("getHttp404", func(context *gin.Context) {
-			context.JSON(404, gin.H{"message": "hello world"})
-		})
-		Communal.GET("getHttp304", func(context *gin.Context) {
-			context.JSON(304, gin.H{"message": "hello world"})
-		})
-		Communal.GET("getHttp500", func(context *gin.Context) {
-			context.JSON(500, gin.H{"message": "hello world"})
-		})
-		Communal.POST("postHttp500", func(context *gin.Context) {
-			context.JSON(500, gin.H{"message": "hello world"})
-		})
-		Communal.POST("postHttp404", func(context *gin.Context) {
-			context.JSON(404, gin.H{"message": "hello world"})
-		})
-		Communal.POST("postHttp304", func(context *gin.Context) {
-			context.JSON(304, gin.H{"message": "hello world"})
-		})
-
-		Communal.POST("postHttp200", func(context *gin.Context) {
-			context.JSON(200, gin.H{"message": "hello world"})
-		})
+		//Communal.GET("getHttp404", func(context *gin.Context) {
+		//	context.JSON(404, gin.H{"message": "hello world"})
+		//})
+		//Communal.GET("getHttp304", func(context *gin.Context) {
+		//	context.JSON(304, gin.H{"message": "hello world"})
+		//})
+		//Communal.GET("getHttp500", func(context *gin.Context) {
+		//	context.JSON(500, gin.H{"message": "hello world"})
+		//})
+		//Communal.POST("postHttp500", func(context *gin.Context) {
+		//	context.JSON(500, gin.H{"message": "hello world"})
+		//})
+		//Communal.POST("postHttp404", func(context *gin.Context) {
+		//	context.JSON(404, gin.H{"message": "hello world"})
+		//})
+		//Communal.POST("postHttp304", func(context *gin.Context) {
+		//	context.JSON(304, gin.H{"message": "hello world"})
+		//})
+		//
+		//Communal.POST("postHttp200", func(context *gin.Context) {
+		//	context.JSON(200, gin.H{"message": "hello world"})
+		//})
 	}
 }

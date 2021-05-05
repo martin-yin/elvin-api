@@ -23,17 +23,17 @@ func AdminLogin(context *gin.Context) {
 	}
 }
 
-func CreateAdmin(context *gin.Context) {
+func RegisterAdmin(context *gin.Context) {
 	var adminParam request.AdminParam
 	_ = context.ShouldBind(&adminParam)
-	admin := model.Admin{
+	user, err := services.RegisterAdmin(model.Admin{
 		UserName: adminParam.Username,
 		Password: adminParam.Password,
-	}
-	if err := services.CreateAdmin(admin); err != nil {
+	})
+	if err != nil {
 		response.FailWithMessage("管理员创建失败！", context)
 	} else {
-		response.OkWithMessage("管理员创建成功！", context)
+		tokenNext(context, user)
 	}
 }
 

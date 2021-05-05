@@ -8,9 +8,7 @@ import (
 func InitAdmin(Router *gin.RouterGroup) {
 	Admin := Router.Group("admin")
 	{
-		Admin.POST("createAdmin", v1.CreateAdmin)
+		Admin.POST("registerAdmin", v1.RegisterAdmin)
 		Admin.POST("adminLogin", v1.AdminLogin)
-		Admin.GET("teamList", v1.GetTeamList)
-		Admin.POST("createTeam", v1.CreateTeam)
 	}
 }
