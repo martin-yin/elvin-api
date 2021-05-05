@@ -2,7 +2,6 @@ package utils
 
 import (
 	"encoding/json"
-	"fmt"
 )
 
 func JSONToStruct(str string, v interface{}) error {
@@ -44,6 +43,5 @@ func InterfaceToJsonToStruct(v interface{}, o interface{}) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(o, "oooooooooooooooooooo")
 	return nil
 }

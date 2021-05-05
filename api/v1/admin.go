@@ -15,11 +15,25 @@ import (
 
 func AdminLogin(context *gin.Context) {
 	var loginParam request.Login
-	_ = context.ShouldBindJSON(&loginParam)
+	_ = context.ShouldBind(&loginParam)
 	if err, user := services.Login(loginParam); err != nil {
 		response.FailWithMessage("用户名不存在或者密码错误", context)
 	} else {
 		tokenNext(context, user)
+	}
+}
+
+func CreateAdmin(context *gin.Context) {
+	var adminParam request.AdminParam
+	_ = context.ShouldBind(&adminParam)
+	admin := model.Admin{
+		UserName: adminParam.Username,
+		Password: adminParam.Password,
+	}
+	if err := services.CreateAdmin(admin); err != nil {
+		response.FailWithMessage("管理员创建失败！", context)
+	} else {
+		response.OkWithMessage("管理员创建成功！", context)
 	}
 }
 
@@ -48,35 +62,4 @@ func tokenNext(context *gin.Context, user *model.Admin) {
 		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
 	}, "登录成功", context)
 	return
-	//if err, jwtStr := service.GetRedisJWT(user.Username); err == redis.Nil {
-	//	if err := service.SetRedisJWT(token, user.Username); err != nil {
-	//		global.GVA_LOG.Error("设置登录状态失败", zap.Any("err", err))
-	//		response.FailWithMessage("设置登录状态失败", c)
-	//		return
-	//	}
-	//	response.OkWithDetailed(response.LoginResponse{
-	//		User:      user,
-	//		Token:     token,
-	//		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
-	//	}, "登录成功", c)
-	//} else if err != nil {
-	//	global.GVA_LOG.Error("设置登录状态失败", zap.Any("err", err))
-	//	response.FailWithMessage("设置登录状态失败", c)
-	//} else {
-	//	var blackJWT model.JwtBlacklist
-	//	blackJWT.Jwt = jwtStr
-	//	if err := service.JsonInBlacklist(blackJWT); err != nil {
-	//		response.FailWithMessage("jwt作废失败", c)
-	//		return
-	//	}
-	//	if err := service.SetRedisJWT(token, user.Username); err != nil {
-	//		response.FailWithMessage("设置登录状态失败", c)
-	//		return
-	//	}
-	//	response.OkWithDetailed(response.LoginResponse{
-	//		User:      user,
-	//		Token:     token,
-	//		ExpiresAt: claims.StandardClaims.ExpiresAt * 1000,
-	//	}, "登录成功", c)
-	//}
 }
