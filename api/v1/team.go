@@ -6,6 +6,7 @@ import (
 	"danci-api/model/response"
 	"danci-api/services"
 	"danci-api/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
@@ -28,21 +29,21 @@ func CreateTeam(context *gin.Context) {
 	if exists {
 		var customClaims request.CustomClaims
 		utils.InterfaceToJsonToStruct(claims, &customClaims)
-		name, isExist := context.GetPostForm("name")
-		if isExist {
-			admins, err := services.FindAdmins(customClaims.ID)
-			if err == nil {
-				team := &model.Team{
-					Name:     name,
-					AdminId:  customClaims.ID,
-					NickName: customClaims.NickName,
-					Admins:   admins,
-				}
-				if err := services.CreateTeam(*team); err != nil {
-					response.FailWithMessage("创建团队失败！！", context)
-				} else {
-					response.OkWithMessage("创建团队成功！", context)
-				}
+		var addTeamParams request.AddTeamParams
+		_ = context.ShouldBind(&addTeamParams)
+		fmt.Println("name----------", addTeamParams)
+		admins, err := services.FindAdmins(customClaims.ID)
+		if err == nil {
+			team := &model.Team{
+				Name:     addTeamParams.Name,
+				AdminId:  customClaims.ID,
+				NickName: customClaims.NickName,
+				Admins:   admins,
+			}
+			if err := services.CreateTeam(*team); err != nil {
+				response.FailWithMessage("创建团队失败！！", context)
+			} else {
+				response.OkWithMessage("创建团队成功！", context)
 			}
 		}
 	}
