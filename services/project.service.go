@@ -20,3 +20,13 @@ func CreateProject(project model.Project) (projectInter model.Project, err error
 	err = global.GVA_DB.Model(&model.Project{}).Create(&project).Error
 	return project, err
 }
+
+func FindProject(projectName string) (isExist bool) {
+	var project model.Project
+	result := global.GVA_DB.Model(&model.Project{}).Where("project_name = ? ", projectName).First(&project)
+	if result.RowsAffected != 0 {
+		return true
+	}
+	return false
+}
+

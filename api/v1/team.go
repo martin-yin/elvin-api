@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
+	"time"
 )
 
 // 获取团队列表
@@ -18,24 +19,21 @@ func GetTeamList(context *gin.Context) {
 	if exists {
 		var customClaims request.CustomClaims
 		utils.InterfaceToJsonToStruct(claims, &customClaims)
+		responses, _ := services.GetTeamList()
+		response.OkWithDetailed(responses, "获取成功", context)
 	}
-	responses, _ := services.GetTeamList()
-	response.OkWithDetailed(responses, "获取成功", context)
 }
 
-// 创建团队
+
 func CreateTeam(context *gin.Context) {
-	claims, exists := context.Get("claims")
-	if exists {
-		var customClaims request.CustomClaims
-		utils.InterfaceToJsonToStruct(claims, &customClaims)
-		var addTeamParams request.AddTeamParams
-		_ = context.ShouldBind(&addTeamParams)
-		fmt.Println("name----------", addTeamParams)
+	customClaims := getCustomClaims(context)
+	if customClaims != nil {
+		var teamParams request.AddTeamParams
+		_ = context.ShouldBind(&teamParams)
 		admins, err := services.FindAdmins(customClaims.ID)
 		if err == nil {
 			team := &model.Team{
-				Name:     addTeamParams.Name,
+				Name:     teamParams.Name,
 				AdminId:  customClaims.ID,
 				NickName: customClaims.NickName,
 				Admins:   admins,
@@ -48,24 +46,33 @@ func CreateTeam(context *gin.Context) {
 		}
 	}
 }
+// 判断团队是否存在
+func TeamIsExist(context *gin.Context) {
+	var teamParams request.AddTeamParams
+	_ = context.ShouldBind(&teamParams)
+	teamIsExist := services.FindProject(teamParams.Name)
+	if teamIsExist {
+		response.FailWithMessage("团队已存在", context)
+	} else {
+		response.OkWithMessage("", context)
+	}
+}
 
-// 根据团队去创建项目
 func AddTeamProject(context *gin.Context) {
-	claims, exists := context.Get("claims")
-	if exists {
+	customClaims := getCustomClaims(context)
+	if customClaims != nil {
 		var addTeamProjectParams request.AddTeamProjectParams
-		var customClaims request.CustomClaims
-		utils.InterfaceToJsonToStruct(claims, &customClaims)
 		_ = context.ShouldBind(&addTeamProjectParams)
 		team, err := services.FindTeam(addTeamProjectParams.TeamId)
 		if err != nil {
 			response.FailWithMessage("没有查询到团队！", context)
 		} else {
+			monitorId := "monitor_id" + fmt.Sprintf("%d", int32(time.Now().Unix()))
 			projectModel := model.Project{
 				ProjectName: addTeamProjectParams.ProjectName,
 				ProjectType: addTeamProjectParams.ProjectType,
 				Logo:        addTeamProjectParams.Logo,
-				MonitorId:   addTeamProjectParams.MonitorId,
+				MonitorId:   monitorId,
 				AdminID:     customClaims.ID,
 				TeamID:      team.ID,
 			}
@@ -78,6 +85,16 @@ func AddTeamProject(context *gin.Context) {
 		}
 	}
 }
+
+func getCustomClaims(context *gin.Context) (customClaims *request.CustomClaims) {
+	claims, exists := context.Get("claims")
+	if exists {
+		utils.InterfaceToJsonToStruct(claims, &customClaims)
+		return customClaims
+	}
+	return nil
+}
+
 
 func StrToUInt(str string) uint {
 	i, e := strconv.Atoi(str)

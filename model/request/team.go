@@ -15,7 +15,6 @@ type AddTeamProjectParams struct {
 	ProjectName string `form:"project_name" json:"project_name"`
 	ProjectType string `form:"project_type" json:"project_type"`
 	Logo        string `form:"logo" json:"logo"`
-	MonitorId   string `form:"monitor_id" json:"monitor_id"`
 }
 
 type ProjectParams struct {

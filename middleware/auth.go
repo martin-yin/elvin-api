@@ -13,7 +13,7 @@ func Auth() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("token")
 		if token == "" {
-			response.FailWithDetailed(gin.H{"reload": true}, "登录状态过期，请重新登录", c)
+			response.Expire("登录状态过期，请重新登录", c)
 			c.Abort()
 			return
 		}
@@ -21,11 +21,11 @@ func Auth() gin.HandlerFunc {
 		claims, err := j.ParseToken(token)
 		if err != nil {
 			if err == TokenExpired {
-				response.FailWithDetailed(gin.H{"reload": true}, "授权已过期", c)
+				response.Expire("授权已过期", c)
 				c.Abort()
 				return
 			}
-			response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
+			response.Expire(err.Error(), c)
 			c.Abort()
 			return
 		}
