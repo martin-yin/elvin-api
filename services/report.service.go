@@ -124,18 +124,18 @@ func CreateResourcesError(resourceErrorInfo model.PageResourceError, eventId str
 	return err
 }
 
-func CreatePageBehavior(pageBehavior model.PageBehavior, eventId string) error {
-	err := global.GVA_DB.Create(&pageBehavior).Error
+func CreatePageBehavior(pageOperation model.PageOperation, eventId string) error {
+	err := global.GVA_DB.Create(&pageOperation).Error
 	userActionModel := model.UserAction{
-		PageUrl:    pageBehavior.PageUrl,
-		UserId:     pageBehavior.PublicFiles.UserId,
-		MonitorId:  pageBehavior.PublicFiles.MonitorId,
-		HappenTime: pageBehavior.PublicFiles.HappenTime,
-		ActionType: pageBehavior.PublicFiles.ActionType,
-		ActionID:   pageBehavior.ID,
+		PageUrl:    pageOperation.PageUrl,
+		UserId:     pageOperation.PublicFiles.UserId,
+		MonitorId:  pageOperation.PublicFiles.MonitorId,
+		HappenTime: pageOperation.PublicFiles.HappenTime,
+		ActionType: pageOperation.PublicFiles.ActionType,
+		ActionID:   pageOperation.ID,
 		EventId:    eventId,
-		ClassName:  pageBehavior.ClassName,
-		InnterText: pageBehavior.InnterText,
+		ClassName:  pageOperation.ClassName,
+		InnterText: pageOperation.InnterText,
 	}
 	CreateUserAction(userActionModel)
 	return err

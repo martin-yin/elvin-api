@@ -63,7 +63,7 @@ func GetActionResourceError(id string) (actionResourceErrorResponse response.Act
 }
 
 func GetActionBehavior(id string) (actionPageBehaviorResponse response.ActionPageBehaviorResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageBehavior{}).Where("id = ?", id).Scan(&actionPageBehaviorResponse).Error
+	err = global.GVA_DB.Model(&model.PageOperation{}).Where("id = ?", id).Scan(&actionPageBehaviorResponse).Error
 	return
 }
 

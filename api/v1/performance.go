@@ -5,9 +5,8 @@ import (
 	"danci-api/model/response"
 	"danci-api/services"
 	"fmt"
-	"time"
-
 	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func getTodayStartAndEndTime() (startTime string, endTime string) {
@@ -16,27 +15,53 @@ func getTodayStartAndEndTime() (startTime string, endTime string) {
 	return
 }
 
-func GetPerformance(context *gin.Context) {
-	var queryPagePerformance request.QueryPagePerformance
-	err := context.BindQuery(&queryPagePerformance)
-	queryPagePerformance.StartTime = queryPagePerformance.StartTime + " 00:00:00"
-	queryPagePerformance.EndTime = queryPagePerformance.EndTime + " 23:59:59"
+// performance web性能相关的接口
+func getPerformanceQuery(context *gin.Context) (performanceParams *request.PerformanceParams) {
+	err := context.BindQuery(&performanceParams)
+	performanceParams.StartTime = performanceParams.StartTime + " 00:00:00"
+	performanceParams.EndTime = performanceParams.EndTime + " 23:59:59"
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+	}
+	return performanceParams
+}
 
-	StackResponse, err := services.GetStackPerformance(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
-	QuotaResponse, err := services.GetQuotaData(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
-	PagePerformanceListResponse, err := services.GetLoadInfoPageList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
-	StageTimeResponse, err := services.GetStageTimeList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime, queryPagePerformance.TimeGrain)
-	RankingHttListResponse, err := services.GetRankingList(queryPagePerformance.MonitorId, queryPagePerformance.StartTime, queryPagePerformance.EndTime)
-
+func GetPerformanceStack(context *gin.Context) {
+	performanceParams := getPerformanceQuery(context)
+	stack, err := services.GetPerformanceStack(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
-		response.OkWithDetailed(response.PagePerformanceResponse{
-			QuotaResponse:               QuotaResponse,
-			StackResponse:               StackResponse,
-			PagePerformanceListResponse: PagePerformanceListResponse,
-			StageTimeResponse:           StageTimeResponse,
-			RankingHttListResponse:      RankingHttListResponse,
-		}, "获取成功", context)
+		response.OkWithDetailed(stack, "获取成功", context)
+	}
+}
+
+func GetPerformanceList(context *gin.Context) {
+	performanceParams := getPerformanceQuery(context)
+	list, err := services.GetLoadInfoPageList(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+	} else {
+		response.OkWithDetailed(list, "获取成功", context)
+	}
+}
+
+func GetPerformanceStageTime(context *gin.Context) {
+	performanceParams := getPerformanceQuery(context)
+	stageTime, err := services.GetStageTimeList(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime, performanceParams.TimeGrain)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+	} else {
+		response.OkWithDetailed(stageTime, "获取成功", context)
+	}
+}
+
+func GetPerformanceRankingList(context *gin.Context) {
+	performanceParams := getPerformanceQuery(context)
+	rankingList, err := services.GetRankingList(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+	} else {
+		response.OkWithDetailed(rankingList, "获取成功", context)
 	}
 }

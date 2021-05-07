@@ -9,10 +9,10 @@ import (
 )
 
 func GetSurveyStatisticsData(context *gin.Context) {
-	var querySuvey request.QueryPagePerformance
-	err := context.BindQuery(&querySuvey)
+	var suveyParams request.SuveyParams
+	err := context.BindQuery(&suveyParams)
 	startTime, endTime := getTodayStartAndEndTime()
-	surveyResponse, err := services.GetSurveyStatisticsData(startTime, endTime, querySuvey.MonitorId)
+	surveyResponse, err := services.GetSurveyStatisticsData(startTime, endTime, suveyParams.MonitorId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
@@ -21,10 +21,10 @@ func GetSurveyStatisticsData(context *gin.Context) {
 }
 
 func GetSurveyPUvData(context *gin.Context) {
-	var querySuvey request.QueryPagePerformance
-	err := context.BindQuery(&querySuvey)
+	var suveyParams request.SuveyParams
+	err := context.BindQuery(&suveyParams)
 	startTime, endTime := getTodayStartAndEndTime()
-	surveyResponse, err := services.GetSurveyPUvData(startTime, endTime, querySuvey.MonitorId)
+	surveyResponse, err := services.GetSurveyPUvData(startTime, endTime, suveyParams.MonitorId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
@@ -33,10 +33,10 @@ func GetSurveyPUvData(context *gin.Context) {
 }
 
 func GetSurveyJsErrorData(context *gin.Context) {
-	var querySuvey request.QueryPagePerformance
-	err := context.BindQuery(&querySuvey)
+	var suveyParams request.SuveyParams
+	err := context.BindQuery(&suveyParams)
 	startTime, endTime := getTodayStartAndEndTime()
-	surveyResponse, err := services.GetSurveyJsErrorData(startTime, endTime, querySuvey.MonitorId)
+	surveyResponse, err := services.GetSurveyJsErrorData(startTime, endTime, suveyParams.MonitorId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {

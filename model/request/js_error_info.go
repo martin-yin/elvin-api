@@ -1,6 +1,6 @@
 package request
 
-type PostJsErrorBody struct {
+type JsErrorBody struct {
 	PageUrl    string `json:"page_url"`
 	UserId     string `json:"user_id"`
 	MonitorId  string `json:"monitor_id"`

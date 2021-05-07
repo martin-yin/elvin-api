@@ -6,7 +6,7 @@ import (
 	"danci-api/model/response"
 )
 
-func GetStackPerformance(monitorId string, startTime string, endTime string) (stackData response.StackResponse, err error) {
+func GetPerformanceStack(monitorId string, startTime string, endTime string) (stackData response.StackResponse, err error) {
 	sqlWhere := `from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("round(AVG(redirect),2) as redirect, "+
 		"round(AVG(appcache),2) as appcache, "+

@@ -33,27 +33,27 @@ func reportDataWrite() {
 				publicFiles.District = addressInfo.District
 				publicFiles.Province = addressInfo.Province
 				if publicFiles.ActionType == "PAGE_LOAD" {
-					var pagePerformanceBody request.PostPagePerformance
+					var pagePerformanceBody request.PerformanceBody
 					json.Unmarshal([]byte(performance), &pagePerformanceBody)
 					createPerformance(pagePerformanceBody, publicFiles)
 				} else if publicFiles.ActionType == "HTTP_LOG" {
-					var pageHttpBody request.PostPageHttpBody
+					var pageHttpBody request.HttpBody
 					json.Unmarshal([]byte(performance), &pageHttpBody)
 					createHttp(pageHttpBody, publicFiles)
 				} else if publicFiles.ActionType == "PAGE_VIEW" {
-					var pageViewBody request.PostPageViewBody
+					var pageViewBody request.PageViewBody
 					json.Unmarshal([]byte(performance), &pageViewBody)
 					createPageView(pageViewBody, publicFiles)
 				} else if publicFiles.ActionType == "BEHAVIOR_INFO" {
-					var behaviorInfoBody request.PostBehaviorInfoBody
-					json.Unmarshal([]byte(performance), &behaviorInfoBody)
-					CreatePageBehavior(behaviorInfoBody, publicFiles)
+					var operationBody request.OperationBody
+					json.Unmarshal([]byte(performance), &operationBody)
+					CreatePageBehavior(operationBody, publicFiles)
 				} else if publicFiles.ActionType == "RESOURCE_ERROR" {
-					var pageResourceErroBody request.PostPageResourceErroBody
-					json.Unmarshal([]byte(performance), &pageResourceErroBody)
-					createResourcesError(pageResourceErroBody, publicFiles)
+					var resourceErroBody request.ResourceErrorBody
+					json.Unmarshal([]byte(performance), &resourceErroBody)
+					createResourcesError(resourceErroBody, publicFiles)
 				} else if publicFiles.ActionType == "JS_ERROR" {
-					var jsErrorBody request.PostJsErrorBody
+					var jsErrorBody request.JsErrorBody
 					json.Unmarshal([]byte(performance), &jsErrorBody)
 					createJsError(jsErrorBody, publicFiles)
 				}
@@ -96,7 +96,7 @@ func InitReportData() {
 	//cron2.Start()
 }
 
-func createJsError(jsErrorBody request.PostJsErrorBody, publicFiles model.PublicFiles) {
+func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFiles) {
 	jsErrorModel := model.PageJsError{
 		PageUrl:       jsErrorBody.PageUrl,
 		ComponentName: jsErrorBody.ComponentName,
@@ -109,7 +109,7 @@ func createJsError(jsErrorBody request.PostJsErrorBody, publicFiles model.Public
 	}
 }
 
-func createPerformance(performanceBody request.PostPagePerformance, publicFiles model.PublicFiles) {
+func createPerformance(performanceBody request.PerformanceBody, publicFiles model.PublicFiles) {
 	pagePerformanceModel := model.PagePerformance{
 		PageUrl:      performanceBody.PageUrl,
 		Appcache:     performanceBody.Appcache,
@@ -130,57 +130,57 @@ func createPerformance(performanceBody request.PostPagePerformance, publicFiles 
 	}
 }
 
-func createHttp(pageHttpBody request.PostPageHttpBody, publicFiles model.PublicFiles) {
+func createHttp(httpBody request.HttpBody, publicFiles model.PublicFiles) {
 	HttpInfoModel := model.PageHttp{
-		PageUrl:      pageHttpBody.PageUrl,
-		HttpUrl:      pageHttpBody.HttpUrl,
-		LoadTime:     pageHttpBody.LoadTime,
-		Status:       pageHttpBody.Status,
-		StatusText:   pageHttpBody.StatusText,
-		StatusResult: pageHttpBody.StatusResult,
-		RequestText:  pageHttpBody.RequestText,
-		ResponseText: pageHttpBody.ResponseText,
+		PageUrl:      httpBody.PageUrl,
+		HttpUrl:      httpBody.HttpUrl,
+		LoadTime:     httpBody.LoadTime,
+		Status:       httpBody.Status,
+		StatusText:   httpBody.StatusText,
+		StatusResult: httpBody.StatusResult,
+		RequestText:  httpBody.RequestText,
+		ResponseText: httpBody.ResponseText,
 		PublicFiles:  publicFiles,
 	}
-	if err := services.CreatePageHttpModel(HttpInfoModel, pageHttpBody.EventId); err != nil {
+	if err := services.CreatePageHttpModel(HttpInfoModel, httpBody.EventId); err != nil {
 		fmt.Print(err, "!!!!!!!!!!!!")
 	}
 }
 
-func createResourcesError(pageResourceErroBody request.PostPageResourceErroBody, publicFiles model.PublicFiles) {
-	resourceErrorInfoModel := model.PageResourceError{
-		PageUrl:     pageResourceErroBody.PageUrl,
-		SourceUrl:   pageResourceErroBody.SourceUrl,
-		ElementType: pageResourceErroBody.ElementType,
-		Status:      pageResourceErroBody.Status,
+func createResourcesError(resourceErrorBody request.ResourceErrorBody, publicFiles model.PublicFiles) {
+	resourceError := model.PageResourceError{
+		PageUrl:     resourceErrorBody.PageUrl,
+		SourceUrl:   resourceErrorBody.SourceUrl,
+		ElementType: resourceErrorBody.ElementType,
+		Status:      resourceErrorBody.Status,
 		PublicFiles: publicFiles,
 	}
-	if err := services.CreateResourcesError(resourceErrorInfoModel, pageResourceErroBody.EventId); err != nil {
+	if err := services.CreateResourcesError(resourceError, resourceErrorBody.EventId); err != nil {
 		fmt.Print(err, "!!!!!!!!!!!!")
 	}
 }
 
-func createPageView(pageViewBody request.PostPageViewBody, publicFiles model.PublicFiles) {
-	pageViewModel := model.PageView{
+func createPageView(pageViewBody request.PageViewBody, publicFiles model.PublicFiles) {
+	pageView := model.PageView{
 		PageUrl:     pageViewBody.PageUrl,
 		PublicFiles: publicFiles,
 	}
-	if err := services.CreatePageView(pageViewModel, pageViewBody.EventId); err != nil {
+	if err := services.CreatePageView(pageView, pageViewBody.EventId); err != nil {
 		fmt.Print(err, "!!!!!!!!!!!!")
 	}
 }
 
-func CreatePageBehavior(behaviorInfoBody request.PostBehaviorInfoBody, publicFiles model.PublicFiles) {
-	pageBehaviorInfoModel := model.PageBehavior{
-		PageUrl:     behaviorInfoBody.PageUrl,
-		ClassName:   behaviorInfoBody.ClassName,
-		Placeholder: behaviorInfoBody.Placeholder,
-		InputValue:  behaviorInfoBody.InputValue,
-		TagNameint:  behaviorInfoBody.TagNameint,
-		InnterText:  behaviorInfoBody.InnterText,
+func CreatePageBehavior(operationBody request.OperationBody, publicFiles model.PublicFiles) {
+	operation := model.PageOperation{
+		PageUrl:     operationBody.PageUrl,
+		ClassName:   operationBody.ClassName,
+		Placeholder: operationBody.Placeholder,
+		InputValue:  operationBody.InputValue,
+		TagNameint:  operationBody.TagNameint,
+		InnterText:  operationBody.InnterText,
 		PublicFiles: publicFiles,
 	}
-	if err := services.CreatePageBehavior(pageBehaviorInfoModel, behaviorInfoBody.EventId); err != nil {
+	if err := services.CreatePageBehavior(operation, operationBody.EventId); err != nil {
 		fmt.Print(err, "!!!!!!!!!!!!")
 	}
 }

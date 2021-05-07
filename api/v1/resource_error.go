@@ -9,11 +9,11 @@ import (
 )
 
 func GetResourceErrorInfo(context *gin.Context) {
-	var queryPagePerformance request.QueryPagePerformance
-	err := context.BindQuery(&queryPagePerformance)
+	var resourceErrorParams request.ResourceErrorParams
+	err := context.BindQuery(&resourceErrorParams)
 	startTime, endTime := getTodayStartAndEndTime()
-	ResourcesList, err := services.GetResourcesInfoList(queryPagePerformance.MonitorId, startTime, endTime)
-	ResourcesQuota, err := services.GetResourcesQuota(queryPagePerformance.MonitorId, startTime, endTime)
+	ResourcesList, err := services.GetResourcesInfoList(resourceErrorParams.MonitorId, startTime, endTime)
+	ResourcesQuota, err := services.GetResourcesQuota(resourceErrorParams.MonitorId, startTime, endTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {

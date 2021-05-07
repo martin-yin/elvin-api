@@ -1,6 +1,6 @@
 package request
 
-type PostPageResourceErroBody struct {
+type ResourceErrorBody struct {
 	PageUrl     string `json:"page_url"`
 	UserId      string `json:"user_id"`
 	MonitorId   string `json:"monitor_id"`
@@ -20,4 +20,13 @@ type PostPageResourceErroBody struct {
 	Browser        string `json:"browser"`
 	BrowserVersion string `json:"browser_version"`
 	UA             string `json:"ua"`
+}
+
+
+type ResourceErrorParams struct {
+	TimeGrain string `form:"time_grain"`
+	StartTime string `form:"start_time"`
+	EndTime   string `form:"end_time"`
+	StageType string `form:"stage_type"`
+	MonitorId string `form:"monitor_id"`
 }

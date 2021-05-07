@@ -28,7 +28,7 @@ func GetHttpQuota(monitorId string, startTime string, endTime string) (httpQuota
 	return
 }
 
-func GetHttpStageTimeByTimeGrain(monitorId string, timeGrain string, startTime string, endTime string) (httpStageTime []response.HttpStageTimeResponse, err error) {
+func GetHttpStage(monitorId string, timeGrain string, startTime string, endTime string) (httpStageTime []response.HttpStageTimeResponse, err error) {
 	query := ""
 	sqlWhere := "from_unixtime(page_https.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ? and status = 200"
 	if timeGrain == "minute" {

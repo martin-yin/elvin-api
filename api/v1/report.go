@@ -9,39 +9,32 @@ import (
 )
 
 func CreatePagePerformance(context *gin.Context) {
-	var pagePerformanceBody request.PostPagePerformance
-	err := context.ShouldBindJSON(&pagePerformanceBody)
-	pagePerformanceBody.IP = context.ClientIP()
+	var performanceBody request.PerformanceBody
+	err := context.ShouldBindJSON(&performanceBody)
+	performanceBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	res, _ := json.Marshal(pagePerformanceBody)
+	res, _ := json.Marshal(performanceBody)
 	global.GVA_REDIS.LPush("reportData", res)
-	incrKey := pagePerformanceBody.HappenDay + pagePerformanceBody.MonitorId + pagePerformanceBody.ActionType
+	incrKey := performanceBody.HappenDay + performanceBody.MonitorId + performanceBody.ActionType
 	global.GVA_REDIS.Incr(incrKey)
 	response.Ok(context)
 }
 
-func Report(context *gin.Context) {
-	//actionType := context.PostForm("action_type")
-	//if actionType == "PAGE_LOAD" {
-	//	CreatePagePerformance(context)
-	//}
-}
-
 func CreateHttpInfo(context *gin.Context) {
-	var pageHttpBody request.PostPageHttpBody
-	err := context.BindJSON(&pageHttpBody)
-	pageHttpBody.IP = context.ClientIP()
+	var httpBody request.HttpBody
+	err := context.BindJSON(&httpBody)
+	httpBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	res, _ := json.Marshal(pageHttpBody)
+	res, _ := json.Marshal(httpBody)
 	global.GVA_REDIS.LPush("reportData", res)
-	incrKey := pageHttpBody.HappenDay + pageHttpBody.MonitorId
-	if pageHttpBody.Status >= 400 {
+	incrKey := httpBody.HappenDay + httpBody.MonitorId
+	if httpBody.Status >= 400 {
 		incrKey = "HTTP_ERROR_LOG"
 	} else {
 		incrKey = "HTTP_LOG"
@@ -51,37 +44,37 @@ func CreateHttpInfo(context *gin.Context) {
 }
 
 func CreateResourcesError(context *gin.Context) {
-	var pageResourceErroBody request.PostPageResourceErroBody
-	err := context.BindJSON(&pageResourceErroBody)
-	pageResourceErroBody.IP = context.ClientIP()
+	var resourceErroBody request.ResourceErrorBody
+	err := context.BindJSON(&resourceErroBody)
+	resourceErroBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	res, _ := json.Marshal(pageResourceErroBody)
+	res, _ := json.Marshal(resourceErroBody)
 	global.GVA_REDIS.LPush("reportData", res)
-	incrKey := pageResourceErroBody.HappenDay + pageResourceErroBody.MonitorId + pageResourceErroBody.ActionType
+	incrKey := resourceErroBody.HappenDay + resourceErroBody.MonitorId + resourceErroBody.ActionType
 	global.GVA_REDIS.Incr(incrKey)
 	response.Ok(context)
 }
 
-func CreatePageBehavior(context *gin.Context) {
-	var behaviorBody request.PostBehaviorInfoBody
-	err := context.BindJSON(&behaviorBody)
-	behaviorBody.IP = context.ClientIP()
+func CreatePageOperation(context *gin.Context) {
+	var operationBody request.OperationBody
+	err := context.BindJSON(&operationBody)
+	operationBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	res, _ := json.Marshal(behaviorBody)
+	res, _ := json.Marshal(operationBody)
 	global.GVA_REDIS.LPush("reportData", res)
-	incrKey := behaviorBody.HappenDay + behaviorBody.MonitorId + behaviorBody.ActionType
+	incrKey := operationBody.HappenDay + operationBody.MonitorId + operationBody.ActionType
 	global.GVA_REDIS.Incr(incrKey)
 	response.Ok(context)
 }
 
 func CreatePageJsError(context *gin.Context) {
-	var jsErrorBody request.PostJsErrorBody
+	var jsErrorBody request.JsErrorBody
 	err := context.BindJSON(&jsErrorBody)
 	jsErrorBody.IP = context.ClientIP()
 	if err != nil {
@@ -96,7 +89,7 @@ func CreatePageJsError(context *gin.Context) {
 }
 
 func CreatePageView(context *gin.Context) {
-	var pageViewBody request.PostPageViewBody
+	var pageViewBody request.PageViewBody
 	err := context.BindJSON(&pageViewBody)
 	pageViewBody.IP = context.ClientIP()
 	if err != nil {

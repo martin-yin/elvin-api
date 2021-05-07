@@ -3,7 +3,7 @@ package model
 import "danci-api/global"
 
 // page得点击记录
-type PageBehavior struct {
+type PageOperation struct {
 	global.GVA_MODEL
 	PageUrl     string      `json:"page_url"`
 	ClassName   string      `json:"class_name"`
