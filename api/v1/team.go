@@ -24,7 +24,6 @@ func GetTeamList(context *gin.Context) {
 	}
 }
 
-
 func CreateTeam(context *gin.Context) {
 	customClaims := getCustomClaims(context)
 	if customClaims != nil {
@@ -46,6 +45,7 @@ func CreateTeam(context *gin.Context) {
 		}
 	}
 }
+
 // 判断团队是否存在
 func TeamIsExist(context *gin.Context) {
 	var teamParams request.AddTeamParams
@@ -94,7 +94,6 @@ func getCustomClaims(context *gin.Context) (customClaims *request.CustomClaims) 
 	}
 	return nil
 }
-
 
 func StrToUInt(str string) uint {
 	i, e := strconv.Atoi(str)

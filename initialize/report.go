@@ -8,6 +8,7 @@ import (
 	"danci-api/services"
 	"encoding/json"
 	"fmt"
+	"github.com/robfig/cron/v3"
 	"io/ioutil"
 	"net/http"
 	"sync"
@@ -67,12 +68,11 @@ func reportDataWrite() {
 
 // 页面性能
 func InitReportData() {
-	//cron2 := cron.New(cron.WithSeconds())
-	//cron2.AddFunc("*/10 * * * * * ", reportDataWrite)
-
-	//cron2.AddFunc("0 0 0 1 * ?  ", func() {    这个是正式得，每天凌晨调用一次。
+	cron2 := cron.New(cron.WithSeconds())
+	cron2.AddFunc("*/10 * * * * * ", reportDataWrite)
+	//cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
 	//cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
-	//	projectList := services.GetProjectList()
+	//
 	//	actionType := [7]string{"PAGE_LOAD", "HTTP_ERROR_LOG", "HTTP_LOG" , "RESOURCE_ERROR", "BEHAVIOR_INFO", "PAGE_VIEW", "JS_ERROR"}
 	//	var reportData []model.ReportDayStatistic
 	//	startTime := time.Now().Format("2006-01-02")
@@ -94,23 +94,22 @@ func InitReportData() {
 	//	services.CreateReportDay(reportData)
 	//})
 	//cron2.Start()
+	cron2.Start()
 }
 
 func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFiles) {
-	jsErrorModel := model.PageJsError{
+	jsError := model.PageJsError{
 		PageUrl:       jsErrorBody.PageUrl,
 		ComponentName: jsErrorBody.ComponentName,
 		Stack:         jsErrorBody.Stack,
 		Message:       jsErrorBody.Message,
 		PublicFiles:   publicFiles,
 	}
-	if err := services.CreatePageJsError(jsErrorModel, jsErrorBody.EventId); err != nil {
-		fmt.Print(err, "!!!!!!!!!")
-	}
+	services.CreatePageJsError(&jsError);
 }
 
 func createPerformance(performanceBody request.PerformanceBody, publicFiles model.PublicFiles) {
-	pagePerformanceModel := model.PagePerformance{
+	performance := model.PagePerformance{
 		PageUrl:      performanceBody.PageUrl,
 		Appcache:     performanceBody.Appcache,
 		LookupDomain: performanceBody.LookupDomain,
@@ -125,13 +124,11 @@ func createPerformance(performanceBody request.PerformanceBody, publicFiles mode
 		Redirect:     performanceBody.Redirect,
 		PublicFiles:  publicFiles,
 	}
-	if err := services.CreatePagePerformance(&pagePerformanceModel, publicFiles.EventId); err != nil {
-		fmt.Print(err, "!!!!!!!!!!!!")
-	}
+    services.CreatePagePerformance(&performance)
 }
 
 func createHttp(httpBody request.HttpBody, publicFiles model.PublicFiles) {
-	HttpInfoModel := model.PageHttp{
+	http := model.PageHttp{
 		PageUrl:      httpBody.PageUrl,
 		HttpUrl:      httpBody.HttpUrl,
 		LoadTime:     httpBody.LoadTime,
@@ -142,9 +139,8 @@ func createHttp(httpBody request.HttpBody, publicFiles model.PublicFiles) {
 		ResponseText: httpBody.ResponseText,
 		PublicFiles:  publicFiles,
 	}
-	if err := services.CreatePageHttpModel(HttpInfoModel, httpBody.EventId); err != nil {
-		fmt.Print(err, "!!!!!!!!!!!!")
-	}
+	services.CreatePageHttpModel(&http)
+
 }
 
 func createResourcesError(resourceErrorBody request.ResourceErrorBody, publicFiles model.PublicFiles) {
@@ -155,9 +151,8 @@ func createResourcesError(resourceErrorBody request.ResourceErrorBody, publicFil
 		Status:      resourceErrorBody.Status,
 		PublicFiles: publicFiles,
 	}
-	if err := services.CreateResourcesError(resourceError, resourceErrorBody.EventId); err != nil {
-		fmt.Print(err, "!!!!!!!!!!!!")
-	}
+	services.CreateResourcesError(&resourceError)
+
 }
 
 func createPageView(pageViewBody request.PageViewBody, publicFiles model.PublicFiles) {
@@ -165,9 +160,8 @@ func createPageView(pageViewBody request.PageViewBody, publicFiles model.PublicF
 		PageUrl:     pageViewBody.PageUrl,
 		PublicFiles: publicFiles,
 	}
-	if err := services.CreatePageView(pageView, pageViewBody.EventId); err != nil {
-		fmt.Print(err, "!!!!!!!!!!!!")
-	}
+	services.CreatePageView(&pageView)
+
 }
 
 func CreatePageBehavior(operationBody request.OperationBody, publicFiles model.PublicFiles) {
@@ -180,9 +174,7 @@ func CreatePageBehavior(operationBody request.OperationBody, publicFiles model.P
 		InnterText:  operationBody.InnterText,
 		PublicFiles: publicFiles,
 	}
-	if err := services.CreatePageBehavior(operation, operationBody.EventId); err != nil {
-		fmt.Print(err, "!!!!!!!!!!!!")
-	}
+	services.CreatePageBehavior(&operation)
 }
 
 func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {

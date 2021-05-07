@@ -22,7 +22,6 @@ type ResourceErrorBody struct {
 	UA             string `json:"ua"`
 }
 
-
 type ResourceErrorParams struct {
 	TimeGrain string `form:"time_grain"`
 	StartTime string `form:"start_time"`

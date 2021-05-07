@@ -9,7 +9,7 @@ import (
 )
 
 func GetProjectList(context *gin.Context) {
-	emptyList :=  make([]int, 0)
+	emptyList := make([]int, 0)
 	claims, exists := context.Get("claims")
 	if exists {
 		var customClaims request.CustomClaims

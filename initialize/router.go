@@ -19,9 +19,9 @@ func Routers() *gin.Engine {
 	Router.Use(middleware.Cors()) // 如需跨域可以打开
 	//global.GVA_LOG.Info("use middleware cors")
 	ApiGroup := Router.Group("")
-	router.InitReport(ApiGroup)  // 上报数据
-	router.InitCommunal(ApiGroup)  // 公用接口
-	router.InitAdmin(ApiGroup) // 管理相关接口
+	router.InitReport(ApiGroup)   // 上报数据
+	router.InitCommunal(ApiGroup) // 公用接口
+	router.InitAdmin(ApiGroup)    // 管理相关接口
 	global.GVA_LOG.Info("router register success")
 	return Router
 }

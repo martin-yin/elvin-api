@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetUsers(context *gin.Context) {
+func GetUserList(context *gin.Context) {
 	var userRequest request.UsersRequest
 	err := context.BindQuery(&userRequest)
 	responses, err := services.GetUsers(userRequest)

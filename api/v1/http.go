@@ -42,8 +42,6 @@ func GetHttpQuota(context *gin.Context) {
 	}
 }
 
-
-
 //
 //func GetHttpInfo(context *gin.Context) {
 //	var queryPageHttp request.QueryPageHttp

@@ -1,6 +1,5 @@
 package request
 
-
 type SuveyParams struct {
 	TimeGrain string `form:"time_grain"`
 	StartTime string `form:"start_time"`

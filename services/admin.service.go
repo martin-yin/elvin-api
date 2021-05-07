@@ -15,7 +15,7 @@ func Login(loginParam request.Login) (err error, userInter *model.Admin) {
 
 func RegisterAdmin(admin model.Admin) (userInter *model.Admin, err error) {
 	err = global.GVA_DB.Model(&model.Admin{}).Create(&admin).Error
-	return  &admin, err
+	return &admin, err
 }
 
 func FindAdmins(adminIds ...uint) (adminList []model.Admin, err error) {

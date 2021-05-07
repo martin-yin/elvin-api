@@ -10,8 +10,8 @@ type BindTeamAdminsParams struct {
 }
 
 type AddTeamProjectParams struct {
-	TeamId    uint `form:"team_id" json:"team_id"`
-	ProjectId uint `form:"project_id" json:"project_id"`
+	TeamId      uint   `form:"team_id" json:"team_id"`
+	ProjectId   uint   `form:"project_id" json:"project_id"`
 	ProjectName string `form:"project_name" json:"project_name"`
 	ProjectType string `form:"project_type" json:"project_type"`
 	Logo        string `form:"logo" json:"logo"`
