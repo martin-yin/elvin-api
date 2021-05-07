@@ -14,6 +14,7 @@ func main() {
 		initialize.MysqlTables(global.GVA_DB) // 初始化表
 		// 程序结束前关闭数据库链接
 		db, _ := global.GVA_DB.DB()
+		initialize.Redis()
 		defer db.Close()
 	}
 	go initialize.InitReportData()

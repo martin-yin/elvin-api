@@ -2,12 +2,11 @@ package router
 
 import (
 	v1 "danci-api/api/v1"
-	"danci-api/middleware"
 	"github.com/gin-gonic/gin"
 )
 
 func InitCommunal(Router *gin.RouterGroup) {
-	Communal := Router.Group("communal").Use(middleware.Auth())
+	Communal := Router.Group("communal")
 	{
 		//performance 相关API接口
 		Communal.GET("performanceStack", v1.GetPerformanceStack)

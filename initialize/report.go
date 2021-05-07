@@ -33,6 +33,7 @@ func reportDataWrite() {
 				publicFiles.City = addressInfo.City
 				publicFiles.District = addressInfo.District
 				publicFiles.Province = addressInfo.Province
+				services.CreateUserAction(publicFiles, performance)
 				if publicFiles.ActionType == "PAGE_LOAD" {
 					var pagePerformanceBody request.PerformanceBody
 					json.Unmarshal([]byte(performance), &pagePerformanceBody)
@@ -105,7 +106,7 @@ func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFile
 		Message:       jsErrorBody.Message,
 		PublicFiles:   publicFiles,
 	}
-	services.CreatePageJsError(&jsError);
+	services.CreatePageJsError(&jsError)
 }
 
 func createPerformance(performanceBody request.PerformanceBody, publicFiles model.PublicFiles) {
@@ -124,7 +125,7 @@ func createPerformance(performanceBody request.PerformanceBody, publicFiles mode
 		Redirect:     performanceBody.Redirect,
 		PublicFiles:  publicFiles,
 	}
-    services.CreatePagePerformance(&performance)
+	services.CreatePagePerformance(&performance)
 }
 
 func createHttp(httpBody request.HttpBody, publicFiles model.PublicFiles) {
@@ -132,6 +133,7 @@ func createHttp(httpBody request.HttpBody, publicFiles model.PublicFiles) {
 		PageUrl:      httpBody.PageUrl,
 		HttpUrl:      httpBody.HttpUrl,
 		LoadTime:     httpBody.LoadTime,
+		Method:       httpBody.Method,
 		Status:       httpBody.Status,
 		StatusText:   httpBody.StatusText,
 		StatusResult: httpBody.StatusResult,
@@ -139,7 +141,7 @@ func createHttp(httpBody request.HttpBody, publicFiles model.PublicFiles) {
 		ResponseText: httpBody.ResponseText,
 		PublicFiles:  publicFiles,
 	}
-	services.CreatePageHttpModel(&http)
+	services.CreatePageHttp(&http)
 
 }
 

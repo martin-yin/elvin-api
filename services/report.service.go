@@ -24,13 +24,22 @@ func CreateUser(user *model.User) {
 	}
 }
 
-func CreateUserAction(userAction *model.UserAction) {
-	if err := global.GVA_DB.Create(&userAction).Error; err != nil {
+func CreateUserAction(publicFiles model.PublicFiles, reportData string) {
+	userAciton := model.UserAction{
+		UserId:       publicFiles.UserId,
+		MonitorId:    publicFiles.MonitorId,
+		HappenTime:   publicFiles.HappenTime,
+		HappenDay:    publicFiles.HappenDay,
+		EventId:      publicFiles.EventId,
+		ActionType:   publicFiles.ActionType,
+		ActionDetail: reportData,
+	}
+	if err := global.GVA_DB.Create(&userAciton).Error; err != nil {
 		fmt.Println(err, "err \n")
 	}
 }
 
-func CreatePageHttpModel(pageHttp *model.PageHttp) {
+func CreatePageHttp(pageHttp *model.PageHttp) {
 	if err := global.GVA_DB.Create(&pageHttp).Error; err != nil {
 		fmt.Println(err, "err \n")
 	}

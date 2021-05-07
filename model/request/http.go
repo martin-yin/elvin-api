@@ -9,6 +9,7 @@ type HttpBody struct {
 	HappenDay    string  `json:"happen_day"`
 	HttpUrl      string  `json:"http_url"`
 	LoadTime     float64 `json:"load_time"`
+	Method       string  `json:"method"`
 	Status       int     `json:"status"`
 	StatusText   string  `json:"status_text"`
 	StatusResult string  `json:"status_result"`

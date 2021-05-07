@@ -16,7 +16,6 @@ func GetProjectList(id uint) (projectList []model.Project, err error) {
 	return
 }
 
-
 func CreateProject(project model.Project) (projectInter model.Project, err error) {
 	err = global.GVA_DB.Model(&model.Project{}).Create(&project).Error
 	return project, err
