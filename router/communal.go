@@ -11,9 +11,10 @@ func InitCommunal(Router *gin.RouterGroup) {
 	{
 		//performance 相关API接口
 		Communal.GET("performanceStack", v1.GetPerformanceStack)
-		Communal.GET("performanceList", v1.GetPerformanceList)
+		Communal.GET("performancePageList", v1.GetPerformancePageList)
 		Communal.GET("performanceStageTime", v1.GetPerformanceStageTime)
 		Communal.GET("performanceRankingList", v1.GetPerformanceRankingList)
+		Communal.GET("performanceQuota", v1.GetPerformanceQuota)
 
 		// http相关API接口
 		Communal.GET("httpList", v1.GetHttpList)

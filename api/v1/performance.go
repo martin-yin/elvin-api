@@ -36,7 +36,7 @@ func GetPerformanceStack(context *gin.Context) {
 	}
 }
 
-func GetPerformanceList(context *gin.Context) {
+func GetPerformancePageList(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
 	list, err := services.GetLoadInfoPageList(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
 	if err != nil {
@@ -55,6 +55,18 @@ func GetPerformanceStageTime(context *gin.Context) {
 		response.OkWithDetailed(stageTime, "获取成功", context)
 	}
 }
+
+func GetPerformanceQuota(context *gin.Context) {
+	performanceParams := getPerformanceQuery(context)
+	quota, err := services.GetQuotaData(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+	} else {
+		response.OkWithDetailed(quota, "获取成功", context)
+	}
+}
+
+//
 
 func GetPerformanceRankingList(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
