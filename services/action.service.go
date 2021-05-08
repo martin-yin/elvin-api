@@ -18,7 +18,7 @@ func GetUsers(usersParam request.UsersRequest) (userResponse []response.UserResp
 	}
 	startSearchTime := usersParam.SearchDate + " " + usersParam.SearchHour
 	endSearchTime := usersParam.SearchDate + " 23:59:59"
-	err = global.GVA_DB.Model(&model.User{}).Where(whereQuery, usersParam.MonitorId, startSearchTime, endSearchTime, usersParam.UserId).Group("happen_time desc").Find(&userResponse).Error
+	err = global.GVA_DB.Model(&model.User{}).Where(whereQuery, usersParam.MonitorId, startSearchTime, endSearchTime).Group("happen_time desc").Find(&userResponse).Error
 	return
 }
 

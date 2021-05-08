@@ -11,7 +11,6 @@ func CreatePagePerformance(pagePerformance *model.PagePerformance) {
 		fmt.Println("err", err)
 	}
 	user := model.User{
-		UserId:      pagePerformance.PublicFiles.UserId,
 		PublicFiles: pagePerformance.PublicFiles,
 	}
 	CreateUser(&user)

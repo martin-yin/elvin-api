@@ -6,5 +6,4 @@ import "danci-api/global"
 type User struct {
 	global.GVA_MODEL
 	PublicFiles PublicFiles `gorm:"embedded"`
-	UserId      string      `json:"user_id" gorm:"unique"`
 }

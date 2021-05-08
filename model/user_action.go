@@ -2,7 +2,6 @@ package model
 
 import "danci-api/global"
 
-// 用户行为记录
 type UserAction struct {
 	global.GVA_MODEL
 	UserId       string `json:"user_id"`

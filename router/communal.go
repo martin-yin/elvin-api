@@ -32,6 +32,9 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("surveyPUv", v1.GetSurveyPUvData)
 		Communal.GET("surveyJsError", v1.GetSurveyJsErrorData)
 
+		// 项目健康状态
+		Communal.GET("projectHealthy", v1.GetProjectHealthy)
+
 		//Communal.GET("projects", v1.GetProjectList)
 
 	}

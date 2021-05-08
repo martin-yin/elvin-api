@@ -2,7 +2,7 @@ package response
 
 type ProjectResponse struct {
 	ID          string `json:"id"`
-	MonitorId   string `json:"monitor_id"`
+	MonitorId   string `form:"monitor_id" json:"monitor_id"`
 	AdminId     string `json:"admin_id"`
 	ProjectName string `json:"project_name"`
 	ProjectType string `json:"project_type"`
@@ -22,4 +22,12 @@ type HomeStatisticsDataProjectResponse struct {
 	JsErrorRate       string `json:"js_error_rate"`
 	HttpErrorRate     string `json:"http_error_rate"`
 	ResourceErrorRate string `json:"resource_error_rate"`
+}
+
+type ProjectStatistics struct {
+	Pv float64 `json:"pv"`
+	Uv float64 `json:"uv"`
+	JsError        float64 `json:"js_error"`
+	ResourcesError float64 `json:"resources_error"`
+	HttpError      float64 `json:"http_error"`
 }

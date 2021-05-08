@@ -13,6 +13,7 @@ func GetUserList(context *gin.Context) {
 	responses, err := services.GetUsers(userRequest)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
+		return
 	}
 	response.OkWithDetailed(responses, "获取成功", context)
 }
@@ -23,6 +24,7 @@ func GetUser(context *gin.Context) {
 	responses, err := services.GetUser(userRequest.ID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
+		return
 	}
 	response.OkWithDetailed(responses, "获取成功", context)
 }
@@ -33,6 +35,7 @@ func GetUsersActionsStatistics(context *gin.Context) {
 	actionStatisticsResponse, err := services.GetUserActionsStatistics(userActionsRequest.EventID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
+		return
 	}
 	response.OkWithDetailed(actionStatisticsResponse, "获取成功", context)
 }
@@ -44,6 +47,7 @@ func GetUserActionList(context *gin.Context) {
 	total, err := services.GetUserActionsTotal(userActionsRequest.EventID)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
+		return
 	}
 	response.OkWithDetailed(response.UserActionsResponse{
 		ActionsResponse: actionResponse,
@@ -72,6 +76,7 @@ func GetUserAction(context *gin.Context) {
 	}
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
+		return
 	}
 	response.OkWithDetailed(responses, "获取成功", context)
 }
