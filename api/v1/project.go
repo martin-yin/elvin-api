@@ -5,6 +5,7 @@ import (
 	"danci-api/model/response"
 	"danci-api/services"
 	"danci-api/utils"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,14 +32,16 @@ func GetProjectList(context *gin.Context) {
 }
 
 func GetProjectHealthy(context *gin.Context) {
-	var projectParams request.ProjectParams
-	err := context.BindQuery(&projectParams)
+	var healthyParams request.HealthyParams
+	err := context.ShouldBind(&healthyParams)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
+	fmt.Print(healthyParams, "healthyParams \n")
+
 	startTime, endTime := getTodayStartAndEndTime()
-	healthyData, err := services.GetProjectHealthy(startTime, endTime, projectParams.MonitorId)
+	healthyData, err := services.GetProjectHealthy(startTime, endTime, healthyParams.MonitorId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return

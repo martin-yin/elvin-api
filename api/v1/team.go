@@ -76,11 +76,11 @@ func AddTeamProject(context *gin.Context) {
 				AdminID:     customClaims.ID,
 				TeamID:      team.ID,
 			}
-			project, err := services.CreateProject(projectModel)
+			err := services.CreateProject(projectModel)
 			if err != nil {
-				response.FailWithMessage("项目创建出错！", context)
+				response.FailWithMessage(err.Error(), context)
 			} else {
-				response.OkWithDetailed(project, "项目创建成功！", context)
+				response.OkWithDetailed("project", "项目创建成功！", context)
 			}
 		}
 	}

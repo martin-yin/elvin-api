@@ -25,8 +25,8 @@ type HomeStatisticsDataProjectResponse struct {
 }
 
 type ProjectStatistics struct {
-	Pv float64 `json:"pv"`
-	Uv float64 `json:"uv"`
+	Pv             float64 `json:"pv"`
+	Uv             float64 `json:"uv"`
 	JsError        float64 `json:"js_error"`
 	ResourcesError float64 `json:"resources_error"`
 	HttpError      float64 `json:"http_error"`

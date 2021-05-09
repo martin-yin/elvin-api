@@ -25,6 +25,10 @@ type ProjectParams struct {
 	TeamId      uint   `form:"team_id" json:"team_id"`
 }
 
+type HealthyParams struct {
+	MonitorId string `form:"monitor_id" json:"monitor_id"`
+}
+
 type AddTeamParams struct {
 	Name string `json:"name"`
 }

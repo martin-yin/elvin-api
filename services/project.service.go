@@ -4,6 +4,8 @@ import (
 	"danci-api/global"
 	"danci-api/model"
 	"danci-api/model/response"
+	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -18,9 +20,9 @@ func GetProjectList(id uint) (projectList []model.Project, err error) {
 	return
 }
 
-func CreateProject(project model.Project) (projectInter model.Project, err error) {
-	err = global.GVA_DB.Model(&model.Project{}).Create(&project).Error
-	return project, err
+func CreateProject(project model.Project) (err error) {
+	err = global.GVA_DB.Create(&project).Error
+	return err
 }
 
 func FindProject(projectName string) (isExist bool) {
@@ -40,21 +42,32 @@ func GetProjectStatistics(startTime string, endTime string, monitorId string) (p
 func GetProjectHealthy(startTime string, endTime string, monitorIds string) (projectStatisticsList []response.ProjectStatistics, err error) {
 	monitorIdealists := strings.Split(monitorIds, `,`)
 	for _, monitorId := range monitorIdealists {
+
+		fmt.Println(monitorId, "monitorId")
 		var projectStatistics response.ProjectStatistics
 		err = global.GVA_DB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		// projectStatistics.Pv  当前这个项目总的pv
+		//// projectStatistics.Pv  当前这个项目总的pv
 		err = global.GVA_DB.Model(&model.PageJsError{}).Select("COUNT( DISTINCT id ) as js_error").Where(SqlWhereBuild("page_js_errors"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 		err = global.GVA_DB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources_error").Where(SqlWhereBuild("page_resource_errors"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 		err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(SqlWhereBuild("page_https"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		projectStatistics.JsError = Decimal(projectStatistics.JsError / projectStatistics.Pv)
-		projectStatistics.ResourcesError = Decimal(projectStatistics.ResourcesError / projectStatistics.Pv)
-		projectStatistics.HttpError = Decimal(projectStatistics.HttpError / projectStatistics.Pv)
+		projectStatistics.JsError = DecimalNotZero(projectStatistics.JsError, projectStatistics.Pv)
+		projectStatistics.ResourcesError = DecimalNotZero(projectStatistics.ResourcesError, projectStatistics.Pv)
+		projectStatistics.HttpError = DecimalNotZero(projectStatistics.HttpError, projectStatistics.Pv)
 		projectStatisticsList = append(projectStatisticsList, projectStatistics)
 	}
 	return
 	// js 报错
 	// http 报错
 	// 资源报错
+}
+
+func DecimalNotZero(value float64, value2 float64) float64 {
+	if value != 0 {
+		result := value / value2
+		result, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", result), 64)
+		return result
+	}
+	return 0
 }
 
 func SqlWhereBuild(model string) string {
