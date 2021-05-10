@@ -42,8 +42,6 @@ func GetProjectStatistics(startTime string, endTime string, monitorId string) (p
 func GetProjectHealthy(startTime string, endTime string, monitorIds string) (projectStatisticsList []response.ProjectStatistics, err error) {
 	monitorIdealists := strings.Split(monitorIds, `,`)
 	for _, monitorId := range monitorIdealists {
-
-		fmt.Println(monitorId, "monitorId")
 		var projectStatistics response.ProjectStatistics
 		err = global.GVA_DB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 		//// projectStatistics.Pv  当前这个项目总的pv
