@@ -48,7 +48,7 @@ func GetProject(context *gin.Context) {
 }
 
 func DelProject(context *gin.Context) {
-	id, isExist:= context.GetQuery("id")
+	id, isExist := context.GetQuery("id")
 	if isExist {
 		err := services.DelProject(id)
 		if err != nil {
@@ -63,7 +63,6 @@ func DelProject(context *gin.Context) {
 		return
 	}
 }
-
 
 func GetProjectHealthy(context *gin.Context) {
 	var healthyParams request.HealthyParams

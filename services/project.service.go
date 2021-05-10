@@ -44,7 +44,7 @@ func GetProjectStatistics(startTime string, endTime string, monitorId string) (p
 	return
 }
 
-func DelProject(id string) (err error){
+func DelProject(id string) (err error) {
 	err = global.GVA_DB.Delete(&model.Project{}, id).Error
 	return err
 }
