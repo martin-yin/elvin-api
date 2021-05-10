@@ -58,7 +58,7 @@ func TeamIsExist(context *gin.Context) {
 	}
 }
 
-func AddTeamProject(context *gin.Context) {
+func CreateProject(context *gin.Context) {
 	customClaims := getCustomClaims(context)
 	if customClaims != nil {
 		var addTeamProjectParams request.AddTeamProjectParams

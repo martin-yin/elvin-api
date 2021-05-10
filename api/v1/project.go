@@ -5,7 +5,6 @@ import (
 	"danci-api/model/response"
 	"danci-api/services"
 	"danci-api/utils"
-	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -31,6 +30,41 @@ func GetProjectList(context *gin.Context) {
 	}
 }
 
+func GetProject(context *gin.Context) {
+	var projectParams request.ProjectParams
+	err := context.ShouldBind(&projectParams)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
+	project, err := services.GetProject(projectParams.MonitorId)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	} else {
+		response.OkWithDetailed(project, "获取成功", context)
+		return
+	}
+}
+
+func DelProject(context *gin.Context) {
+	id, isExist:= context.GetQuery("id")
+	if isExist {
+		err := services.DelProject(id)
+		if err != nil {
+			response.FailWithMessage(err.Error(), context)
+			return
+		} else {
+			response.OkWithMessage("删除成功！", context)
+			return
+		}
+	} else {
+		response.FailWithMessage("不存在项目, 删除失败", context)
+		return
+	}
+}
+
+
 func GetProjectHealthy(context *gin.Context) {
 	var healthyParams request.HealthyParams
 	err := context.ShouldBind(&healthyParams)
@@ -38,7 +72,6 @@ func GetProjectHealthy(context *gin.Context) {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	fmt.Print(healthyParams, "healthyParams \n")
 
 	startTime, endTime := getTodayStartAndEndTime()
 	healthyData, err := services.GetProjectHealthy(startTime, endTime, healthyParams.MonitorId)

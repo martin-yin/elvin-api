@@ -19,8 +19,12 @@ func InitAdmin(Router *gin.RouterGroup) {
 		// 团队绑定管理员
 		Admin.Use(middleware.Auth()).POST("bindTeamAdmins", v1.BindTeamAdmins)
 		// 创建团队项目
-		Admin.Use(middleware.Auth()).POST("addTeamProject", v1.AddTeamProject)
+		Admin.Use(middleware.Auth()).POST("createProject", v1.CreateProject)
 		// 获取项目列表，根据当前登录的id查找项目
 		Admin.Use(middleware.Auth()).GET("projectList", v1.GetProjectList)
+
+		Admin.Use(middleware.Auth()).GET("project", v1.GetProject)
+
+		Admin.Use(middleware.Auth()).GET("delProject", v1.DelProject)
 	}
 }

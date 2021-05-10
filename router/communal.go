@@ -34,8 +34,8 @@ func InitCommunal(Router *gin.RouterGroup) {
 
 		// 项目健康状态
 		Communal.GET("projectHealthy", v1.GetProjectHealthy)
-
-		//Communal.GET("projects", v1.GetProjectList)
+		// 资源错误接口
+		Communal.GET("resourceError", v1.GetResourceErrorInfo)
 
 	}
 }

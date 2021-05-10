@@ -34,9 +34,19 @@ func FindProject(projectName string) (isExist bool) {
 	return false
 }
 
+func GetProject(monitorId string) (project model.Project, err error) {
+	err = global.GVA_DB.Model(&model.Project{}).Where("monitor_id = ? ", monitorId).First(&project).Error
+	return
+}
+
 func GetProjectStatistics(startTime string, endTime string, monitorId string) (projectStatistics response.ProjectStatistics, err error) {
 	err = global.GVA_DB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 	return
+}
+
+func DelProject(id string) (err error){
+	err = global.GVA_DB.Delete(&model.Project{}, id).Error
+	return err
 }
 
 func GetProjectHealthy(startTime string, endTime string, monitorIds string) (projectStatisticsList []response.ProjectStatistics, err error) {
