@@ -36,6 +36,5 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("projectHealthy", v1.GetProjectHealthy)
 		// 资源错误接口
 		Communal.GET("resourceError", v1.GetResourceErrorInfo)
-
 	}
 }

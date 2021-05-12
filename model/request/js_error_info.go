@@ -9,6 +9,8 @@ type JsErrorBody struct {
 	HappenTime int    `json:"happen_day"`
 	// 组件名称
 	ComponentName  string `json:"component_name"`
+	Line           string `json:"line"`
+	Column         string `json:"column"`
 	Stack          string `json:"stack"`
 	Message        string `json:"message"`
 	EventId        string `json:"event_id"`
