@@ -6,7 +6,7 @@ type JsErrorBody struct {
 	MonitorId  string `json:"monitor_id"`
 	ActionType string `json:"action_type"`
 	HappenDay  string `json:"happen_time"`
-	HappenTime int    `json:"happen_day"`
+	HappenTime int    `json:"happen_time"`
 	// 组件名称
 	ComponentName  string `json:"component_name"`
 	Line           string `json:"line"`
@@ -22,4 +22,9 @@ type JsErrorBody struct {
 	Browser        string `json:"browser"`
 	BrowserVersion string `json:"browser_version"`
 	UA             string `json:"ua"`
+}
+
+
+type JsErrorParams struct {
+	ID string `form:"id"`
 }

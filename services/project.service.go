@@ -54,7 +54,6 @@ func GetProjectHealthy(startTime string, endTime string, monitorIds string) (pro
 	for _, monitorId := range monitorIdealists {
 		var projectStatistics response.ProjectStatistics
 		err = global.GVA_DB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		//// projectStatistics.Pv  当前这个项目总的pv
 		err = global.GVA_DB.Model(&model.PageJsError{}).Select("COUNT( DISTINCT id ) as js_error").Where(SqlWhereBuild("page_js_errors"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 		err = global.GVA_DB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources_error").Where(SqlWhereBuild("page_resource_errors"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 		err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(SqlWhereBuild("page_https"), startTime, endTime, monitorId).Scan(&projectStatistics).Error

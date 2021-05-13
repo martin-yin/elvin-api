@@ -9,7 +9,7 @@ type JsErrorStackFrame struct {
 	FileName     string `json:"file_name"`
 	FunctionName string `json:"function_name"`
 	LineName     string `json:"line_name"`
-	Source       string `json:"source" gorm:"type:text"`  // 这个就是通过source map 解析出来的源码
+	Source       string `json:"source" gorm:"type:text"` // 这个就是通过source map 解析出来的源码
 
 	PageJsErrorId uint
 }

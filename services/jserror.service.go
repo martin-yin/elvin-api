@@ -7,6 +7,11 @@ import (
 )
 
 func GetJsError() (pageJsErrorList []response.PageJsErrorList, err error) {
-	err = global.GVA_DB.Model(&model.PageJsError{}).Select("COUNT(DISTINCT id) as frequency, message").Group("message").Scan(&pageJsErrorList).Error
+	err = global.GVA_DB.Model(&model.PageJsError{}).Select("id, COUNT(DISTINCT id) as frequency, stack, message").Group("message").Scan(&pageJsErrorList).Error
+	return
+}
+
+func GetJsErrorDetail(id string) (jsErrorDetail model.PageJsError, err error) {
+	err = global.GVA_DB.Model(&model.PageJsError{}).Where("id = ?", id).First(&jsErrorDetail).Error
 	return
 }

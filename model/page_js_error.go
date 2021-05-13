@@ -10,8 +10,8 @@ type PageJsError struct {
 	ComponentName string `json:"componentName"`
 	Stack         string `json:"stack" gorm:"type:text"`
 
-	Message       string `json:"message"`
+	Message string `json:"message"`
 
 	JsErrorStackFrame []JsErrorStackFrame `gorm:"foreignKey:PageJsErrorId"`
-	PublicFiles  PublicFiles   `gorm:"embedded"`
+	PublicFiles       PublicFiles         `gorm:"embedded"`
 }
