@@ -56,11 +56,24 @@ func CreatePageBehavior(pageOperation *model.PageOperation) {
 	}
 }
 
-func CreatePageJsError(pageJsError *model.PageJsError) {
-	if err := global.GVA_DB.Create(&pageJsError).Error; err != nil {
+func CreatePageJsError(jsError model.PageJsError) {
+	if err := global.GVA_DB.Save(&jsError).Error; err != nil {
 		fmt.Println(err, "err \n")
 	}
 }
+
+func CreateJsErrorStack(stack model.JsErrorStack) {
+	if err := global.GVA_DB.Save(&stack).Error; err != nil {
+		fmt.Println(err, "err \n")
+	}
+}
+
+
+func FindPageJsError(message string) (pageJsError model.PageJsError, err error) {
+	err = global.GVA_DB.Where("message = ? ", message).Find(&pageJsError).Error
+	return
+}
+
 
 func CreatePageView(pageView *model.PageView) {
 	if err := global.GVA_DB.Create(&pageView).Error; err != nil {

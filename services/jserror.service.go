@@ -3,11 +3,13 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
-	"danci-api/model/response"
+	"gorm.io/gorm"
 )
 
-func GetJsError() (pageJsErrorList []response.PageJsErrorList, err error) {
-	err = global.GVA_DB.Model(&model.PageJsError{}).Select("id, COUNT(DISTINCT id) as frequency, stack, message").Group("message").Scan(&pageJsErrorList).Error
+func GetJsError() (pageJsErrorList []model.PageJsError, err error) {
+	err = global.GVA_DB.Preload("JsErrorStacks", func(db *gorm.DB) *gorm.DB {
+		return db.Select("js_error_stacks.stack")
+	}).Model(&model.PageJsError{}).Find(&pageJsErrorList).Error
 	return
 }
 

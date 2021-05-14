@@ -41,6 +41,5 @@ func InitCommunal(Router *gin.RouterGroup) {
 
 		Communal.GET("jsErrorDetail", v1.GetJsErrorDetail)
 
-
 	}
 }

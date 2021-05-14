@@ -5,13 +5,18 @@ import "danci-api/global"
 // 页面js错误
 type PageJsError struct {
 	global.GVA_MODEL
-	PageUrl string `json:"page_url"`
-	// 组件名称
-	ComponentName string `json:"componentName"`
-	Stack         string `json:"stack" gorm:"type:text"`
 
-	Message string `json:"message"`
+	ErrorName string `json:"error_name"`
+	Message   string `json:"message" gorm:"uniqueIndex"`
+	JsErrorStacks []JsErrorStack `gorm:"foreignKey:PageJsErrorId"`
+}
 
-	JsErrorStackFrame []JsErrorStackFrame `gorm:"foreignKey:PageJsErrorId"`
-	PublicFiles       PublicFiles         `gorm:"embedded"`
+type JsErrorStack struct {
+	global.GVA_MODEL
+	// 对应归属到哪个PageJsError
+	PageJsErrorId uint
+	ComponentName string      `json:"componentName"`
+	Stack         string      `json:"stack" gorm:"type:text"`
+	ErrorName     string      `json:"error_name"`
+	PublicFiles   PublicFiles `gorm:"embedded"`
 }

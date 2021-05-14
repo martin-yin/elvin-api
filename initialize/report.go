@@ -100,13 +100,26 @@ func InitReportData() {
 
 func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFiles) {
 	jsError := model.PageJsError{
-		PageUrl:       jsErrorBody.PageUrl,
-		ComponentName: jsErrorBody.ComponentName,
-		Stack:         jsErrorBody.Stack,
-		Message:       jsErrorBody.Message,
-		PublicFiles:   publicFiles,
+		ErrorName: jsErrorBody.ErrorName,
+		Message:   jsErrorBody.Message,
+		JsErrorStacks:  []model.JsErrorStack{{
+			ComponentName: jsErrorBody.ComponentName,
+			Stack: jsErrorBody.Stack,
+			ErrorName: jsErrorBody.ErrorName,
+			PublicFiles: publicFiles,
+		},
+		},
 	}
-	services.CreatePageJsError(&jsError)
+	jsErrorModel, err := services.FindPageJsError(jsErrorBody.Message)
+	if err == nil {
+		if jsErrorModel.ID != 0 {
+			jsErrorStack := jsError.JsErrorStacks[0]
+			jsErrorStack.PageJsErrorId = jsErrorModel.ID
+			services.CreateJsErrorStack(jsErrorStack)
+		} else {
+			services.CreatePageJsError(jsError)
+		}
+	}
 }
 
 func createPerformance(performanceBody request.PerformanceBody, publicFiles model.PublicFiles) {
