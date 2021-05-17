@@ -37,7 +37,7 @@ func InitCommunal(Router *gin.RouterGroup) {
 		// 资源错误接口
 		Communal.GET("resourceError", v1.GetResourceErrorInfo)
 
-		Communal.GET("jsError", v1.GetJsError)
+		Communal.GET("issues", v1.GetIssues)
 
 		Communal.GET("jsErrorDetail", v1.GetJsErrorDetail)
 

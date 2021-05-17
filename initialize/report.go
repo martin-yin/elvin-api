@@ -100,24 +100,27 @@ func InitReportData() {
 
 func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFiles) {
 	jsError := model.PageJsError{
-		ErrorName: jsErrorBody.ErrorName,
-		Message:   jsErrorBody.Message,
-		JsErrorStacks:  []model.JsErrorStack{{
-			ComponentName: jsErrorBody.ComponentName,
-			Stack: jsErrorBody.Stack,
-			ErrorName: jsErrorBody.ErrorName,
-			PublicFiles: publicFiles,
-		},
-		},
+		PageUrl:       jsErrorBody.PageUrl,
+		ComponentName: jsErrorBody.ComponentName,
+		Stack:         jsErrorBody.Stack,
+		Message:       jsErrorBody.Message,
+		ErrorName:     jsErrorBody.ErrorName,
+		PublicFiles:   publicFiles,
 	}
-	jsErrorModel, err := services.FindPageJsError(jsErrorBody.Message)
+	jsIssueModel, err := services.FindJsIssue(jsErrorBody.Message)
 	if err == nil {
-		if jsErrorModel.ID != 0 {
-			jsErrorStack := jsError.JsErrorStacks[0]
-			jsErrorStack.PageJsErrorId = jsErrorModel.ID
-			services.CreateJsErrorStack(jsErrorStack)
-		} else {
+		if jsIssueModel.ID != 0 {
+			jsError.JsIssuesId = jsIssueModel.ID
 			services.CreatePageJsError(jsError)
+		} else {
+			jsIssue := model.JsIssue{
+				ErrorName: jsError.ErrorName,
+				Message:   jsError.Message,
+				PageJsError: []model.PageJsError{
+					jsError,
+				},
+			}
+			services.CreateJsIssue(jsIssue)
 		}
 	}
 }

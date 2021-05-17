@@ -3,17 +3,47 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
-	"gorm.io/gorm"
+	"danci-api/model/response"
+	"fmt"
 )
 
-func GetJsError() (pageJsErrorList []model.PageJsError, err error) {
-	err = global.GVA_DB.Preload("JsErrorStacks", func(db *gorm.DB) *gorm.DB {
-		return db.Select("js_error_stacks.stack")
-	}).Model(&model.PageJsError{}).Find(&pageJsErrorList).Error
+func GetJsError() (pageJsErrorList []response.PageJsErrorList, err error) {
+	err = global.GVA_DB.Model(&model.PageJsError{}).Select("page_js_errors.id, " +
+		"page_js_errors.error_name, " +
+		"page_js_errors.message, " +
+		"COUNT(DISTINCT js_error_stacks.user_id) as error_user," +
+		"COUNT(js_error_stacks.id) as error_count ").
+		Joins("INNER JOIN js_error_stacks on js_error_stacks.page_js_error_id = page_js_errors.id").
+		Group("page_js_errors.error_name").Find(&pageJsErrorList).Error
 	return
 }
 
-func GetJsErrorDetail(id string) (jsErrorDetail model.PageJsError, err error) {
-	err = global.GVA_DB.Model(&model.PageJsError{}).Where("id = ?", id).First(&jsErrorDetail).Error
+func GetIssues() (pageJsErrorList []response.PageJsErrorList, err error) {
+	err = global.GVA_DB.Model(&model.JsIssue{}).Select("js_issues.id, " +
+		"js_issues.error_name, " +
+		"js_issues.message, " +
+		"COUNT(DISTINCT page_js_errors.user_id) as error_user, " +
+		"COUNT(page_js_errors.id) as error_count").Joins("" +
+		"INNER JOIN page_js_errors on page_js_errors.js_issues_id = js_issues.id" +
+		"").Find(&pageJsErrorList).
+		Group("js_issues.id").Error
 	return
+}
+
+func GetJsErrorDetail(issueId, errorId string) (jsErrorDetail response.PageJsErrorDetail, err error) {
+	if len(errorId) != 0 {
+		err = global.GVA_DB.Model(&model.PageJsError{}).Where("id = ?", errorId).First(&jsErrorDetail).Error
+	} else {
+		err = global.GVA_DB.Model(&model.PageJsError{}).Where("js_issues_id = ?", issueId).Scan(&jsErrorDetail).Error
+		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as previous_error_id").Where("js_issues_id < ?", jsErrorDetail.ID).Scan(&jsErrorDetail.PreviousErrorID).Error
+		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as next_error_id").Where("js_issues_id > ?", jsErrorDetail.ID).Scan(&jsErrorDetail.NextErrorID).Error
+	}
+	return
+}
+
+func GetJsErrorPreAndNext(id uint) (err error) {
+	var preId int
+	err = global.GVA_DB.Model(&model.PageJsError{}).Select("id").Where("js_issues_id < ?", id).First(&preId).Error
+	fmt.Println(preId, "上一个！！！")
+	return err
 }
