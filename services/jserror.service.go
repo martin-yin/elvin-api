@@ -30,13 +30,15 @@ func GetIssues() (pageJsErrorList []response.PageJsErrorList, err error) {
 	return
 }
 
-func GetJsErrorDetail(issueId, errorId string) (jsErrorDetail response.PageJsErrorDetail, err error) {
-	if len(errorId) != 0 {
-		err = global.GVA_DB.Model(&model.PageJsError{}).Where("id = ?", errorId).First(&jsErrorDetail).Error
+func GetJsErrorDetail(issueId, errorId int) (jsErrorDetail response.PageJsErrorDetail, err error) {
+	if errorId != 0 {
+		err = global.GVA_DB.Model(&model.PageJsError{}).Where("id = ?", errorId).Scan(&jsErrorDetail).Error
+		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as previous_error_id").Where("id < ?", errorId).Group("id DESC").Limit(1).Scan(&jsErrorDetail.PreviousErrorID).Error
+		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as next_error_id").Where("id > ?", errorId).Group("id").Limit(1).Scan(&jsErrorDetail.NextErrorID).Error
 	} else {
 		err = global.GVA_DB.Model(&model.PageJsError{}).Where("js_issues_id = ?", issueId).Scan(&jsErrorDetail).Error
-		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as previous_error_id").Where("js_issues_id < ?", jsErrorDetail.ID).Scan(&jsErrorDetail.PreviousErrorID).Error
-		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as next_error_id").Where("js_issues_id > ?", jsErrorDetail.ID).Scan(&jsErrorDetail.NextErrorID).Error
+		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as previous_error_id").Where("id < ?", jsErrorDetail.ID).Group("id DESC").Limit(1).Scan(&jsErrorDetail.PreviousErrorID).Error
+		err = global.GVA_DB.Model(&model.PageJsError{}).Select("id as next_error_id").Where("id > ?", jsErrorDetail.ID).Group("id").Limit(1).Scan(&jsErrorDetail.NextErrorID).Error
 	}
 	return
 }

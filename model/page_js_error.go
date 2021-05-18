@@ -35,6 +35,7 @@ type PageJsError struct {
 	ComponentName string      `json:"componentName"`
 	Message       string      `json:"message"`
 	Stack         string      `json:"stack" gorm:"type:text"`
+	StackFrames   string      `json:"stack_frames" gorm:"type:text"`
 	ErrorName     string      `json:"error_name"`
 	PublicFiles   PublicFiles `json:"public_files" gorm:"embedded"`
 	JsIssuesId    uint        `json:"js_issues_id"`

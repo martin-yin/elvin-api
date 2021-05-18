@@ -1,13 +1,14 @@
 package request
 
 type JsErrorBody struct {
-	PageUrl    string `json:"page_url"`
-	UserId     string `json:"user_id"`
-	MonitorId  string `json:"monitor_id"`
-	ActionType string `json:"action_type"`
-	HappenTime int    `json:"happen_time"`
-	HappenDay  string `json:"happen_day"`
-	ErrorName  string `json:"error_name"`
+	PageUrl     string `json:"page_url"`
+	UserId      string `json:"user_id"`
+	MonitorId   string `json:"monitor_id"`
+	ActionType  string `json:"action_type"`
+	HappenTime  int    `json:"happen_time"`
+	HappenDay   string `json:"happen_day"`
+	ErrorName   string `json:"error_name"`
+	StackFrames string `json:"stack_frames"`
 	// 组件名称
 	ComponentName  string `json:"component_name"`
 	Line           string `json:"line"`
@@ -26,6 +27,6 @@ type JsErrorBody struct {
 }
 
 type JsErrorParams struct {
-	IssueId string `form:"issue_id"`
-	ErrorId string `form:"error_id"`
+	IssueId int `form:"issue_id"`
+	ErrorId int `form:"error_id"`
 }

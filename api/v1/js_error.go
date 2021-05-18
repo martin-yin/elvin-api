@@ -30,7 +30,6 @@ func GetJsErrorDetail(context *gin.Context) {
 	_ = context.BindQuery(&jsErrorParams)
 
 	responses, err := services.GetJsErrorDetail(jsErrorParams.IssueId, jsErrorParams.ErrorId)
-	//
 	//services.GetJsErrorPreAndNext(20)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)

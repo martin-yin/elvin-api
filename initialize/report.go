@@ -104,6 +104,7 @@ func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFile
 		ComponentName: jsErrorBody.ComponentName,
 		Stack:         jsErrorBody.Stack,
 		Message:       jsErrorBody.Message,
+		StackFrames:   jsErrorBody.StackFrames,
 		ErrorName:     jsErrorBody.ErrorName,
 		PublicFiles:   publicFiles,
 	}
