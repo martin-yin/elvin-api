@@ -117,6 +117,7 @@ func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFile
 			jsIssue := model.JsIssue{
 				ErrorName: jsError.ErrorName,
 				Message:   jsError.Message,
+				MonitorId: jsError.PublicFiles.MonitorId,
 				PageJsError: []model.PageJsError{
 					jsError,
 				},

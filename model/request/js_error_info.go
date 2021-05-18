@@ -27,6 +27,7 @@ type JsErrorBody struct {
 }
 
 type JsErrorParams struct {
-	IssueId int `form:"issue_id"`
-	ErrorId int `form:"error_id"`
+	IssueId   int    `form:"issue_id"`
+	ErrorId   int    `form:"error_id"`
+	MonitorId string `form:"monitor_id"`
 }

@@ -17,9 +17,8 @@ type PageJsErrorDetail struct {
 	Message       string `json:"message"`
 	Stack         string `json:"stack"`
 	ErrorName     string `json:"error_name"`
-	StackFrames string `json:"stack_frames"`
+	StackFrames   string `json:"stack_frames"`
 
-	//PublicFiles   PublicFiles `json:"public_files" gorm:"embedded"`
 	JsIssuesId      uint      `json:"js_issues_id"`
 	PreviousErrorID uint      `json:"previous_error_id"`
 	NextErrorID     uint      `json:"next_error_id"`

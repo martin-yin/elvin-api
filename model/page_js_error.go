@@ -45,5 +45,6 @@ type JsIssue struct {
 	global.GVA_MODEL
 	ErrorName   string        `json:"error_name"`
 	Message     string        `json:"message" gorm:"uniqueIndex"`
+	MonitorId   string        `json:"monitor_id"`
 	PageJsError []PageJsError `json:"page_js_error" gorm:"foreignKey:JsIssuesId"`
 }
