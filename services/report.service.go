@@ -56,19 +56,19 @@ func CreatePageBehavior(pageOperation *model.PageOperation) {
 	}
 }
 
-func CreatePageJsError(jsError model.PageJsError) {
+func CreatePageJsError(jsError model.PageIssue) {
 	if err := global.GVA_DB.Save(&jsError).Error; err != nil {
 		fmt.Println(err, "err \n")
 	}
 }
 
-func CreateJsIssue(stack model.JsIssue) {
+func CreateJsIssue(stack model.Issue) {
 	if err := global.GVA_DB.Save(&stack).Error; err != nil {
 		fmt.Println(err, "err \n")
 	}
 }
 
-func FindJsIssue(message string) (jsIssues model.JsIssue, err error) {
+func FindJsIssue(message string) (jsIssues model.Issue, err error) {
 	err = global.GVA_DB.Where("message = ? ", message).Find(&jsIssues).Error
 	return
 }

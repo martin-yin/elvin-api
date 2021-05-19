@@ -16,7 +16,7 @@ func GetIssues(context *gin.Context) {
 	response.OkWithDetailed(responses, "获取成功", context)
 }
 
-func GetJsErrorDetail(context *gin.Context) {
+func GetIssuesDetail(context *gin.Context) {
 	var jsErrorParams request.JsErrorParams
 	_ = context.BindQuery(&jsErrorParams)
 

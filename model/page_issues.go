@@ -29,7 +29,7 @@ import "danci-api/global"
 //	PublicFiles   PublicFiles `gorm:"embedded"`
 //}
 
-type PageJsError struct {
+type PageIssue struct {
 	global.GVA_MODEL
 	PageUrl       string      `json:"page_url"`
 	ComponentName string      `json:"componentName"`
@@ -38,13 +38,13 @@ type PageJsError struct {
 	StackFrames   string      `json:"stack_frames" gorm:"type:text"`
 	ErrorName     string      `json:"error_name"`
 	PublicFiles   PublicFiles `json:"public_files" gorm:"embedded"`
-	JsIssuesId    uint        `json:"js_issues_id"`
+	IssuesId      uint        `json:"issues_id"`
 }
 
-type JsIssue struct {
+type Issue struct {
 	global.GVA_MODEL
-	ErrorName   string        `json:"error_name"`
-	Message     string        `json:"message" gorm:"uniqueIndex"`
-	MonitorId   string        `json:"monitor_id"`
-	PageJsError []PageJsError `json:"page_js_error" gorm:"foreignKey:JsIssuesId"`
+	ErrorName string      `json:"error_name"`
+	Message   string      `json:"message" gorm:"uniqueIndex"`
+	MonitorId string      `json:"monitor_id"`
+	PageIssue []PageIssue `json:"page_issue" gorm:"foreignKey:IssuesId"`
 }

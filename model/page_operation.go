@@ -9,7 +9,7 @@ type PageOperation struct {
 	ClassName   string      `json:"class_name"`
 	Placeholder string      `json:"placeholder"`
 	InputValue  string      `json:"Input_value"`
-	TagNameint  string      `json:"tag_name"`
-	InnterText  string      `json:"innter_text" gorm:"type:text"`
+	TagName     string      `json:"tag_name"`
+	InnerText   string      `json:"inner_text" gorm:"type:text"`
 	PublicFiles PublicFiles `gorm:"embedded"`
 }

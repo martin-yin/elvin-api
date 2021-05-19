@@ -44,16 +44,16 @@ func CreateHttpInfo(context *gin.Context) {
 }
 
 func CreateResourcesError(context *gin.Context) {
-	var resourceErroBody request.ResourceErrorBody
-	err := context.BindJSON(&resourceErroBody)
-	resourceErroBody.IP = context.ClientIP()
+	var resourceErrorBody request.ResourceErrorBody
+	err := context.BindJSON(&resourceErrorBody)
+	resourceErrorBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	res, _ := json.Marshal(resourceErroBody)
+	res, _ := json.Marshal(resourceErrorBody)
 	global.GVA_REDIS.LPush("reportData", res)
-	incrKey := resourceErroBody.HappenDay + resourceErroBody.MonitorId + resourceErroBody.ActionType
+	incrKey := resourceErrorBody.HappenDay + resourceErrorBody.MonitorId + resourceErrorBody.ActionType
 	global.GVA_REDIS.Incr(incrKey)
 	response.Ok(context)
 }
@@ -73,17 +73,17 @@ func CreatePageOperation(context *gin.Context) {
 	response.Ok(context)
 }
 
-func CreatePageJsError(context *gin.Context) {
-	var jsErrorBody request.JsErrorBody
-	err := context.BindJSON(&jsErrorBody)
-	jsErrorBody.IP = context.ClientIP()
+func CreatePageIssues(context *gin.Context) {
+	var issuesBody request.IssuesBody
+	err := context.BindJSON(&issuesBody)
+	issuesBody.IP = context.ClientIP()
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	res, _ := json.Marshal(jsErrorBody)
+	res, _ := json.Marshal(issuesBody)
 	global.GVA_REDIS.LPush("reportData", res)
-	incrKey := jsErrorBody.HappenDay + jsErrorBody.MonitorId + jsErrorBody.ActionType
+	incrKey := issuesBody.HappenDay + issuesBody.MonitorId + issuesBody.ActionType
 	global.GVA_REDIS.Incr(incrKey)
 	response.Ok(context)
 }

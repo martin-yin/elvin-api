@@ -39,7 +39,7 @@ func InitCommunal(Router *gin.RouterGroup) {
 
 		Communal.GET("issues", v1.GetIssues)
 
-		Communal.GET("jsErrorDetail", v1.GetJsErrorDetail)
+		Communal.GET("jsErrorDetail", v1.GetIssuesDetail)
 
 	}
 }

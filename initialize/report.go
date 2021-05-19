@@ -55,9 +55,9 @@ func reportDataWrite() {
 					json.Unmarshal([]byte(performance), &resourceErroBody)
 					createResourcesError(resourceErroBody, publicFiles)
 				} else if publicFiles.ActionType == "JS_ERROR" {
-					var jsErrorBody request.JsErrorBody
-					json.Unmarshal([]byte(performance), &jsErrorBody)
-					createJsError(jsErrorBody, publicFiles)
+					var issuesBody request.IssuesBody
+					json.Unmarshal([]byte(performance), &issuesBody)
+					createJsError(issuesBody, publicFiles)
 				}
 				wg.Done()
 			}(performance)
@@ -98,28 +98,28 @@ func InitReportData() {
 	cron2.Start()
 }
 
-func createJsError(jsErrorBody request.JsErrorBody, publicFiles model.PublicFiles) {
-	jsError := model.PageJsError{
-		PageUrl:       jsErrorBody.PageUrl,
-		ComponentName: jsErrorBody.ComponentName,
-		Stack:         jsErrorBody.Stack,
-		Message:       jsErrorBody.Message,
-		StackFrames:   jsErrorBody.StackFrames,
-		ErrorName:     jsErrorBody.ErrorName,
+func createJsError(issusesBody request.IssuesBody, publicFiles model.PublicFiles) {
+	issuses := model.PageIssue{
+		PageUrl:       issusesBody.PageUrl,
+		ComponentName: issusesBody.ComponentName,
+		Stack:         issusesBody.Stack,
+		Message:       issusesBody.Message,
+		StackFrames:   issusesBody.StackFrames,
+		ErrorName:     issusesBody.ErrorName,
 		PublicFiles:   publicFiles,
 	}
-	jsIssueModel, err := services.FindJsIssue(jsErrorBody.Message)
+	jsIssueModel, err := services.FindJsIssue(issusesBody.Message)
 	if err == nil {
 		if jsIssueModel.ID != 0 {
-			jsError.JsIssuesId = jsIssueModel.ID
-			services.CreatePageJsError(jsError)
+			issuses.IssuesId = jsIssueModel.ID
+			services.CreatePageJsError(issuses)
 		} else {
-			jsIssue := model.JsIssue{
-				ErrorName: jsError.ErrorName,
-				Message:   jsError.Message,
-				MonitorId: jsError.PublicFiles.MonitorId,
-				PageJsError: []model.PageJsError{
-					jsError,
+			jsIssue := model.Issue{
+				ErrorName: issuses.ErrorName,
+				Message:   issuses.Message,
+				MonitorId: issuses.PublicFiles.MonitorId,
+				PageIssue: []model.PageIssue{
+					issuses,
 				},
 			}
 			services.CreateJsIssue(jsIssue)
@@ -190,8 +190,8 @@ func CreatePageBehavior(operationBody request.OperationBody, publicFiles model.P
 		ClassName:   operationBody.ClassName,
 		Placeholder: operationBody.Placeholder,
 		InputValue:  operationBody.InputValue,
-		TagNameint:  operationBody.TagNameint,
-		InnterText:  operationBody.InnterText,
+		TagName:     operationBody.TagName,
+		InnerText:   operationBody.InnerText,
 		PublicFiles: publicFiles,
 	}
 	services.CreatePageBehavior(&operation)

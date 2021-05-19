@@ -30,8 +30,8 @@ func MysqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
 		model.PageOperation{},
 		model.PageHttp{},
-		model.PageJsError{},
-		model.JsIssue{},
+		model.PageIssue{},
+		model.Issue{},
 		model.PagePerformance{},
 		model.PageResourceError{},
 		model.UserAction{},

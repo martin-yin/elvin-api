@@ -53,7 +53,7 @@ func GetActionPerformance(id string) (actionPerformanceResponse response.ActionP
 }
 
 func GetActionJsError(id string) (actionJsErrorResponse response.ActionJsErrorResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageJsError{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
+	err = global.GVA_DB.Model(&model.PageIssue{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
 	return
 }
 
