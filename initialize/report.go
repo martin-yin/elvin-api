@@ -46,7 +46,7 @@ func reportDataWrite() {
 					var pageViewBody request.PageViewBody
 					json.Unmarshal([]byte(performance), &pageViewBody)
 					createPageView(pageViewBody, publicFiles)
-				} else if publicFiles.ActionType == "BEHAVIOR_INFO" {
+				} else if publicFiles.ActionType == "OPERATION" {
 					var operationBody request.OperationBody
 					json.Unmarshal([]byte(performance), &operationBody)
 					CreatePageBehavior(operationBody, publicFiles)
