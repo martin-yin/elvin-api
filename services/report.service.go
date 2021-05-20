@@ -37,7 +37,7 @@ func CreateUserAction(publicFiles model.PublicFiles, reportData string) {
 }
 
 func CreatePageHttp(pageHttp *model.PageHttp) {
- 	global.GVA_DB.Create(&pageHttp)
+	global.GVA_DB.Create(&pageHttp)
 }
 
 func CreateResourcesError(resourceError *model.PageResourceError) {
@@ -55,8 +55,6 @@ func CreatePageJsError(jsError model.PageIssue) {
 func CreateJsIssue(stack model.Issue) {
 	global.GVA_DB.Save(&stack)
 }
-
-
 
 func CreatePageView(pageView *model.PageView) {
 	global.GVA_DB.Create(&pageView)

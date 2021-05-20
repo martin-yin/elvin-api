@@ -1,8 +1,10 @@
 package request
 
-type MonitorIdAndTime struct {
+type StartEndTime struct {
 	StartTime string `form:"start_time"`
 	EndTime   string `form:"end_time"`
-	MonitorId string `form:"monitor_id"`
 }
 
+type MonitorId struct {
+	MonitorId string `form:"monitor_id"`
+}
