@@ -28,52 +28,53 @@ func getPerformanceQuery(context *gin.Context) (performanceParams *request.Perfo
 
 func GetPerformanceStack(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
-	stack, err := services.GetPerformanceStack(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
+	stack, err := services.GetPerformanceStack(performanceParams.MonitorId.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
-	} else {
-		response.OkWithDetailed(stack, "获取成功", context)
+		return
 	}
+	response.OkWithDetailed(stack, "获取成功", context)
 }
 
 func GetPerformancePageList(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
-	list, err := services.GetLoadInfoPageList(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
+	list, err := services.GetLoadInfoPageList(performanceParams.MonitorId.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
-	} else {
-		response.OkWithDetailed(list, "获取成功", context)
+		return
 	}
+	response.OkWithDetailed(list, "获取成功", context)
+
 }
 
 func GetPerformanceStageTime(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
-	stageTime, err := services.GetStageTimeList(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime, performanceParams.TimeGrain)
+	stageTime, err := services.GetStageTimeList(performanceParams.MonitorId.MonitorId, performanceParams.StartTime, performanceParams.EndTime, performanceParams.TimeGrain)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
-	} else {
-		response.OkWithDetailed(stageTime, "获取成功", context)
+		return
 	}
+	response.OkWithDetailed(stageTime, "获取成功", context)
 }
 
 func GetPerformanceQuota(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
-	quota, err := services.GetQuotaData(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
+	quota, err := services.GetQuotaData(performanceParams.MonitorId.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
-	} else {
-		response.OkWithDetailed(quota, "获取成功", context)
+		return
 	}
+	response.OkWithDetailed(quota, "获取成功", context)
 }
 
 //
 
 func GetPerformanceRankingList(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
-	rankingList, err := services.GetRankingList(performanceParams.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
+	rankingList, err := services.GetRankingList(performanceParams.MonitorId.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
-	} else {
-		response.OkWithDetailed(rankingList, "获取成功", context)
+		return
 	}
+	response.OkWithDetailed(rankingList, "获取成功", context)
 }

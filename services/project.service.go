@@ -63,9 +63,6 @@ func GetProjectHealthy(startTime string, endTime string, monitorIds string) (pro
 		projectStatisticsList = append(projectStatisticsList, projectStatistics)
 	}
 	return
-	// js 报错
-	// http 报错
-	// 资源报错
 }
 
 func DecimalNotZero(value float64, value2 float64) float64 {

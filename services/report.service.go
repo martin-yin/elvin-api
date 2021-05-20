@@ -24,7 +24,7 @@ func CreateUser(user *model.User) {
 }
 
 func CreateUserAction(publicFiles model.PublicFiles, reportData string) {
-	userAciton := model.UserAction{
+	userAction := model.UserAction{
 		UserId:       publicFiles.UserId,
 		MonitorId:    publicFiles.MonitorId,
 		HappenTime:   publicFiles.HappenTime,
@@ -33,48 +33,31 @@ func CreateUserAction(publicFiles model.PublicFiles, reportData string) {
 		ActionType:   publicFiles.ActionType,
 		ActionDetail: reportData,
 	}
-	if err := global.GVA_DB.Create(&userAciton).Error; err != nil {
-		fmt.Println(err, "err \n")
-	}
+	global.GVA_DB.Create(&userAction)
 }
 
 func CreatePageHttp(pageHttp *model.PageHttp) {
-	if err := global.GVA_DB.Create(&pageHttp).Error; err != nil {
-		fmt.Println(err, "err \n")
-	}
+ 	global.GVA_DB.Create(&pageHttp)
 }
 
 func CreateResourcesError(resourceError *model.PageResourceError) {
-	if err := global.GVA_DB.Create(&resourceError).Error; err != nil {
-		fmt.Println(err, "err \n")
-	}
+	global.GVA_DB.Create(&resourceError)
 }
 
 func CreatePageBehavior(pageOperation *model.PageOperation) {
-	if err := global.GVA_DB.Create(&pageOperation).Error; err != nil {
-		fmt.Println(err, "err \n")
-	}
+	global.GVA_DB.Create(&pageOperation)
 }
 
 func CreatePageJsError(jsError model.PageIssue) {
-	if err := global.GVA_DB.Save(&jsError).Error; err != nil {
-		fmt.Println(err, "err \n")
-	}
+	global.GVA_DB.Save(&jsError)
 }
 
 func CreateJsIssue(stack model.Issue) {
-	if err := global.GVA_DB.Save(&stack).Error; err != nil {
-		fmt.Println(err, "err \n")
-	}
+	global.GVA_DB.Save(&stack)
 }
 
-func FindJsIssue(message string) (jsIssues model.Issue, err error) {
-	err = global.GVA_DB.Where("message = ? ", message).Find(&jsIssues).Error
-	return
-}
+
 
 func CreatePageView(pageView *model.PageView) {
-	if err := global.GVA_DB.Create(&pageView).Error; err != nil {
-		fmt.Println(err, "err \n")
-	}
+	global.GVA_DB.Create(&pageView)
 }

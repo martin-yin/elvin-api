@@ -7,7 +7,6 @@ import (
 )
 
 func GetPerformanceStack(monitorId string, startTime string, endTime string) (stackData response.StackResponse, err error) {
-	sqlWhere := `from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("round(AVG(redirect),2) as redirect, "+
 		"round(AVG(appcache),2) as appcache, "+
 		"round(AVG(lookup_domain),2) as lookup_domain, "+
@@ -16,17 +15,16 @@ func GetPerformanceStack(monitorId string, startTime string, endTime string) (st
 		"round(AVG(request),2) as request, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_event),2) as load_event, "+
-		"round(AVG(dom_parse),2) as dom_parse ").Where(sqlWhere, startTime, endTime, monitorId).Find(&stackData).Error
+		"round(AVG(dom_parse),2) as dom_parse ").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Find(&stackData).Error
 	return
 }
 
 func GetQuotaData(monitorId string, startTime string, endTime string) (quotaData response.QuotaResponse, err error) {
-	sqlWhere := `from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and monitor_id = ?`
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("round(AVG(dom_parse),2) as dom_parse, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_page),2) as load_page, "+
-		"Count(*) as Pv ").Where(sqlWhere, startTime, endTime, monitorId).Scan(&quotaData).Error
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("COUNT( * ) AS fast").Where(sqlWhere, startTime, endTime, monitorId).Scan(&quotaData.Fast).Error
+		"Count(*) as Pv ").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Scan(&quotaData).Error
+	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("COUNT( * ) AS fast").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Scan(&quotaData.Fast).Error
 
 	if quotaData.Fast != 0 {
 		quotaData.Fast = Decimal(quotaData.Fast/quotaData.Pv) * 100
@@ -35,16 +33,14 @@ func GetQuotaData(monitorId string, startTime string, endTime string) (quotaData
 }
 
 func GetRankingList(monitorId string, startTime string, endTime string) (RankingHttListResponse []response.RankingHttpListResponse, err error) {
-	sqlWhere := `from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select(
 		"page_url, "+
 			"round( AVG( load_page ), 2 ) AS load_page, "+
-			"COUNT(*) as total").Where(sqlWhere, startTime, endTime, monitorId).Group("page_url").Order("load_page desc").Order("load_page desc").Limit(8).Find(&RankingHttListResponse).Error
+			"COUNT(*) as total").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Group("page_url").Order("load_page desc").Order("load_page desc").Limit(8).Find(&RankingHttListResponse).Error
 	return
 }
 
 func GetStageTimeList(monitorId string, startTime string, endTime string, timeGrain string) (stageTimeList []response.StageTimeResponse, err error) {
-	sqlWhere := `from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`
 	query := ""
 	if timeGrain == "minute" {
 		query = query + "'%H:%i'"
@@ -66,12 +62,11 @@ func GetStageTimeList(monitorId string, startTime string, endTime string, timeGr
 		"round( AVG( ttfb ), 2 ) AS ttfb,"+
 		"round( AVG( load_event ), 2 ) AS load_event,"+
 		"round( AVG( load_page ), 2 ) AS load_page,"+
-		"COUNT(*) as Pv ").Where(sqlWhere, startTime, endTime, monitorId).Group("time_key").Find(&stageTimeList).Error
+		"COUNT(*) as Pv ").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Group("time_key").Find(&stageTimeList).Error
 	return
 }
 
 func GetLoadInfoPageList(monitorId string, startTime string, endTime string) (pagePerformanceList []response.PagePerformanceListResponse, err error) {
-	sqlWhere := `from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ? `
 	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("ID, page_url, "+
 		"request, "+
 		"dom_parse, "+
@@ -79,6 +74,6 @@ func GetLoadInfoPageList(monitorId string, startTime string, endTime string) (pa
 		"round( AVG( load_page ), 2 ) AS load_page,"+
 		"load_event, "+
 		"load_type, "+
-		"COUNT(*) as pv ").Where(sqlWhere, startTime, endTime, monitorId).Group("page_url").Find(&pagePerformanceList).Error
+		"COUNT(*) as pv ").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Group("page_url").Find(&pagePerformanceList).Error
 	return
 }

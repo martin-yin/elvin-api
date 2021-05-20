@@ -4,17 +4,10 @@ import (
 	"danci-api/global"
 	"danci-api/model"
 	"danci-api/model/response"
-	"fmt"
 )
 
-func GetJsError() (pageJsErrorList []response.PageJsErrorList, err error) {
-	err = global.GVA_DB.Model(&model.PageIssue{}).Select("page_js_errors.id, " +
-		"page_js_errors.error_name, " +
-		"page_js_errors.message, " +
-		"COUNT(DISTINCT js_error_stacks.user_id) as error_user," +
-		"COUNT(js_error_stacks.id) as error_count ").
-		Joins("INNER JOIN js_error_stacks on js_error_stacks.page_js_error_id = page_js_errors.id").
-		Group("page_js_errors.error_name").Find(&pageJsErrorList).Error
+func FindJsIssue(message string) (jsIssues model.Issue, err error) {
+	err = global.GVA_DB.Where("message = ? ", message).Find(&jsIssues).Error
 	return
 }
 
@@ -30,8 +23,7 @@ func GetIssues() (pageJsErrorList []response.PageJsErrorList, err error) {
 	return
 }
 
-func GetJsErrorDetail(issueId, errorId int, monitorId string) (jsErrorDetail response.PageJsErrorDetail, err error) {
-
+func GetIssuesDetail(issueId, errorId int, monitorId string) (jsErrorDetail response.PageJsErrorDetail, err error) {
 	if errorId != 0 {
 		err = global.GVA_DB.Model(&model.PageIssue{}).Where("id = ? And monitor_id = ?", errorId, monitorId).Group("id DESC").Limit(1).Scan(&jsErrorDetail).Error
 		err = global.GVA_DB.Model(&model.PageIssue{}).Select("id as previous_error_id ").Where("id < ? And monitor_id = ? ", errorId, monitorId).Group("id DESC").Limit(1).Scan(&jsErrorDetail.PreviousErrorID).Error
@@ -42,11 +34,4 @@ func GetJsErrorDetail(issueId, errorId int, monitorId string) (jsErrorDetail res
 		err = global.GVA_DB.Model(&model.PageIssue{}).Select("id as next_error_id").Where("id > ? And monitor_id = ? ", jsErrorDetail.ID, monitorId).Group("id").Limit(1).Scan(&jsErrorDetail.NextErrorID).Error
 	}
 	return
-}
-
-func GetJsErrorPreAndNext(id uint) (err error) {
-	var preId int
-	err = global.GVA_DB.Model(&model.PageIssue{}).Select("id").Where("js_issues_id < ?", id).First(&preId).Error
-	fmt.Println(preId, "上一个！！！")
-	return err
 }

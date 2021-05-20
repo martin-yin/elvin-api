@@ -20,8 +20,7 @@ func GetIssuesDetail(context *gin.Context) {
 	var jsErrorParams request.JsErrorParams
 	_ = context.BindQuery(&jsErrorParams)
 
-	responses, err := services.GetJsErrorDetail(jsErrorParams.IssueId, jsErrorParams.ErrorId, jsErrorParams.MonitorId)
-	//services.GetJsErrorPreAndNext(20)
+	responses, err := services.GetIssuesDetail(jsErrorParams.IssueId, jsErrorParams.ErrorId, jsErrorParams.MonitorId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return

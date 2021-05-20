@@ -71,14 +71,3 @@ func GetActionPageView(id string) (actionPageViewResponse response.ActionPageVie
 	err = global.GVA_DB.Model(&model.PageView{}).Where("id = ?", id).Scan(&actionPageViewResponse).Error
 	return
 }
-
-//
-//func GetBehaviorError(id string) (userInfo UserInfo, err error) {
-//	err = global.GVA_DB.Model(&model.PagePerformance{}).Where("id = ?", id).Scan(&userInfo).Error
-//	return
-//}
-
-//func GetBehaviorPerformance() (behavior response.UserInfo, err error){
-//	err = global.GVA_DB.Model(&model.UserBehaviorInfo{}).Find(&behavior).Error
-//	return
-//}

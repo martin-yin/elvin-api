@@ -39,9 +39,9 @@ func CreateTeam(context *gin.Context) {
 			}
 			if err := services.CreateTeam(*team); err != nil {
 				response.FailWithMessage("创建团队失败！！", context)
-			} else {
-				response.OkWithMessage("创建团队成功！", context)
+				return
 			}
+			response.OkWithMessage("创建团队成功！", context)
 		}
 	}
 }
@@ -53,9 +53,9 @@ func TeamIsExist(context *gin.Context) {
 	teamIsExist := services.FindProject(teamParams.Name)
 	if teamIsExist {
 		response.FailWithMessage("团队已存在", context)
-	} else {
-		response.OkWithMessage("", context)
+		return
 	}
+	response.OkWithMessage("", context)
 }
 
 func CreateProject(context *gin.Context) {
@@ -79,9 +79,9 @@ func CreateProject(context *gin.Context) {
 			err := services.CreateProject(projectModel)
 			if err != nil {
 				response.FailWithMessage(err.Error(), context)
-			} else {
-				response.OkWithDetailed("project", "项目创建成功！", context)
+				return
 			}
+			response.OkWithDetailed("project", "项目创建成功！", context)
 		}
 	}
 }
@@ -117,9 +117,9 @@ func BindTeamAdmins(context *gin.Context) {
 			team.Admins = admins
 			if err := services.UpdateTeamAdminIds(&team); err != nil {
 				response.FailWithMessage("绑定团队成员失败！", context)
-			} else {
-				response.OkWithMessage("绑定团队成员成功！", context)
+				return
 			}
+			response.OkWithMessage("绑定团队成员成功！", context)
 		}
 	}
 }

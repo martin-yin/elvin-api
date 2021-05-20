@@ -17,16 +17,15 @@ func GetProjectList(context *gin.Context) {
 		projectList, err := services.GetProjectList(customClaims.ID)
 		if err != nil {
 			response.FailWithMessage(err.Error(), context)
-		} else {
-			if len(projectList) == 0 {
-				response.OkWithDetailed(emptyList, "获取成功", context)
-				return
-			} else {
-				response.OkWithDetailed(projectList, "获取成功", context)
-				return
-			}
+			return
 		}
-		return
+		if len(projectList) == 0 {
+			response.OkWithDetailed(emptyList, "获取成功", context)
+			return
+		} else {
+			response.OkWithDetailed(projectList, "获取成功", context)
+			return
+		}
 	}
 }
 
@@ -41,10 +40,8 @@ func GetProject(context *gin.Context) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
-	} else {
-		response.OkWithDetailed(project, "获取成功", context)
-		return
 	}
+	response.OkWithDetailed(project, "获取成功", context)
 }
 
 func DelProject(context *gin.Context) {
@@ -71,14 +68,11 @@ func GetProjectHealthy(context *gin.Context) {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-
 	startTime, endTime := getTodayStartAndEndTime()
 	healthyData, err := services.GetProjectHealthy(startTime, endTime, healthyParams.MonitorId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
-	} else {
-		response.OkWithDetailed(healthyData, "获取成功", context)
-		return
 	}
+	response.OkWithDetailed(healthyData, "获取成功", context)
 }

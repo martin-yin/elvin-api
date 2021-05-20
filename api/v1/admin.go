@@ -18,6 +18,7 @@ func AdminLogin(context *gin.Context) {
 	_ = context.ShouldBind(&loginParam)
 	if err, user := services.Login(loginParam); err != nil {
 		response.FailWithMessage("用户名不存在或者密码错误", context)
+		return
 	} else {
 		tokenNext(context, user)
 	}
@@ -33,6 +34,7 @@ func RegisterAdmin(context *gin.Context) {
 	})
 	if err != nil {
 		response.FailWithMessage("管理员创建失败！", context)
+		return
 	} else {
 		tokenNext(context, user)
 	}
