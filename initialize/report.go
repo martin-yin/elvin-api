@@ -6,6 +6,7 @@ import (
 	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
+	"danci-api/utils"
 	"encoding/json"
 	"fmt"
 	"github.com/robfig/cron/v3"
@@ -14,10 +15,12 @@ import (
 	"sync"
 )
 
-func reportDataWrite() {
+var handles *utils.Handles
+
+func reportDataConsume() {
 	var wg sync.WaitGroup
 	pipe := global.GVA_REDIS.TxPipeline()
-	getValue := pipe.LRange("reportData", 0, 500)
+	getValue := pipe.LRange("reportData", 0, 5000)
 	_, err := pipe.Exec()
 	if err != nil {
 		return
@@ -26,51 +29,72 @@ func reportDataWrite() {
 		for _, performance := range getValue.Val() {
 			wg.Add(1)
 			go func(performance string) {
-				var publicFiles model.PublicFiles
-				json.Unmarshal([]byte(performance), &publicFiles)
-				addressInfo := getIpAddressInfo(publicFiles.IP)
-				publicFiles.Nation = addressInfo.Nation
-				publicFiles.City = addressInfo.City
-				publicFiles.District = addressInfo.District
-				publicFiles.Province = addressInfo.Province
-				services.CreateUserAction(publicFiles, performance)
-				if publicFiles.ActionType == "PAGE_LOAD" {
-					var pagePerformanceBody request.PerformanceBody
-					json.Unmarshal([]byte(performance), &pagePerformanceBody)
-					createPerformance(pagePerformanceBody, publicFiles)
-				} else if publicFiles.ActionType == "HTTP_LOG" {
-					var pageHttpBody request.HttpBody
-					json.Unmarshal([]byte(performance), &pageHttpBody)
-					createHttp(pageHttpBody, publicFiles)
-				} else if publicFiles.ActionType == "PAGE_VIEW" {
-					var pageViewBody request.PageViewBody
-					json.Unmarshal([]byte(performance), &pageViewBody)
-					createPageView(pageViewBody, publicFiles)
-				} else if publicFiles.ActionType == "OPERATION" {
-					var operationBody request.OperationBody
-					json.Unmarshal([]byte(performance), &operationBody)
-					CreatePageBehavior(operationBody, publicFiles)
-				} else if publicFiles.ActionType == "RESOURCE_ERROR" {
-					var resourceErroBody request.ResourceErrorBody
-					json.Unmarshal([]byte(performance), &resourceErroBody)
-					createResourcesError(resourceErroBody, publicFiles)
-				} else if publicFiles.ActionType == "JS_ERROR" {
-					var issuesBody request.IssuesBody
-					json.Unmarshal([]byte(performance), &issuesBody)
-					createJsError(issuesBody, publicFiles)
-				}
-				wg.Done()
+				reportConsumer(performance)
 			}(performance)
 		}
+		global.GVA_REDIS.LTrim("reportData", 5000, -1)
 		wg.Wait()
-		global.GVA_REDIS.LTrim("reportData", 500, -1)
 	}
 }
 
+func reportConsumer(report string) {
+	var publicFiles model.PublicFiles
+	json.Unmarshal([]byte(report), &publicFiles)
+	addressInfo := getIpAddressInfo(publicFiles.IP)
+	publicFiles.Nation = addressInfo.Nation
+	publicFiles.City = addressInfo.City
+	publicFiles.District = addressInfo.District
+	publicFiles.Province = addressInfo.Province
+	services.CreateUserAction(publicFiles, report)
+	handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
+}
+
+
+func init() {
+	handles = utils.NewHandles()
+	handles.ServicesHandlerRegister("PAGE_LOAD", func(report string, publicFiles *model.PublicFiles) {
+		var performance request.PerformanceBody
+		json.Unmarshal([]byte(report), &performance)
+		services.CreatePagePerformance(&performance, publicFiles)
+	})
+
+	handles.ServicesHandlerRegister("HTTP_LOG", func(report string, publicFiles *model.PublicFiles) {
+		var http request.HttpBody
+		json.Unmarshal([]byte(report), &http)
+		services.CreatePageHttp(&http, publicFiles)
+	})
+
+	handles.ServicesHandlerRegister("PAGE_VIEW", func(report string, publicFiles *model.PublicFiles) {
+		var pageView request.PageViewBody
+		json.Unmarshal([]byte(report), &pageView)
+		services.CreatePageView(&pageView, publicFiles)
+	})
+
+	handles.ServicesHandlerRegister("OPERATION", func(report string, publicFiles *model.PublicFiles) {
+		var operation request.OperationBody
+		json.Unmarshal([]byte(report), &operation)
+		services.CreatePageOperation(&operation, publicFiles)
+	})
+
+	handles.ServicesHandlerRegister("RESOURCE", func(report string, publicFiles *model.PublicFiles) {
+		var resource request.ResourceErrorBody
+		json.Unmarshal([]byte(report), &resource)
+		services.CreateResourcesError(&resource, publicFiles)
+	})
+
+	handles.ServicesHandlerRegister("JS_ERROR", func(report string, publicFiles *model.PublicFiles) {
+		var issuesBody request.IssuesBody
+		json.Unmarshal([]byte(report), &issuesBody)
+		services.CreatePageJsError(&issuesBody, publicFiles)
+	})
+}
+
 // 页面性能
+
 func InitReportData() {
+
 	cron2 := cron.New(cron.WithSeconds())
-	cron2.AddFunc("*/10 * * * * * ", reportDataWrite)
+	cron2.AddFunc("*/5 * * * * * ", reportDataConsume)
 	//cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
 	//cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
 	//
@@ -94,107 +118,7 @@ func InitReportData() {
 	//	}
 	//	services.CreateReportDay(reportData)
 	//})
-	//cron2.Start()
 	cron2.Start()
-}
-
-func createJsError(issusesBody request.IssuesBody, publicFiles model.PublicFiles) {
-	issuses := model.PageIssue{
-		PageUrl:       issusesBody.PageUrl,
-		ComponentName: issusesBody.ComponentName,
-		Stack:         issusesBody.Stack,
-		Message:       issusesBody.Message,
-		StackFrames:   issusesBody.StackFrames,
-		ErrorName:     issusesBody.ErrorName,
-		PublicFiles:   publicFiles,
-	}
-	jsIssueModel, err := services.FindJsIssue(issusesBody.Message)
-	if err == nil {
-		if jsIssueModel.ID != 0 {
-			issuses.IssuesId = jsIssueModel.ID
-			services.CreatePageJsError(issuses)
-		} else {
-			jsIssue := model.Issue{
-				ErrorName: issuses.ErrorName,
-				Message:   issuses.Message,
-				MonitorId: issuses.PublicFiles.MonitorId,
-				PageIssue: []model.PageIssue{
-					issuses,
-				},
-			}
-			services.CreateJsIssue(jsIssue)
-		}
-	}
-}
-
-func createPerformance(performanceBody request.PerformanceBody, publicFiles model.PublicFiles) {
-	performance := model.PagePerformance{
-		PageUrl:      performanceBody.PageUrl,
-		Appcache:     performanceBody.Appcache,
-		LookupDomain: performanceBody.LookupDomain,
-		Tcp:          performanceBody.Tcp,
-		SslT:         performanceBody.SslT,
-		Request:      performanceBody.Request,
-		DomParse:     performanceBody.DomParse,
-		Ttfb:         performanceBody.Ttfb,
-		LoadPage:     performanceBody.LoadPage,
-		LoadEvent:    performanceBody.LoadEvent,
-		LoadType:     performanceBody.LoadType,
-		Redirect:     performanceBody.Redirect,
-		PublicFiles:  publicFiles,
-	}
-	services.CreatePagePerformance(&performance)
-}
-
-func createHttp(httpBody request.HttpBody, publicFiles model.PublicFiles) {
-	http := model.PageHttp{
-		PageUrl:      httpBody.PageUrl,
-		HttpUrl:      httpBody.HttpUrl,
-		LoadTime:     httpBody.LoadTime,
-		Method:       httpBody.Method,
-		Status:       httpBody.Status,
-		StatusText:   httpBody.StatusText,
-		StatusResult: httpBody.StatusResult,
-		RequestText:  httpBody.RequestText,
-		ResponseText: httpBody.ResponseText,
-		PublicFiles:  publicFiles,
-	}
-	services.CreatePageHttp(&http)
-
-}
-
-func createResourcesError(resourceErrorBody request.ResourceErrorBody, publicFiles model.PublicFiles) {
-	resourceError := model.PageResourceError{
-		PageUrl:     resourceErrorBody.PageUrl,
-		SourceUrl:   resourceErrorBody.SourceUrl,
-		ElementType: resourceErrorBody.ElementType,
-		Status:      resourceErrorBody.Status,
-		PublicFiles: publicFiles,
-	}
-	services.CreateResourcesError(&resourceError)
-
-}
-
-func createPageView(pageViewBody request.PageViewBody, publicFiles model.PublicFiles) {
-	pageView := model.PageView{
-		PageUrl:     pageViewBody.PageUrl,
-		PublicFiles: publicFiles,
-	}
-	services.CreatePageView(&pageView)
-
-}
-
-func CreatePageBehavior(operationBody request.OperationBody, publicFiles model.PublicFiles) {
-	operation := model.PageOperation{
-		PageUrl:     operationBody.PageUrl,
-		ClassName:   operationBody.ClassName,
-		Placeholder: operationBody.Placeholder,
-		InputValue:  operationBody.InputValue,
-		TagName:     operationBody.TagName,
-		InnerText:   operationBody.InnerText,
-		PublicFiles: publicFiles,
-	}
-	services.CreatePageBehavior(&operation)
 }
 
 func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {

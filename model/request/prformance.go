@@ -2,6 +2,14 @@ package request
 
 import "danci-api/model"
 
+type ReportBody struct {
+	ActionType string `json:"action_type" form: "action_type"`
+	HappenTime int    `json:"happen_time" form: "happen_time"`
+	HappenDay  string `json:"happen_day" form: "happen_day"`
+	MonitorId  string `json:"monitor_id" form: "monitor_id"`
+	IP         string `json:"ip"`
+}
+
 type PerformanceBody struct {
 	PageUrl      string  `json:"page_url"`
 	Redirect     float64 `json:"redirect"`

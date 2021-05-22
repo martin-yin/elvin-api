@@ -3,15 +3,31 @@ package services
 import (
 	"danci-api/global"
 	"danci-api/model"
+	"danci-api/model/request"
 	"fmt"
 )
 
-func CreatePagePerformance(pagePerformance *model.PagePerformance) {
-	if err := global.GVA_DB.Create(&pagePerformance).Error; err != nil {
+func CreatePagePerformance(performance *request.PerformanceBody, publicFiles *model.PublicFiles) {
+	performanceModel := &model.PagePerformance{
+		PageUrl:      performance.PageUrl,
+		Appcache:     performance.Appcache,
+		LookupDomain: performance.LookupDomain,
+		Tcp:          performance.Tcp,
+		SslT:         performance.SslT,
+		Request:      performance.Request,
+		DomParse:     performance.DomParse,
+		Ttfb:         performance.Ttfb,
+		LoadPage:     performance.LoadPage,
+		LoadEvent:    performance.LoadEvent,
+		LoadType:     performance.LoadType,
+		Redirect:     performance.Redirect,
+		PublicFiles:  *publicFiles,
+	}
+	if err := global.GVA_DB.Create(&performanceModel).Error; err != nil {
 		fmt.Println("err", err)
 	}
 	user := model.User{
-		PublicFiles: pagePerformance.PublicFiles,
+		PublicFiles: performance.PublicFiles,
 	}
 	CreateUser(&user)
 }
@@ -36,26 +52,83 @@ func CreateUserAction(publicFiles model.PublicFiles, reportData string) {
 	global.GVA_DB.Create(&userAction)
 }
 
-func CreatePageHttp(pageHttp *model.PageHttp) {
-	global.GVA_DB.Create(&pageHttp)
+func CreatePageHttp(http *request.HttpBody, publicFiles *model.PublicFiles) {
+	httpModel := model.PageHttp{
+		PageUrl:      http.PageUrl,
+		HttpUrl:      http.HttpUrl,
+		LoadTime:     http.LoadTime,
+		Method:       http.Method,
+		Status:       http.Status,
+		StatusText:   http.StatusText,
+		StatusResult: http.StatusResult,
+		RequestText:  http.RequestText,
+		ResponseText: http.ResponseText,
+		PublicFiles:  *publicFiles,
+	}
+	global.GVA_DB.Create(&httpModel)
 }
 
-func CreateResourcesError(resourceError *model.PageResourceError) {
-	global.GVA_DB.Create(&resourceError)
+func CreateResourcesError(resource *request.ResourceErrorBody, publicFiles *model.PublicFiles) {
+	resourceModel := model.PageResourceError{
+		PageUrl:     resource.PageUrl,
+		SourceUrl:   resource.SourceUrl,
+		ElementType: resource.ElementType,
+		Status:      resource.Status,
+		PublicFiles: *publicFiles,
+	}
+	global.GVA_DB.Create(&resourceModel)
 }
 
-func CreatePageBehavior(pageOperation *model.PageOperation) {
-	global.GVA_DB.Create(&pageOperation)
+func CreatePageOperation(operation *request.OperationBody, publicFiles *model.PublicFiles) {
+	operationModel := model.PageOperation{
+		PageUrl:     operation.PageUrl,
+		ClassName:   operation.ClassName,
+		Placeholder: operation.Placeholder,
+		InputValue:  operation.InputValue,
+		TagName:     operation.TagName,
+		InnerText:   operation.InnerText,
+		PublicFiles: *publicFiles,
+	}
+	global.GVA_DB.Create(&operationModel)
 }
 
-func CreatePageJsError(jsError model.PageIssue) {
-	global.GVA_DB.Save(&jsError)
+func CreatePageJsError(issue *request.IssuesBody, publicFiles *model.PublicFiles) {
+	issueModel := model.PageIssue{
+		PageUrl:       issue.PageUrl,
+		ComponentName: issue.ComponentName,
+		Stack:         issue.Stack,
+		Message:       issue.Message,
+		StackFrames:   issue.StackFrames,
+		ErrorName:     issue.ErrorName,
+		PublicFiles:   *publicFiles,
+	}
+	jsIssueModel, err := FindJsIssue(issueModel.Message)
+	if err == nil {
+		if jsIssueModel.ID != 0 {
+			issueModel.IssuesId = jsIssueModel.ID
+			global.GVA_DB.Save(&issueModel)
+		} else {
+			jsIssue := model.Issue{
+				ErrorName: issue.ErrorName,
+				Message:   issue.Message,
+				MonitorId: issue.PublicFiles.MonitorId,
+				PageIssue: []model.PageIssue{
+					issueModel,
+				},
+			}
+			CreateJsIssue(jsIssue)
+		}
+	}
 }
 
 func CreateJsIssue(stack model.Issue) {
 	global.GVA_DB.Save(&stack)
 }
 
-func CreatePageView(pageView *model.PageView) {
-	global.GVA_DB.Create(&pageView)
+func CreatePageView(pageView *request.PageViewBody, publicFiles *model.PublicFiles) {
+	pageViewModel := model.PageView{
+		PageUrl:     pageView.PageUrl,
+		PublicFiles: *publicFiles,
+	}
+	global.GVA_DB.Create(&pageViewModel)
 }

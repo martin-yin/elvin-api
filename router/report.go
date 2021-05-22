@@ -8,11 +8,12 @@ import (
 func InitReport(Router *gin.RouterGroup) {
 	WebPageReport := Router.Group("report")
 	{
-		WebPageReport.POST("performance", v1.CreatePagePerformance)
-		WebPageReport.POST("http", v1.CreateHttpInfo)
-		WebPageReport.POST("resource", v1.CreateResourcesError)
-		WebPageReport.POST("operation", v1.CreatePageOperation)
-		WebPageReport.POST("issues", v1.CreatePageIssues)
-		WebPageReport.POST("view", v1.CreatePageView)
+		WebPageReport.POST("", v1.Report)
+		//WebPageReport.POST("performance", v1.CreatePagePerformance)
+		//WebPageReport.POST("http", v1.CreateHttpInfo)
+		//WebPageReport.POST("resource", v1.CreateResourcesError)
+		//WebPageReport.POST("operation", v1.CreatePageOperation)
+		//WebPageReport.POST("issues", v1.CreatePageIssues)
+		//WebPageReport.POST("view", v1.CreatePageView)
 	}
 }

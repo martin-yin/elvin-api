@@ -4,9 +4,71 @@ import (
 	"danci-api/global"
 	"danci-api/model/request"
 	"danci-api/model/response"
+	"danci-api/utils"
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 )
+
+var handles *utils.Handles
+
+func init() {
+	handles = utils.NewHandles()
+
+	handles.RoutersHandlerRegister("PAGE_LOAD", func(context *gin.Context) {
+		var performanceBody request.PerformanceBody
+		reportProducer(context, performanceBody)
+		return
+	})
+
+	handles.RoutersHandlerRegister("HTTP_LOG", func(context *gin.Context) {
+		var httpBody request.HttpBody
+		reportProducer(context, httpBody)
+		return
+	})
+
+	handles.RoutersHandlerRegister("PAGE_VIEW", func(context *gin.Context) {
+		var pageViewBody request.PageViewBody
+		reportProducer(context, pageViewBody)
+		return
+	})
+
+	handles.RoutersHandlerRegister("OPERATION", func(context *gin.Context) {
+		var operationBody request.OperationBody
+		reportProducer(context, operationBody)
+		return
+	})
+
+	handles.RoutersHandlerRegister("RESOURCE", func(context *gin.Context) {
+		var resourceBody request.ResourceErrorBody
+		reportProducer(context, resourceBody)
+		return
+	})
+
+	handles.RoutersHandlerRegister("JS_ERROR", func(context *gin.Context) {
+		var issuesBody request.IssuesBody
+		reportProducer(context, issuesBody)
+		return
+	})
+}
+func Report(context *gin.Context) {
+	reportBody := &request.ReportBody{}
+	reportBody.ActionType = context.Query("action_type")
+	handles.RouterHandlers[reportBody.ActionType](context)
+}
+
+func reportProducer(context *gin.Context, body interface{}) {
+	err := context.ShouldBindJSON(&body)
+	if err != nil {
+		response.FailWithMessage(err.Error(), context)
+		return
+	}
+	res, _ := json.Marshal(body)
+	global.GVA_REDIS.LPush("reportData", res)
+	response.Ok(context)
+	return
+}
+
+// 改造前
 
 func CreatePagePerformance(context *gin.Context) {
 	var performanceBody request.PerformanceBody
