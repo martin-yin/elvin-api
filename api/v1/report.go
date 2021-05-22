@@ -13,42 +13,39 @@ var handles *utils.Handles
 
 func init() {
 	handles = utils.NewHandles()
-
-	handles.RoutersHandlerRegister("PAGE_LOAD", func(context *gin.Context) {
-		var performanceBody request.PerformanceBody
-		reportProducer(context, performanceBody)
-		return
-	})
-
-	handles.RoutersHandlerRegister("HTTP_LOG", func(context *gin.Context) {
-		var httpBody request.HttpBody
-		reportProducer(context, httpBody)
-		return
-	})
-
-	handles.RoutersHandlerRegister("PAGE_VIEW", func(context *gin.Context) {
-		var pageViewBody request.PageViewBody
-		reportProducer(context, pageViewBody)
-		return
-	})
-
-	handles.RoutersHandlerRegister("OPERATION", func(context *gin.Context) {
-		var operationBody request.OperationBody
-		reportProducer(context, operationBody)
-		return
-	})
-
-	handles.RoutersHandlerRegister("RESOURCE", func(context *gin.Context) {
-		var resourceBody request.ResourceErrorBody
-		reportProducer(context, resourceBody)
-		return
-	})
-
-	handles.RoutersHandlerRegister("JS_ERROR", func(context *gin.Context) {
-		var issuesBody request.IssuesBody
-		reportProducer(context, issuesBody)
-		return
-	})
+	routerHandles := map[string]utils.RouterFunc{
+		"PAGE_LOAD": func(context *gin.Context) {
+			var performanceBody request.PerformanceBody
+			reportProducer(context, performanceBody)
+			return
+		},
+		"HTTP_LOG": func(context *gin.Context) {
+			var httpBody request.HttpBody
+			reportProducer(context, httpBody)
+			return
+		},
+		"PAGE_VIEW": func(context *gin.Context) {
+			var pageViewBody request.PageViewBody
+			reportProducer(context, pageViewBody)
+			return
+		},
+		"OPERATION": func(context *gin.Context) {
+			var operationBody request.OperationBody
+			reportProducer(context, operationBody)
+			return
+		},
+		"RESOURCE": func(context *gin.Context) {
+			var resourceBody request.ResourceErrorBody
+			reportProducer(context, resourceBody)
+			return
+		},
+		"JS_ERROR": func(context *gin.Context) {
+			var issuesBody request.IssuesBody
+			reportProducer(context, issuesBody)
+			return
+		},
+	}
+	handles.RoutersHandlerRegister(routerHandles)
 }
 func Report(context *gin.Context) {
 	reportBody := &request.ReportBody{}

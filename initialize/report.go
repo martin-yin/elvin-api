@@ -49,44 +49,41 @@ func reportConsumer(report string) {
 	handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
 }
 
-
 func init() {
 	handles = utils.NewHandles()
-	handles.ServicesHandlerRegister("PAGE_LOAD", func(report string, publicFiles *model.PublicFiles) {
-		var performance request.PerformanceBody
-		json.Unmarshal([]byte(report), &performance)
-		services.CreatePagePerformance(&performance, publicFiles)
-	})
-
-	handles.ServicesHandlerRegister("HTTP_LOG", func(report string, publicFiles *model.PublicFiles) {
-		var http request.HttpBody
-		json.Unmarshal([]byte(report), &http)
-		services.CreatePageHttp(&http, publicFiles)
-	})
-
-	handles.ServicesHandlerRegister("PAGE_VIEW", func(report string, publicFiles *model.PublicFiles) {
-		var pageView request.PageViewBody
-		json.Unmarshal([]byte(report), &pageView)
-		services.CreatePageView(&pageView, publicFiles)
-	})
-
-	handles.ServicesHandlerRegister("OPERATION", func(report string, publicFiles *model.PublicFiles) {
-		var operation request.OperationBody
-		json.Unmarshal([]byte(report), &operation)
-		services.CreatePageOperation(&operation, publicFiles)
-	})
-
-	handles.ServicesHandlerRegister("RESOURCE", func(report string, publicFiles *model.PublicFiles) {
-		var resource request.ResourceErrorBody
-		json.Unmarshal([]byte(report), &resource)
-		services.CreateResourcesError(&resource, publicFiles)
-	})
-
-	handles.ServicesHandlerRegister("JS_ERROR", func(report string, publicFiles *model.PublicFiles) {
-		var issuesBody request.IssuesBody
-		json.Unmarshal([]byte(report), &issuesBody)
-		services.CreatePageJsError(&issuesBody, publicFiles)
-	})
+	servicesHandles := map[string]utils.ServiceFunc{
+		"PAGE_LOAD": func(report string, publicFiles *model.PublicFiles) {
+			var performance request.PerformanceBody
+			json.Unmarshal([]byte(report), &performance)
+			services.CreatePagePerformance(&performance, publicFiles)
+		},
+		"HTTP_LOG": func(report string, publicFiles *model.PublicFiles) {
+			var http request.HttpBody
+			json.Unmarshal([]byte(report), &http)
+			services.CreatePageHttp(&http, publicFiles)
+		},
+		"PAGE_VIEW": func(report string, publicFiles *model.PublicFiles) {
+			var pageView request.PageViewBody
+			json.Unmarshal([]byte(report), &pageView)
+			services.CreatePageView(&pageView, publicFiles)
+		},
+		"OPERATION": func(report string, publicFiles *model.PublicFiles) {
+			var operation request.OperationBody
+			json.Unmarshal([]byte(report), &operation)
+			services.CreatePageOperation(&operation, publicFiles)
+		},
+		"RESOURCE": func(report string, publicFiles *model.PublicFiles) {
+			var resource request.ResourceErrorBody
+			json.Unmarshal([]byte(report), &resource)
+			services.CreateResourcesError(&resource, publicFiles)
+		},
+		"JS_ERROR": func(report string, publicFiles *model.PublicFiles) {
+			var issuesBody request.IssuesBody
+			json.Unmarshal([]byte(report), &issuesBody)
+			services.CreatePageJsError(&issuesBody, publicFiles)
+		},
+	}
+	handles.ServicesHandlerRegister(servicesHandles)
 }
 
 // 页面性能
@@ -126,9 +123,9 @@ func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 		return
 	}
 	var txMapResponse response.TxMapResponse
-	adinfoStr := global.GVA_REDIS.HGet("ipAddress", ip)
-	if len(adinfoStr.Val()) != 0 {
-		err := json.Unmarshal([]byte(adinfoStr.Val()), &AdInfo)
+	addingStr := global.GVA_REDIS.HGet("ipAddress", ip)
+	if len(addingStr.Val()) != 0 {
+		err := json.Unmarshal([]byte(addingStr.Val()), &AdInfo)
 		if err != nil {
 			fmt.Print(err, "出粗了！")
 		}
@@ -138,9 +135,9 @@ func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 		if err != nil {
 			return
 		}
-		txMapResponsebody, err := ioutil.ReadAll(resp.Body)
+		txMapResponded, err := ioutil.ReadAll(resp.Body)
 		defer resp.Body.Close()
-		err = json.Unmarshal(txMapResponsebody, &txMapResponse)
+		err = json.Unmarshal(txMapResponded, &txMapResponse)
 		txMapResponseStr, err := json.Marshal(&txMapResponse.Result.AdInfo)
 		global.GVA_REDIS.HSet("ipAddress", ip, txMapResponseStr)
 		return txMapResponse.Result.AdInfo

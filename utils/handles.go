@@ -21,21 +21,28 @@ func NewHandles() *Handles {
 		ServiceHandlers: make(map[string]ServiceFunc),
 	}
 }
-func (h *Handles) RoutersHandlerRegister(key string, f RouterFunc) {
-	if h.RouterHandlers == nil {
-		h.RouterHandlers = make(map[string]RouterFunc)
+
+func (h *Handles) RoutersHandlerRegister(routerFunc map[string]RouterFunc) {
+	for index, item := range routerFunc {
+		if h.RouterHandlers == nil {
+			h.RouterHandlers = make(map[string]RouterFunc)
+		}
+		if _, exist := h.RouterHandlers[index]; exist {
+			return
+		}
+		h.RouterHandlers[index] = item
 	}
-	if _, exist := h.RouterHandlers[key]; exist {
-		return
-	}
-	h.RouterHandlers[key] = f
 }
-func (h *Handles) ServicesHandlerRegister(key string, f ServiceFunc) {
-	if h.ServiceHandlers == nil {
-		h.ServiceHandlers = make(map[string]ServiceFunc)
+
+func (h *Handles) ServicesHandlerRegister(serviceFunc map[string]ServiceFunc) {
+	for index, item := range serviceFunc {
+		if h.ServiceHandlers == nil {
+			h.ServiceHandlers = make(map[string]ServiceFunc)
+		}
+		if _, exist := h.ServiceHandlers[index]; exist {
+			return
+		}
+		h.ServiceHandlers[index] = item
 	}
-	if _, exist := h.ServiceHandlers[key]; exist {
-		return
-	}
-	h.ServiceHandlers[key] = f
+
 }
