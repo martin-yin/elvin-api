@@ -112,6 +112,7 @@ func CreatePageJsError(issue *request.IssuesBody, publicFiles *model.PublicFiles
 				ErrorName: issue.ErrorName,
 				Message:   issue.Message,
 				MonitorId: issue.PublicFiles.MonitorId,
+				HappenTime: issue.HappenTime,
 				PageIssue: []model.PageIssue{
 					issueModel,
 				},

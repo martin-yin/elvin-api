@@ -45,6 +45,7 @@ type Issue struct {
 	global.GVA_MODEL
 	ErrorName string      `json:"error_name"`
 	Message   string      `json:"message" gorm:"uniqueIndex"`
+	HappenTime     int    `json:"happen_time"`
 	MonitorId string      `json:"monitor_id"`
 	PageIssue []PageIssue `json:"page_issue" gorm:"foreignKey:IssuesId"`
 }

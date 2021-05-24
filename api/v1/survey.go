@@ -9,10 +9,10 @@ import (
 )
 
 func GetSurveyStatisticsData(context *gin.Context) {
-	var suveyParams request.SurveyParams
-	err := context.BindQuery(&suveyParams)
+	var surveyParams request.SurveyParams
+	err := context.BindQuery(&surveyParams)
 	startTime, endTime := getTodayStartAndEndTime()
-	surveyResponse, err := services.GetSurveyStatisticsData(startTime, endTime, suveyParams.MonitorId.MonitorId)
+	surveyResponse, err := services.GetSurveyStatisticsData(startTime, endTime, surveyParams.MonitorId.MonitorId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 	} else {
