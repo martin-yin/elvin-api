@@ -66,7 +66,7 @@ func GetProjectHealthy(startTime string, endTime string, monitorIds string) (pro
 }
 
 func DecimalNotZero(value float64, value2 float64) float64 {
-	if value != 0 {
+	if value != 0 && value2 != 0 {
 		result := value / value2
 		result, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", result), 64)
 		return result

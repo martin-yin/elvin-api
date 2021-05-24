@@ -16,38 +16,44 @@ func init() {
 	routerHandles := map[string]utils.RouterFunc{
 		"PAGE_LOAD": func(context *gin.Context) {
 			var performanceBody request.PerformanceBody
+			err := context.ShouldBindJSON(&performanceBody)
 			performanceBody.IP = context.ClientIP()
-			reportProducer(context, performanceBody)
+			reportProducer(context, performanceBody, err)
 			return
 		},
 		"HTTP_LOG": func(context *gin.Context) {
 			var httpBody request.HttpBody
+			err := context.ShouldBindJSON(&httpBody)
 			httpBody.IP = context.ClientIP()
-			reportProducer(context, httpBody)
+			reportProducer(context, httpBody, err)
 			return
 		},
 		"PAGE_VIEW": func(context *gin.Context) {
 			var pageViewBody request.PageViewBody
+			err := context.ShouldBindJSON(&pageViewBody)
 			pageViewBody.IP = context.ClientIP()
-			reportProducer(context, pageViewBody)
+			reportProducer(context, pageViewBody, err)
 			return
 		},
 		"OPERATION": func(context *gin.Context) {
 			var operationBody request.OperationBody
+			err := context.ShouldBindJSON(&operationBody)
 			operationBody.IP = context.ClientIP()
-			reportProducer(context, operationBody)
+			reportProducer(context, operationBody, err)
 			return
 		},
 		"RESOURCE": func(context *gin.Context) {
 			var resourceBody request.ResourceErrorBody
+			err := context.ShouldBindJSON(&resourceBody)
 			resourceBody.IP = context.ClientIP()
-			reportProducer(context, resourceBody)
+			reportProducer(context, resourceBody, err)
 			return
 		},
 		"JS_ERROR": func(context *gin.Context) {
 			var issuesBody request.IssuesBody
+			err := context.ShouldBindJSON(&issuesBody)
 			issuesBody.IP = context.ClientIP()
-			reportProducer(context, issuesBody)
+			reportProducer(context, issuesBody, err)
 			return
 		},
 	}
@@ -59,8 +65,7 @@ func Report(context *gin.Context) {
 	handles.RouterHandlers[reportBody.ActionType](context)
 }
 
-func reportProducer(context *gin.Context, body interface{}) {
-	err := context.ShouldBindJSON(&body)
+func reportProducer(context *gin.Context, body interface{}, err error) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
