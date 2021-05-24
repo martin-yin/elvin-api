@@ -16,31 +16,37 @@ func init() {
 	routerHandles := map[string]utils.RouterFunc{
 		"PAGE_LOAD": func(context *gin.Context) {
 			var performanceBody request.PerformanceBody
+			performanceBody.IP = context.ClientIP()
 			reportProducer(context, performanceBody)
 			return
 		},
 		"HTTP_LOG": func(context *gin.Context) {
 			var httpBody request.HttpBody
+			httpBody.IP = context.ClientIP()
 			reportProducer(context, httpBody)
 			return
 		},
 		"PAGE_VIEW": func(context *gin.Context) {
 			var pageViewBody request.PageViewBody
+			pageViewBody.IP = context.ClientIP()
 			reportProducer(context, pageViewBody)
 			return
 		},
 		"OPERATION": func(context *gin.Context) {
 			var operationBody request.OperationBody
+			operationBody.IP = context.ClientIP()
 			reportProducer(context, operationBody)
 			return
 		},
 		"RESOURCE": func(context *gin.Context) {
 			var resourceBody request.ResourceErrorBody
+			resourceBody.IP = context.ClientIP()
 			reportProducer(context, resourceBody)
 			return
 		},
 		"JS_ERROR": func(context *gin.Context) {
 			var issuesBody request.IssuesBody
+			issuesBody.IP = context.ClientIP()
 			reportProducer(context, issuesBody)
 			return
 		},

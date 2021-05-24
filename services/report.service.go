@@ -109,9 +109,9 @@ func CreatePageJsError(issue *request.IssuesBody, publicFiles *model.PublicFiles
 			global.GVA_DB.Save(&issueModel)
 		} else {
 			jsIssue := model.Issue{
-				ErrorName: issue.ErrorName,
-				Message:   issue.Message,
-				MonitorId: issue.PublicFiles.MonitorId,
+				ErrorName:  issue.ErrorName,
+				Message:    issue.Message,
+				MonitorId:  issue.PublicFiles.MonitorId,
 				HappenTime: issue.HappenTime,
 				PageIssue: []model.PageIssue{
 					issueModel,
