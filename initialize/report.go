@@ -20,35 +20,42 @@ var handles *utils.Handles
 func reportDataConsume() {
 	var wg sync.WaitGroup
 	pipe := global.GVA_REDIS.TxPipeline()
-	getValue := pipe.LRange("reportData", 0, 5000)
+	reportList := pipe.LRange("reportData", 0, 10000)
 	_, err := pipe.Exec()
 	if err != nil {
 		return
 	}
-	if len(getValue.Val()) > 0 {
-		for _, performance := range getValue.Val() {
+	if len(reportList.Val()) > 0 {
+		for _, report := range reportList.Val() {
 			wg.Add(1)
-			go func(performance string) {
-				reportConsumer(performance)
-			}(performance)
+			go func(report string) {
+				var publicFiles model.PublicFiles
+				json.Unmarshal([]byte(report), &publicFiles)
+				addressInfo := getIpAddressInfo(publicFiles.IP)
+				publicFiles.Nation = addressInfo.Nation
+				publicFiles.City = addressInfo.City
+				publicFiles.District = addressInfo.District
+				publicFiles.Province = addressInfo.Province
+				services.CreateUserAction(publicFiles, report)
+				handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
+				wg.Done()
+			}(report)
 		}
-		global.GVA_REDIS.LTrim("reportData", 5000, -1)
 		wg.Wait()
+		global.GVA_REDIS.LTrim("reportData", 10000, -1)
 	}
 }
-
-func reportConsumer(report string) {
-	var publicFiles model.PublicFiles
-	json.Unmarshal([]byte(report), &publicFiles)
-	addressInfo := getIpAddressInfo(publicFiles.IP)
-	publicFiles.Nation = addressInfo.Nation
-	publicFiles.City = addressInfo.City
-	publicFiles.District = addressInfo.District
-	publicFiles.Province = addressInfo.Province
-	services.CreateUserAction(publicFiles, report)
-	handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
-}
-
+//func reportConsumer(report string) {
+//	var publicFiles model.PublicFiles
+//	json.Unmarshal([]byte(report), &publicFiles)
+//	addressInfo := getIpAddressInfo(publicFiles.IP)
+//	publicFiles.Nation = addressInfo.Nation
+//	publicFiles.City = addressInfo.City
+//	publicFiles.District = addressInfo.District
+//	publicFiles.Province = addressInfo.Province
+//	services.CreateUserAction(publicFiles, report)
+//	handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
+//}
 func init() {
 	handles = utils.NewHandles()
 	servicesHandles := map[string]utils.ServiceFunc{
@@ -85,38 +92,38 @@ func init() {
 	}
 	handles.ServicesHandlerRegister(servicesHandles)
 }
-
-// 页面性能
-
 func InitReportData() {
-
 	cron2 := cron.New(cron.WithSeconds())
-	cron2.AddFunc("*/5 * * * * * ", reportDataConsume)
-	//cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
-	//cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
-	//
-	//	actionType := [7]string{"PAGE_LOAD", "HTTP_ERROR_LOG", "HTTP_LOG" , "RESOURCE_ERROR", "BEHAVIOR_INFO", "PAGE_VIEW", "JS_ERROR"}
-	//	var reportData []model.ReportDayStatistic
-	//	startTime := time.Now().Format("2006-01-02")
-	//	for _, value := range projectList {
-	//		for _, action :=range actionType {
-	//			keyName := startTime + value.MonitorId + action;
-	//			count := global.GVA_REDIS.Get(keyName).Val()
-	//			if count != "" {
-	//				reportData = append(reportData, model.ReportDayStatistic{
-	//					ActionType: "PAGE_LOAD",
-	//					MonitorId: value.MonitorId,
-	//					Day: startTime,
-	//					Count: global.GVA_REDIS.Get(keyName).Val(),
-	//				})
-	//				global.GVA_REDIS.Del(keyName)
-	//			}
-	//		}
-	//	}
-	//	services.CreateReportDay(reportData)
-	//})
+	cron2.AddFunc("*/10 * * * * * ", reportDataConsume)
 	cron2.Start()
 }
+
+
+
+
+//cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
+//cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
+//
+//	actionType := [7]string{"PAGE_LOAD", "HTTP_ERROR_LOG", "HTTP_LOG" , "RESOURCE_ERROR", "BEHAVIOR_INFO", "PAGE_VIEW", "JS_ERROR"}
+//	var reportData []model.ReportDayStatistic
+//	startTime := time.Now().Format("2006-01-02")
+//	for _, value := range projectList {
+//		for _, action :=range actionType {
+//			keyName := startTime + value.MonitorId + action;
+//			count := global.GVA_REDIS.Get(keyName).Val()
+//			if count != "" {
+//				reportData = append(reportData, model.ReportDayStatistic{
+//					ActionType: "PAGE_LOAD",
+//					MonitorId: value.MonitorId,
+//					Day: startTime,
+//					Count: global.GVA_REDIS.Get(keyName).Val(),
+//				})
+//				global.GVA_REDIS.Del(keyName)
+//			}
+//		}
+//	}
+//	services.CreateReportDay(reportData)
+//})
 
 func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 	if ip == "" {

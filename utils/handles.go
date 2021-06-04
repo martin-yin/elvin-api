@@ -44,5 +44,4 @@ func (h *Handles) ServicesHandlerRegister(serviceFunc map[string]ServiceFunc) {
 		}
 		h.ServiceHandlers[index] = item
 	}
-
 }
