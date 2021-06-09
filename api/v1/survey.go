@@ -4,6 +4,7 @@ import (
 	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
+	"danci-api/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +12,7 @@ import (
 func GetSurveyStatisticsData(context *gin.Context) {
 	var surveyParams request.SurveyParams
 	err := context.BindQuery(&surveyParams)
-	startTime, endTime := getTodayStartAndEndTime()
+	startTime, endTime := utils.GetTodayStartAndEndTime()
 	surveyResponse, err := services.GetSurveyStatisticsData(startTime, endTime, surveyParams.MonitorId.MonitorId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
@@ -23,7 +24,7 @@ func GetSurveyStatisticsData(context *gin.Context) {
 func GetSurveyPUvData(context *gin.Context) {
 	var surveyParams request.SurveyParams
 	err := context.BindQuery(&surveyParams)
-	startTime, endTime := getTodayStartAndEndTime()
+	startTime, endTime := utils.GetTodayStartAndEndTime()
 	surveyResponse, err := services.GetSurveyPUvData(startTime, endTime, surveyParams.MonitorId.MonitorId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
@@ -35,7 +36,7 @@ func GetSurveyPUvData(context *gin.Context) {
 func GetSurveyJsErrorData(context *gin.Context) {
 	var surveyParams request.SurveyParams
 	err := context.BindQuery(&surveyParams)
-	startTime, endTime := getTodayStartAndEndTime()
+	startTime, endTime := utils.GetTodayStartAndEndTime()
 	surveyResponse, err := services.GetSurveyJsErrorData(startTime, endTime, surveyParams.MonitorId.MonitorId)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)

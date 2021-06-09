@@ -3,11 +3,15 @@ package response
 import "time"
 
 type PageJsErrorList struct {
-	ID         string `json:"id"`
-	ErrorName  string `json:"error_name"`
-	Message    string `json:"message"`
-	ErrorCount string `json:"error_count"`
-	ErrorUser  string `json:"error_user"`
+	ID        string `json:"id"`
+	PageUrl   string `json:"page_url"`
+	ErrorName string `json:"error_name"`
+	Message   string `json:"message"`
+	Total     string `json:"total"`
+	Today     string `json:"today"`
+	ErrorUser string `json:"error_user"`
+	LastTime  string `json:"last_time"`
+	FirstTime string `json:"first_time"`
 }
 
 type PageJsErrorDetail struct {

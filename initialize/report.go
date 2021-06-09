@@ -45,6 +45,7 @@ func reportDataConsume() {
 		global.GVA_REDIS.LTrim("reportData", 10000, -1)
 	}
 }
+
 //func reportConsumer(report string) {
 //	var publicFiles model.PublicFiles
 //	json.Unmarshal([]byte(report), &publicFiles)
@@ -97,9 +98,6 @@ func InitReportData() {
 	cron2.AddFunc("*/10 * * * * * ", reportDataConsume)
 	cron2.Start()
 }
-
-
-
 
 //cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
 //cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。

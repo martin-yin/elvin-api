@@ -68,7 +68,7 @@ func GetProjectHealthy(context *gin.Context) {
 		response.FailWithMessage(err.Error(), context)
 		return
 	}
-	startTime, endTime := getTodayStartAndEndTime()
+	startTime, endTime := utils.GetTodayStartAndEndTime()
 	healthyData, err := services.GetProjectHealthy(startTime, endTime, healthyParams.MonitorId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)

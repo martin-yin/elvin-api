@@ -4,6 +4,7 @@ import (
 	"danci-api/model/request"
 	"danci-api/model/response"
 	"danci-api/services"
+	"danci-api/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +12,7 @@ import (
 func GetResourceError(context *gin.Context) {
 	var resourceErrorParams request.ResourceErrorParams
 	err := context.BindQuery(&resourceErrorParams)
-	startTime, endTime := getTodayStartAndEndTime()
+	startTime, endTime := utils.GetTodayStartAndEndTime()
 	ResourcesList, err := services.GetResourcesList(resourceErrorParams.MonitorId.MonitorId, startTime, endTime)
 	ResourcesQuota, err := services.GetResourcesQuota(resourceErrorParams.MonitorId.MonitorId, startTime, endTime)
 	if err != nil {
