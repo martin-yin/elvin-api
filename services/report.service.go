@@ -26,10 +26,9 @@ func CreatePagePerformance(performance *request.PerformanceBody, publicFiles *mo
 	if err := global.GVA_DB.Create(&performanceModel).Error; err != nil {
 		fmt.Println("err", err)
 	}
-	user := model.User{
-		PublicFiles: performance.PublicFiles,
-	}
-	CreateUser(&user)
+	CreateUser(&model.User{
+		PublicFiles: *publicFiles,
+	})
 }
 
 func CreateUser(user *model.User) {
