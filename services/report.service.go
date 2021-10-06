@@ -44,7 +44,7 @@ func CreateUserAction(publicFiles model.PublicFiles, reportData string) {
 		MonitorId:    publicFiles.MonitorId,
 		HappenTime:   publicFiles.HappenTime,
 		HappenDay:    publicFiles.HappenDay,
-		EventId:      publicFiles.EventId,
+		SessionId:    publicFiles.SessionId,
 		ActionType:   publicFiles.ActionType,
 		ActionDetail: reportData,
 	}

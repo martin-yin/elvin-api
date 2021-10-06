@@ -22,7 +22,7 @@ func GetIssues() (pageJsErrorList []response.PageJsErrorList, err error) {
 		"INNER JOIN page_issues on page_issues.issues_id = issues.id" +
 		"").Group("issues.id").Find(&issueList).Error
 
-	startTime, endTime := utils.GetTodayStartAndEndTime();
+	startTime, endTime := utils.GetTodayStartAndEndTime()
 	for _, issue := range issueList {
 		err = global.GVA_DB.Model(&model.PageIssue{}).Select("page_url, created_at as first_time").Where("issues_id = ? ", &issue.ID).Group("id ASC").Limit(1).Scan(&issue).Error
 		err = global.GVA_DB.Model(&model.PageIssue{}).Select("created_at as last_time").Where("issues_id = ? ", &issue.ID).Group("id DESC").Limit(1).Scan(&issue).Error

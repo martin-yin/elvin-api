@@ -32,7 +32,7 @@ func GetUser(context *gin.Context) {
 func GetUsersActionsStatistics(context *gin.Context) {
 	var userActionsRequest request.UserActionsRequest
 	_ = context.BindQuery(&userActionsRequest)
-	actionStatisticsResponse, err := services.GetUserActionsStatistics(userActionsRequest.EventID)
+	actionStatisticsResponse, err := services.GetUserActionsStatistics(userActionsRequest.SessionId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return
@@ -43,8 +43,8 @@ func GetUsersActionsStatistics(context *gin.Context) {
 func GetUserActionList(context *gin.Context) {
 	var userActionsRequest request.UserActionsRequest
 	_ = context.BindQuery(&userActionsRequest)
-	actionResponse, err := services.GetUserActions(userActionsRequest.EventID, userActionsRequest.Page, userActionsRequest.Limit)
-	total, err := services.GetUserActionsTotal(userActionsRequest.EventID)
+	actionResponse, err := services.GetUserActions(userActionsRequest.SessionId, userActionsRequest.Page, userActionsRequest.Limit)
+	total, err := services.GetUserActionsTotal(userActionsRequest.SessionId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return

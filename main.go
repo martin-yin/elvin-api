@@ -17,6 +17,7 @@ func main() {
 		initialize.Redis()
 		defer db.Close()
 	}
+	go initialize.KafkaWriter()
 	go initialize.InitReportData()
 	core.RunWindowsServer()
 }

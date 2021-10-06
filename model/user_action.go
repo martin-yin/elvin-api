@@ -9,6 +9,6 @@ type UserAction struct {
 	HappenTime   int    `json:"happen_time"`
 	HappenDay    string `json:"happen_day"`
 	ActionType   string `json:"action_type"`
-	EventId      string `json:"event_id"`
+	SessionId    string `json:"session_id"`
 	ActionDetail string `json:"action_detail" gorm:"type:text"`
 }

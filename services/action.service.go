@@ -27,18 +27,18 @@ func GetUser(id string) (userResponse response.UserResponse, err error) {
 	return
 }
 
-func GetUserActions(eventId string, page int, limit int) (actionResponse []response.ActionsResponse, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Where("event_id = ?", eventId).Order("happen_time").Limit(limit).Offset((page - 1) * limit).Find(&actionResponse).Error
+func GetUserActions(sessionId string, page int, limit int) (actionResponse []response.ActionsResponse, err error) {
+	err = global.GVA_DB.Model(&model.UserAction{}).Where("session_id = ?", sessionId).Order("happen_time").Limit(limit).Offset((page - 1) * limit).Find(&actionResponse).Error
 	return
 }
 
-func GetUserActionsTotal(eventId string) (total int, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Select("count(*) as total").Where("event_id = ?", eventId).Order("happen_time").Find(&total).Error
+func GetUserActionsTotal(sessionId string) (total int, err error) {
+	err = global.GVA_DB.Model(&model.UserAction{}).Select("count(*) as total").Where("session_id = ?", sessionId).Order("happen_time").Find(&total).Error
 	return
 }
 
-func GetUserActionsStatistics(eventId string) (actionStatisticsResponse []response.ActionsStatisticsResponse, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Select("action_type, count(*) as total").Where("event_id = ?", eventId).Group("action_type").Find(&actionStatisticsResponse).Error
+func GetUserActionsStatistics(sessionId string) (actionStatisticsResponse []response.ActionsStatisticsResponse, err error) {
+	err = global.GVA_DB.Model(&model.UserAction{}).Select("action_type, count(*) as total").Where("session_id = ?", sessionId).Group("action_type").Find(&actionStatisticsResponse).Error
 	return
 }
 

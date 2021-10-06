@@ -14,9 +14,9 @@ type UserRequest struct {
 }
 
 type UserActionsRequest struct {
-	EventID string `form:"event_id"`
-	Page    int    `form:"page"`
-	Limit   int    `form:"limit"`
+	SessionId string `json:"session_id"`
+	Page      int    `form:"page"`
+	Limit     int    `form:"limit"`
 }
 
 type OperationBody struct {

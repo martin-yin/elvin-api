@@ -12,7 +12,7 @@ type UserResponse struct {
 	BrowserVersion string `json:"browser_version"`
 	Device         string `json:"device"`
 	DeviceType     string `json:"device_type"`
-	EventId        string `json:"event_id"`
+	SessionId      string `json:"session_id"`
 	Nation         string `json:"nation"`
 	Province       string `json:"province"`
 	City           string `json:"city"`
@@ -144,7 +144,7 @@ type ActionsResponse struct {
 	HappenTime   int    `json:"happen_time"`
 	HappenDay    string `json:"happen_day"`
 	ActionType   string `json:"action_type"`
-	EventId      string `json:"event_id"`
+	SessionId    string `json:"session_id"`
 	ActionDetail string `json:"action_detail" gorm:"type:text"`
 }
 

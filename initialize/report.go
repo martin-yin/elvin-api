@@ -1,6 +1,7 @@
 package initialize
 
 import (
+	"context"
 	"danci-api/global"
 	"danci-api/model"
 	"danci-api/model/request"
@@ -9,54 +10,61 @@ import (
 	"danci-api/utils"
 	"encoding/json"
 	"fmt"
-	"github.com/robfig/cron/v3"
 	"io/ioutil"
+	"log"
 	"net/http"
-	"sync"
 )
 
 var handles *utils.Handles
 
 func reportDataConsume() {
-	var wg sync.WaitGroup
-	pipe := global.GVA_REDIS.TxPipeline()
-	reportList := pipe.LRange("reportData", 0, 10000)
-	_, err := pipe.Exec()
-	if err != nil {
-		return
-	}
-	if len(reportList.Val()) > 0 {
-		for _, report := range reportList.Val() {
-			wg.Add(1)
-			go func(report string) {
-				var publicFiles model.PublicFiles
-				json.Unmarshal([]byte(report), &publicFiles)
-				addressInfo := getIpAddressInfo(publicFiles.IP)
-				publicFiles.Nation = addressInfo.Nation
-				publicFiles.City = addressInfo.City
-				publicFiles.District = addressInfo.District
-				publicFiles.Province = addressInfo.Province
-				services.CreateUserAction(publicFiles, report)
-				handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
-				wg.Done()
-			}(report)
+	for {
+		m, err := global.GVA_KAFKA.ReadMessage(context.Background())
+		if err != nil {
+			log.Fatalln(err)
 		}
-		wg.Wait()
-		global.GVA_REDIS.LTrim("reportData", 10000, -1)
+		var publicFiles model.PublicFiles
+		report := string(m.Value)
+		json.Unmarshal([]byte(report), &publicFiles)
+		addressInfo := getIpAddressInfo(publicFiles.IP)
+		publicFiles.Nation = addressInfo.Nation
+		publicFiles.City = addressInfo.City
+		publicFiles.District = addressInfo.District
+		publicFiles.Province = addressInfo.Province
+		services.CreateUserAction(publicFiles, report)
+		handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
 	}
 }
 
-//func reportConsumer(report string) {
-//	var publicFiles model.PublicFiles
-//	json.Unmarshal([]byte(report), &publicFiles)
-//	addressInfo := getIpAddressInfo(publicFiles.IP)
-//	publicFiles.Nation = addressInfo.Nation
-//	publicFiles.City = addressInfo.City
-//	publicFiles.District = addressInfo.District
-//	publicFiles.Province = addressInfo.Province
-//	services.CreateUserAction(publicFiles, report)
-//	handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
+//func reportDataConsume() {
+//	var wg sync.WaitGroup
+//	pipe := global.GVA_REDIS.TxPipeline()
+//	reportList := pipe.LRange("reportData", 0, 10000)
+//	_, err := pipe.Exec()
+//	if err != nil {
+//		return
+//	}
+//	if len(reportList.Val()) > 0 {
+//		for _, report := range reportList.Val() {
+//			wg.Add(1)
+//			go func(report string) {
+//				var publicFiles model.PublicFiles
+//				json.Unmarshal([]byte(report), &publicFiles)
+//				addressInfo := getIpAddressInfo(publicFiles.IP)
+//				publicFiles.Nation = addressInfo.Nation
+//				publicFiles.City = addressInfo.City
+//				publicFiles.District = addressInfo.District
+//				publicFiles.Province = addressInfo.Province
+//				services.CreateUserAction(publicFiles, report)
+//				handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
+//				wg.Done()
+//			}(report)
+//		}
+//		wg.Wait()
+//		global.GVA_REDIS.LTrim("reportData", 10000, -1)
+//	}
 //}
+
 func init() {
 	handles = utils.NewHandles()
 	servicesHandles := map[string]utils.ServiceFunc{
@@ -94,9 +102,8 @@ func init() {
 	handles.ServicesHandlerRegister(servicesHandles)
 }
 func InitReportData() {
-	cron2 := cron.New(cron.WithSeconds())
-	cron2.AddFunc("*/10 * * * * * ", reportDataConsume)
-	cron2.Start()
+	KafkaReader()
+	reportDataConsume()
 }
 
 //cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
