@@ -1,11 +1,11 @@
 package v1
 
 import (
-	"danci-api/model"
-	"danci-api/model/request"
-	"danci-api/model/response"
-	"danci-api/services"
-	"danci-api/utils"
+	"dancin-api/model"
+	"dancin-api/model/request"
+	"dancin-api/model/response"
+	"dancin-api/services"
+	"dancin-api/utils"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"strconv"

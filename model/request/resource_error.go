@@ -1,6 +1,6 @@
 package request
 
-import "danci-api/model"
+import "dancin-api/model"
 
 type ResourceErrorBody struct {
 	PageUrl     string `json:"page_url"`
@@ -8,7 +8,7 @@ type ResourceErrorBody struct {
 	ElementType string `json:"element_type"`
 	Status      string `json:"status"`
 
-	model.PublicFiles
+	model.CommonFiles
 }
 
 type ResourceErrorParams struct {

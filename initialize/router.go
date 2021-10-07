@@ -1,9 +1,10 @@
 package initialize
 
 import (
-	"danci-api/global"
-	"danci-api/middleware"
-	"danci-api/router"
+	//"danci-api/router"
+	"dancin-api/global"
+	"dancin-api/middleware"
+	"dancin-api/router"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -12,16 +13,15 @@ import (
 
 func Routers() *gin.Engine {
 	var Router = gin.Default()
-	Router.StaticFS(global.GVA_CONFIG.Local.Path, http.Dir(global.GVA_CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
+	Router.StaticFS(global.CONFIG.Local.Path, http.Dir(global.CONFIG.Local.Path)) // 为用户头像和文件提供静态地址
 	// Router.Use(middleware.LoadTls())  // 打开就能玩https了
-	global.GVA_LOG.Info("use middleware logger")
-	// 跨域
+	global.LOGGER.Info("use middleware logger")
 	Router.Use(middleware.Cors()) // 如需跨域可以打开
-	//global.GVA_LOG.Info("use middleware cors")
+	global.LOGGER.Info("use middleware cors")
 	ApiGroup := Router.Group("")
 	router.InitReport(ApiGroup)   // 上报数据
 	router.InitCommunal(ApiGroup) // 公用接口
 	router.InitAdmin(ApiGroup)    // 管理相关接口
-	global.GVA_LOG.Info("router register success")
+	global.LOGGER.Info("router register success")
 	return Router
 }

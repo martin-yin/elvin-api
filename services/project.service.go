@@ -1,9 +1,9 @@
 package services
 
 import (
-	"danci-api/global"
-	"danci-api/model"
-	"danci-api/model/response"
+	"dancin-api/global"
+	"dancin-api/model"
+	"dancin-api/model/response"
 	"fmt"
 	"strconv"
 	"strings"
@@ -11,7 +11,7 @@ import (
 
 func GetProjectList(id uint) (projectList []model.Project, err error) {
 	var teamList []model.Team
-	err = global.GVA_DB.Preload("Admins", "id = ? ", 1).Preload("Projects").Model(&model.Team{}).Find(&teamList).Error
+	err = global.GORMDB.Preload("Admins", "id = ? ", 1).Preload("Projects").Model(&model.Team{}).Find(&teamList).Error
 	for _, team := range teamList {
 		for _, project := range team.Projects {
 			projectList = append(projectList, project)
@@ -21,13 +21,13 @@ func GetProjectList(id uint) (projectList []model.Project, err error) {
 }
 
 func CreateProject(project model.Project) (err error) {
-	err = global.GVA_DB.Create(&project).Error
+	err = global.GORMDB.Create(&project).Error
 	return err
 }
 
 func FindProject(projectName string) (isExist bool) {
 	var project model.Project
-	result := global.GVA_DB.Model(&model.Project{}).Where("project_name = ? ", projectName).First(&project)
+	result := global.GORMDB.Model(&model.Project{}).Where("project_name = ? ", projectName).First(&project)
 	if result.RowsAffected != 0 {
 		return true
 	}
@@ -35,17 +35,17 @@ func FindProject(projectName string) (isExist bool) {
 }
 
 func GetProject(monitorId string) (project model.Project, err error) {
-	err = global.GVA_DB.Model(&model.Project{}).Where("monitor_id = ? ", monitorId).First(&project).Error
+	err = global.GORMDB.Model(&model.Project{}).Where("monitor_id = ? ", monitorId).First(&project).Error
 	return
 }
 
 func GetProjectStatistics(startTime string, endTime string, monitorId string) (projectStatistics response.ProjectStatistics, err error) {
-	err = global.GVA_DB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
+	err = global.GORMDB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 	return
 }
 
 func DelProject(id string) (err error) {
-	err = global.GVA_DB.Delete(&model.Project{}, id).Error
+	err = global.GORMDB.Delete(&model.Project{}, id).Error
 	return err
 }
 
@@ -53,10 +53,10 @@ func GetProjectHealthy(startTime string, endTime string, monitorIds string) (pro
 	monitorIdealists := strings.Split(monitorIds, `,`)
 	for _, monitorId := range monitorIdealists {
 		var projectStatistics response.ProjectStatistics
-		err = global.GVA_DB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		err = global.GVA_DB.Model(&model.Issue{}).Select("COUNT( DISTINCT id ) as js_error").Where(SqlWhereBuild("issues"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		err = global.GVA_DB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources_error").Where(SqlWhereBuild("page_resource_errors"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(SqlWhereBuild("page_https"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
+		err = global.GORMDB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
+		err = global.GORMDB.Model(&model.Issue{}).Select("COUNT( DISTINCT id ) as js_error").Where(SqlWhereBuild("issues"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
+		err = global.GORMDB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources_error").Where(SqlWhereBuild("page_resource_errors"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
+		err = global.GORMDB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(SqlWhereBuild("page_https"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
 		projectStatistics.JsError = DecimalNotZero(projectStatistics.JsError, projectStatistics.Pv)
 		projectStatistics.ResourcesError = DecimalNotZero(projectStatistics.ResourcesError, projectStatistics.Pv)
 		projectStatistics.HttpError = DecimalNotZero(projectStatistics.HttpError, projectStatistics.Pv)

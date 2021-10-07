@@ -1,13 +1,13 @@
 package services
 
 import (
-	"danci-api/global"
-	"danci-api/model"
-	"danci-api/model/request"
-	"fmt"
+	"dancin-api/global"
+	"dancin-api/model"
+	"dancin-api/model/request"
+	"gorm.io/gorm"
 )
 
-func CreatePagePerformance(performance *request.PerformanceBody, publicFiles *model.PublicFiles) {
+func CreatePagePerformance(performance *request.PerformanceBody, commonFiles *model.CommonFiles) {
 	performanceModel := &model.PagePerformance{
 		PageUrl:      performance.PageUrl,
 		Appcache:     performance.Appcache,
@@ -21,37 +21,35 @@ func CreatePagePerformance(performance *request.PerformanceBody, publicFiles *mo
 		LoadEvent:    performance.LoadEvent,
 		LoadType:     performance.LoadType,
 		Redirect:     performance.Redirect,
-		PublicFiles:  *publicFiles,
+		CommonFiles:  *commonFiles,
 	}
-	if err := global.GVA_DB.Create(&performanceModel).Error; err != nil {
-		fmt.Println("err", err)
-	}
-	CreateUser(&model.User{
-		PublicFiles: *publicFiles,
+	global.GORMDB.Transaction(func(tx *gorm.DB) error {
+		if err := tx.Create(&performanceModel).Error; err != nil {
+			return err
+		}
+		if err := tx.Create(&model.User{
+			CommonFiles: *commonFiles,
+		}).Error; err != nil {
+			return err
+		}
+		return nil
 	})
 }
 
-func CreateUser(user *model.User) {
-	// 用户每次刷新页面就记录一次用户。
-	if err := global.GVA_DB.Create(&user).Error; err != nil {
-		fmt.Println(err, "创建用户出错！")
-	}
-}
-
-func CreateUserAction(publicFiles model.PublicFiles, reportData string) {
+func CreateUserAction(commonFiles model.CommonFiles, reportData string) {
 	userAction := model.UserAction{
-		UserId:       publicFiles.UserId,
-		MonitorId:    publicFiles.MonitorId,
-		HappenTime:   publicFiles.HappenTime,
-		HappenDay:    publicFiles.HappenDay,
-		SessionId:    publicFiles.SessionId,
-		ActionType:   publicFiles.ActionType,
+		UserId:       commonFiles.UserId,
+		MonitorId:    commonFiles.MonitorId,
+		HappenTime:   commonFiles.HappenTime,
+		HappenDay:    commonFiles.HappenDay,
+		SessionId:    commonFiles.SessionId,
+		ActionType:   commonFiles.ActionType,
 		ActionDetail: reportData,
 	}
-	global.GVA_DB.Create(&userAction)
+	global.GORMDB.Create(&userAction)
 }
 
-func CreatePageHttp(http *request.HttpBody, publicFiles *model.PublicFiles) {
+func CreatePageHttp(http *request.HttpBody, commonFiles *model.CommonFiles) {
 	httpModel := model.PageHttp{
 		PageUrl:      http.PageUrl,
 		HttpUrl:      http.HttpUrl,
@@ -62,23 +60,23 @@ func CreatePageHttp(http *request.HttpBody, publicFiles *model.PublicFiles) {
 		StatusResult: http.StatusResult,
 		RequestText:  http.RequestText,
 		ResponseText: http.ResponseText,
-		PublicFiles:  *publicFiles,
+		CommonFiles:  *commonFiles,
 	}
-	global.GVA_DB.Create(&httpModel)
+	global.GORMDB.Create(&httpModel)
 }
 
-func CreateResourcesError(resource *request.ResourceErrorBody, publicFiles *model.PublicFiles) {
+func CreateResourcesError(resource *request.ResourceErrorBody, commonFiles *model.CommonFiles) {
 	resourceModel := model.PageResourceError{
 		PageUrl:     resource.PageUrl,
 		SourceUrl:   resource.SourceUrl,
 		ElementType: resource.ElementType,
 		Status:      resource.Status,
-		PublicFiles: *publicFiles,
+		CommonFiles: *commonFiles,
 	}
-	global.GVA_DB.Create(&resourceModel)
+	global.GORMDB.Create(&resourceModel)
 }
 
-func CreatePageOperation(operation *request.OperationBody, publicFiles *model.PublicFiles) {
+func CreatePageOperation(operation *request.OperationBody, commonFiles *model.CommonFiles) {
 	operationModel := model.PageOperation{
 		PageUrl:     operation.PageUrl,
 		ClassName:   operation.ClassName,
@@ -86,12 +84,12 @@ func CreatePageOperation(operation *request.OperationBody, publicFiles *model.Pu
 		InputValue:  operation.InputValue,
 		TagName:     operation.TagName,
 		InnerText:   operation.InnerText,
-		PublicFiles: *publicFiles,
+		CommonFiles: *commonFiles,
 	}
-	global.GVA_DB.Create(&operationModel)
+	global.GORMDB.Create(&operationModel)
 }
 
-func CreatePageJsError(issue *request.IssuesBody, publicFiles *model.PublicFiles) {
+func CreatePageJsError(issue *request.IssuesBody, commonFiles *model.CommonFiles) {
 	issueModel := model.PageIssue{
 		PageUrl:       issue.PageUrl,
 		ComponentName: issue.ComponentName,
@@ -99,18 +97,18 @@ func CreatePageJsError(issue *request.IssuesBody, publicFiles *model.PublicFiles
 		Message:       issue.Message,
 		StackFrames:   issue.StackFrames,
 		ErrorName:     issue.ErrorName,
-		PublicFiles:   *publicFiles,
+		CommonFiles:   *commonFiles,
 	}
 	jsIssueModel, err := FindJsIssue(issueModel.Message)
 	if err == nil {
 		if jsIssueModel.ID != 0 {
 			issueModel.IssuesId = jsIssueModel.ID
-			global.GVA_DB.Save(&issueModel)
+			global.GORMDB.Save(&issueModel)
 		} else {
 			jsIssue := model.Issue{
 				ErrorName:  issue.ErrorName,
 				Message:    issue.Message,
-				MonitorId:  issue.PublicFiles.MonitorId,
+				MonitorId:  issue.CommonFiles.MonitorId,
 				HappenTime: issue.HappenTime,
 				PageIssue: []model.PageIssue{
 					issueModel,
@@ -122,13 +120,13 @@ func CreatePageJsError(issue *request.IssuesBody, publicFiles *model.PublicFiles
 }
 
 func CreateJsIssue(stack model.Issue) {
-	global.GVA_DB.Save(&stack)
+	global.GORMDB.Save(&stack)
 }
 
-func CreatePageView(pageView *request.PageViewBody, publicFiles *model.PublicFiles) {
+func CreatePageView(pageView *request.PageViewBody, commonFiles *model.CommonFiles) {
 	pageViewModel := model.PageView{
 		PageUrl:     pageView.PageUrl,
-		PublicFiles: *publicFiles,
+		CommonFiles: *commonFiles,
 	}
-	global.GVA_DB.Create(&pageViewModel)
+	global.GORMDB.Create(&pageViewModel)
 }

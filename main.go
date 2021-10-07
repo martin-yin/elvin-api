@@ -1,19 +1,19 @@
 package main
 
 import (
-	"danci-api/core"
-	"danci-api/global"
-	"danci-api/initialize"
+	"dancin-api/core"
+	"dancin-api/global"
+	"dancin-api/initialize"
 )
 
 func main() {
-	global.GVA_VP = core.Viper()      // 初始化Viper
-	global.GVA_LOG = core.Zap()       // 初始化zap日志库
-	global.GVA_DB = initialize.Gorm() // gorm连接数据库
-	if global.GVA_DB != nil {
-		initialize.MysqlTables(global.GVA_DB) // 初始化表
-		// 程序结束前关闭数据库链接
-		db, _ := global.GVA_DB.DB()
+	global.VIPER = core.Viper()       // 初始化Viper
+	global.LOGGER = core.Zap()        // 初始化zap日志库
+	global.GORMDB = initialize.Gorm() // gorm连接数据库
+
+	if global.GORMDB != nil {
+		initialize.MysqlTables(global.GORMDB) // 初始化表
+		db, _ := global.GORMDB.DB()
 		initialize.Redis()
 		defer db.Close()
 	}

@@ -1,7 +1,5 @@
 package model
 
-import "danci-api/global"
-
 // 页面js错误
 //type PageJsError struct {
 //	global.GVA_MODEL
@@ -30,19 +28,19 @@ import "danci-api/global"
 //}
 
 type PageIssue struct {
-	global.GVA_MODEL
+	MODEL
 	PageUrl       string      `json:"page_url"`
 	ComponentName string      `json:"componentName"`
 	Message       string      `json:"message"`
 	Stack         string      `json:"stack" gorm:"type:text"`
 	StackFrames   string      `json:"stack_frames" gorm:"type:text"`
 	ErrorName     string      `json:"error_name"`
-	PublicFiles   PublicFiles `json:"public_files" gorm:"embedded"`
+	CommonFiles   CommonFiles `json:"common_files"  gorm:"embedded"`
 	IssuesId      uint        `json:"issues_id"`
 }
 
 type Issue struct {
-	global.GVA_MODEL
+	MODEL
 	ErrorName  string      `json:"error_name"`
 	Message    string      `json:"message" gorm:"uniqueIndex"`
 	HappenTime int         `json:"happen_time"`

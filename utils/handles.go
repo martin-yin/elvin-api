@@ -1,12 +1,12 @@
 package utils
 
 import (
-	"danci-api/model"
+	"dancin-api/model"
 	"github.com/gin-gonic/gin"
 )
 
 type RouterFunc func(context *gin.Context)
-type ServiceFunc func(obj string, publicFiles *model.PublicFiles)
+type ServiceFunc func(obj string, commonFiles *model.CommonFiles)
 
 type Handles struct {
 	RouterHandlers  map[string]RouterFunc
@@ -14,7 +14,6 @@ type Handles struct {
 }
 
 // 创建一个新的空map
-
 func NewHandles() *Handles {
 	return &Handles{
 		RouterHandlers:  make(map[string]RouterFunc),

@@ -1,9 +1,7 @@
 package model
 
-import "danci-api/global"
-
 type PageReportStatistics struct {
-	global.GVA_MODEL
+	MODEL
 	HourName   string `json:"hour_name"`
 	HourCount  string `json:"hour_count"`
 	DayName    string `json:"day_name"`

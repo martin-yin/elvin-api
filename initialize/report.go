@@ -2,40 +2,21 @@ package initialize
 
 import (
 	"context"
-	"danci-api/global"
-	"danci-api/model"
-	"danci-api/model/request"
-	"danci-api/model/response"
-	"danci-api/services"
-	"danci-api/utils"
+	"dancin-api/global"
+	"dancin-api/model"
+	"dancin-api/model/request"
+	"dancin-api/model/response"
+	"dancin-api/services"
+	"dancin-api/utils"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 )
 
 var handles *utils.Handles
 
-func reportDataConsume() {
-	for {
-		m, err := global.GVA_KAFKA.ReadMessage(context.Background())
-		if err != nil {
-			log.Fatalln(err)
-		}
-		var publicFiles model.PublicFiles
-		report := string(m.Value)
-		json.Unmarshal([]byte(report), &publicFiles)
-		addressInfo := getIpAddressInfo(publicFiles.IP)
-		publicFiles.Nation = addressInfo.Nation
-		publicFiles.City = addressInfo.City
-		publicFiles.District = addressInfo.District
-		publicFiles.Province = addressInfo.Province
-		services.CreateUserAction(publicFiles, report)
-		handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
-	}
-}
-
+// redis 消费数据
 //func reportDataConsume() {
 //	var wg sync.WaitGroup
 //	pipe := global.GVA_REDIS.TxPipeline()
@@ -68,42 +49,61 @@ func reportDataConsume() {
 func init() {
 	handles = utils.NewHandles()
 	servicesHandles := map[string]utils.ServiceFunc{
-		"PAGE_LOAD": func(report string, publicFiles *model.PublicFiles) {
+		"PAGE_LOAD": func(report string, commonFiles *model.CommonFiles) {
 			var performance request.PerformanceBody
 			json.Unmarshal([]byte(report), &performance)
-			services.CreatePagePerformance(&performance, publicFiles)
+			services.CreatePagePerformance(&performance, commonFiles)
 		},
-		"HTTP_LOG": func(report string, publicFiles *model.PublicFiles) {
+		"HTTP_LOG": func(report string, commonFiles *model.CommonFiles) {
 			var http request.HttpBody
 			json.Unmarshal([]byte(report), &http)
-			services.CreatePageHttp(&http, publicFiles)
+			services.CreatePageHttp(&http, commonFiles)
 		},
-		"PAGE_VIEW": func(report string, publicFiles *model.PublicFiles) {
+		"PAGE_VIEW": func(report string, commonFiles *model.CommonFiles) {
 			var pageView request.PageViewBody
 			json.Unmarshal([]byte(report), &pageView)
-			services.CreatePageView(&pageView, publicFiles)
+			services.CreatePageView(&pageView, commonFiles)
 		},
-		"OPERATION": func(report string, publicFiles *model.PublicFiles) {
+		"OPERATION": func(report string, commonFiles *model.CommonFiles) {
 			var operation request.OperationBody
 			json.Unmarshal([]byte(report), &operation)
-			services.CreatePageOperation(&operation, publicFiles)
+			services.CreatePageOperation(&operation, commonFiles)
 		},
-		"RESOURCE": func(report string, publicFiles *model.PublicFiles) {
+		"RESOURCE": func(report string, commonFiles *model.CommonFiles) {
 			var resource request.ResourceErrorBody
 			json.Unmarshal([]byte(report), &resource)
-			services.CreateResourcesError(&resource, publicFiles)
+			services.CreateResourcesError(&resource, commonFiles)
 		},
-		"JS_ERROR": func(report string, publicFiles *model.PublicFiles) {
+		"JS_ERROR": func(report string, commonFiles *model.CommonFiles) {
 			var issuesBody request.IssuesBody
 			json.Unmarshal([]byte(report), &issuesBody)
-			services.CreatePageJsError(&issuesBody, publicFiles)
+			services.CreatePageJsError(&issuesBody, commonFiles)
 		},
 	}
 	handles.ServicesHandlerRegister(servicesHandles)
 }
+
 func InitReportData() {
 	KafkaReader()
-	reportDataConsume()
+	if global.KAFKA_READER != nil {
+		for {
+			m, err := global.KAFKA_READER.ReadMessage(context.Background())
+			if err != nil {
+				global.LOGGER.Error(err.Error())
+				return
+			}
+			var commonFiles model.CommonFiles
+			report := string(m.Value)
+			json.Unmarshal([]byte(report), &commonFiles)
+			addressInfo := getIpAddressInfo(commonFiles.IP)
+			commonFiles.Nation = addressInfo.Nation
+			commonFiles.City = addressInfo.City
+			commonFiles.District = addressInfo.District
+			commonFiles.Province = addressInfo.Province
+			services.CreateUserAction(commonFiles, report)
+			handles.ServiceHandlers[commonFiles.ActionType](report, &commonFiles)
+		}
+	}
 }
 
 //cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
@@ -135,7 +135,7 @@ func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 		return
 	}
 	var txMapResponse response.TxMapResponse
-	addingStr := global.GVA_REDIS.HGet("ipAddress", ip)
+	addingStr := global.REDIS.HGet("ipAddress", ip)
 	if len(addingStr.Val()) != 0 {
 		err := json.Unmarshal([]byte(addingStr.Val()), &AdInfo)
 		if err != nil {
@@ -151,7 +151,7 @@ func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 		defer resp.Body.Close()
 		err = json.Unmarshal(txMapResponded, &txMapResponse)
 		txMapResponseStr, err := json.Marshal(&txMapResponse.Result.AdInfo)
-		global.GVA_REDIS.HSet("ipAddress", ip, txMapResponseStr)
+		global.REDIS.HSet("ipAddress", ip, txMapResponseStr)
 		return txMapResponse.Result.AdInfo
 	}
 }

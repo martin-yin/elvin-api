@@ -1,9 +1,7 @@
 package model
 
-import "danci-api/global"
-
 type Team struct {
-	global.GVA_MODEL
+	MODEL
 	Name     string    `json:"name" gorm:"unique"`
 	NickName string    `json:"nick_name"`
 	AdminId  uint      `json:"admin_id"`

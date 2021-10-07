@@ -1,13 +1,13 @@
 package services
 
 import (
-	"danci-api/global"
-	"danci-api/model"
-	"danci-api/model/response"
+	"dancin-api/global"
+	"dancin-api/model"
+	"dancin-api/model/response"
 )
 
 func GetResourcesList(monitorId string, startTime string, endTime string) (resourcesList []response.ResourcesListResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageResourceError{}).Select("source_url AS page_source_url, "+
+	err = global.GORMDB.Model(&model.PageResourceError{}).Select("source_url AS page_source_url, "+
 		"COUNT( source_url ) AS source_count, "+
 		"COUNT( DISTINCT user_id ) user_count, "+
 		"element_type, "+
@@ -17,7 +17,7 @@ func GetResourcesList(monitorId string, startTime string, endTime string) (resou
 }
 
 func GetResourcesQuota(monitorId string, startTime string, endTime string) (resourcesQuota response.ResourcesQuotaResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
+	err = global.GORMDB.Model(&model.PageResourceError{}).Select(" COUNT(*) as error_count,"+
 		"COUNT(DISTINCT page_url) as error_page, "+
 		"COUNT(DISTINCT user_id) as error_user").Where(SqlWhereBuild("page_resource_errors"), startTime, endTime, monitorId).Find(&resourcesQuota).Error
 	return

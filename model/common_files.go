@@ -1,6 +1,14 @@
 package model
 
-type PublicFiles struct {
+import "time"
+
+type MODEL struct {
+	ID        uint      `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
+
+type CommonFiles struct {
 	UserId         string `json:"user_id"`
 	MonitorId      string `json:"monitor_id"`
 	ActionType     string `json:"action_type"`

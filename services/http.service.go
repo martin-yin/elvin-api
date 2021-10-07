@@ -1,9 +1,9 @@
 package services
 
 import (
-	"danci-api/global"
-	"danci-api/model"
-	"danci-api/model/response"
+	"dancin-api/global"
+	"dancin-api/model"
+	"dancin-api/model/response"
 	"fmt"
 	"strconv"
 )
@@ -11,7 +11,7 @@ import (
 func GetHttpInfoList(monitorId string, startTime string, endTime string) (httpInfoList []response.HttpListResponse, err error) {
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
-	err = global.GVA_DB.Model(&model.PageHttp{}).
+	err = global.GORMDB.Model(&model.PageHttp{}).
 		Select("http_url, Count(DISTINCT http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time").Where(
 		SqlWhereBuild("page_https")+" and status = 200", startTimes, endTimes, monitorId).
 		Group("http_url").Order("load_time desc").Limit(8).Find(&httpInfoList).Error
@@ -21,12 +21,12 @@ func GetHttpInfoList(monitorId string, startTime string, endTime string) (httpIn
 func GetHttpQuota(monitorId string, startTime string, endTime string) (httpQuota response.HttpQuotaResponse, err error) {
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("round(AVG( load_time )) AS load_time, status, COUNT(*) AS total").Where(
+	err = global.GORMDB.Model(&model.PageHttp{}).Select("round(AVG( load_time )) AS load_time, status, COUNT(*) AS total").Where(
 		SqlWhereBuild("page_https"),
 		startTimes, endTimes, monitorId).Find(&httpQuota).Error
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select(" Count(DISTINCT user_id) as error_user, status ").
+	err = global.GORMDB.Model(&model.PageHttp{}).Select(" Count(DISTINCT user_id) as error_user, status ").
 		Where(SqlWhereBuild("page_https")+" and status > 400", startTimes, endTimes, monitorId).Find(&httpQuota).Error
-	err = global.GVA_DB.Model(&model.PageHttp{}).Select("COUNT(*) AS success_total, status").
+	err = global.GORMDB.Model(&model.PageHttp{}).Select("COUNT(*) AS success_total, status").
 		Where(SqlWhereBuild("page_https")+" and status < 400", startTimes, endTimes, monitorId).Scan(&httpQuota).Error
 	return
 }
@@ -42,7 +42,7 @@ func GetHttpStage(monitorId string, timeGrain string, startTime string, endTime 
 	if timeGrain == "day" {
 		query = query + "'%m-%d'"
 	}
-	err = global.GVA_DB.Model(&model.PageHttp{}).
+	err = global.GORMDB.Model(&model.PageHttp{}).
 		Select("FROM_UNIXTIME( happen_time / 1000, "+query+") AS time_key, COUNT( * ) AS total, status, round( AVG( load_time ), 2 ) AS load_time").
 		Where(SqlWhereBuild("page_https")+"and status = 200", startTime+" 00:00:00", endTime+" 23:59:59", monitorId).
 		Group("time_key").Find(&httpStageTime).Error

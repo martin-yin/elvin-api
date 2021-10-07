@@ -1,6 +1,6 @@
 package initialize
 
-import "danci-api/utils"
+import "dancin-api/utils"
 
 func init() {
 	_ = utils.RegisterRule("PageVerify",

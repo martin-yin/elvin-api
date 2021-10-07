@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"danci-api/model/request"
-	"danci-api/model/response"
-	"danci-api/services"
+	"dancin-api/model/request"
+	"dancin-api/model/response"
+	"dancin-api/services"
 	"github.com/gin-gonic/gin"
 )
 

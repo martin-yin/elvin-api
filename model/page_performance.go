@@ -1,10 +1,7 @@
 package model
 
-import "danci-api/global"
-
 type PagePerformance struct {
-	global.GVA_MODEL
-
+	MODEL
 	PageUrl      string      `json:"page_url"`
 	Redirect     float64     `json:"redirect"`
 	Appcache     float64     `json:"appcache"`
@@ -17,5 +14,5 @@ type PagePerformance struct {
 	LoadPage     float64     `json:"load_page"`
 	LoadEvent    float64     `json:"load_event"`
 	LoadType     string      `json:"load_type"`
-	PublicFiles  PublicFiles `json:"public_files" gorm:"embedded"`
+	CommonFiles  CommonFiles `json:"common_files"  gorm:"embedded"`
 }

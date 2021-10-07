@@ -1,10 +1,10 @@
 package services
 
 import (
-	"danci-api/global"
-	"danci-api/model"
-	"danci-api/model/request"
-	"danci-api/model/response"
+	"dancin-api/global"
+	"dancin-api/model"
+	"dancin-api/model/request"
+	"dancin-api/model/response"
 )
 
 type WhereSql struct {
@@ -18,56 +18,56 @@ func GetUsers(usersParam request.UsersRequest) (userResponse []response.UserResp
 	}
 	startSearchTime := usersParam.SearchDate + " " + usersParam.SearchHour
 	endSearchTime := usersParam.SearchDate + " 23:59:59"
-	err = global.GVA_DB.Model(&model.User{}).Where(whereQuery, usersParam.MonitorId, startSearchTime, endSearchTime).Group("happen_time desc").Find(&userResponse).Error
+	err = global.GORMDB.Model(&model.User{}).Where(whereQuery, usersParam.MonitorId, startSearchTime, endSearchTime, usersParam.UserId).Group("happen_time desc").Find(&userResponse).Error
 	return
 }
 
 func GetUser(id string) (userResponse response.UserResponse, err error) {
-	err = global.GVA_DB.Model(&model.User{}).Where("id = ?", id).Find(&userResponse).Error
+	err = global.GORMDB.Model(&model.User{}).Where("id = ?", id).Find(&userResponse).Error
 	return
 }
 
 func GetUserActions(sessionId string, page int, limit int) (actionResponse []response.ActionsResponse, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Where("session_id = ?", sessionId).Order("happen_time").Limit(limit).Offset((page - 1) * limit).Find(&actionResponse).Error
+	err = global.GORMDB.Model(&model.UserAction{}).Where("session_id = ?", sessionId).Order("happen_time").Limit(limit).Offset((page - 1) * limit).Find(&actionResponse).Error
 	return
 }
 
 func GetUserActionsTotal(sessionId string) (total int, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Select("count(*) as total").Where("session_id = ?", sessionId).Order("happen_time").Find(&total).Error
+	err = global.GORMDB.Model(&model.UserAction{}).Select("count(*) as total").Where("session_id = ?", sessionId).Order("happen_time").Find(&total).Error
 	return
 }
 
 func GetUserActionsStatistics(sessionId string) (actionStatisticsResponse []response.ActionsStatisticsResponse, err error) {
-	err = global.GVA_DB.Model(&model.UserAction{}).Select("action_type, count(*) as total").Where("session_id = ?", sessionId).Group("action_type").Find(&actionStatisticsResponse).Error
+	err = global.GORMDB.Model(&model.UserAction{}).Select("action_type, count(*) as total").Where("session_id = ?", sessionId).Group("action_type").Find(&actionStatisticsResponse).Error
 	return
 }
 
 func GetActionHttp(id string) (actionResponse response.ActionHttpResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageHttp{}).Where("id = ?", id).Scan(&actionResponse).Error
+	err = global.GORMDB.Model(&model.PageHttp{}).Where("id = ?", id).Scan(&actionResponse).Error
 	return
 }
 
 func GetActionPerformance(id string) (actionPerformanceResponse response.ActionPerformanceResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Where("id = ?", id).Scan(&actionPerformanceResponse).Error
+	err = global.GORMDB.Model(&model.PagePerformance{}).Where("id = ?", id).Scan(&actionPerformanceResponse).Error
 	return
 }
 
 func GetActionJsError(id string) (actionJsErrorResponse response.ActionJsErrorResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageIssue{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
+	err = global.GORMDB.Model(&model.PageIssue{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
 	return
 }
 
 func GetActionResourceError(id string) (actionResourceErrorResponse response.ActionResourceErrorResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageResourceError{}).Where("id = ?", id).Scan(&actionResourceErrorResponse).Error
+	err = global.GORMDB.Model(&model.PageResourceError{}).Where("id = ?", id).Scan(&actionResourceErrorResponse).Error
 	return
 }
 
 func GetActionBehavior(id string) (actionPageBehaviorResponse response.ActionPageBehaviorResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageOperation{}).Where("id = ?", id).Scan(&actionPageBehaviorResponse).Error
+	err = global.GORMDB.Model(&model.PageOperation{}).Where("id = ?", id).Scan(&actionPageBehaviorResponse).Error
 	return
 }
 
 func GetActionPageView(id string) (actionPageViewResponse response.ActionPageViewResponse, err error) {
-	err = global.GVA_DB.Model(&model.PageView{}).Where("id = ?", id).Scan(&actionPageViewResponse).Error
+	err = global.GORMDB.Model(&model.PageView{}).Where("id = ?", id).Scan(&actionPageViewResponse).Error
 	return
 }

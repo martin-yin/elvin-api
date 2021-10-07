@@ -1,9 +1,9 @@
 package middleware
 
 import (
-	"danci-api/global"
-	"danci-api/model/request"
-	"danci-api/model/response"
+	"dancin-api/global"
+	"dancin-api/model/request"
+	"dancin-api/model/response"
 	"errors"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -40,7 +40,7 @@ type JWT struct {
 
 func NewJWT() *JWT {
 	return &JWT{
-		[]byte(global.GVA_CONFIG.JWT.SigningKey),
+		[]byte(global.CONFIG.JWT.SigningKey),
 	}
 }
 

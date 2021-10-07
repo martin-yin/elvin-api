@@ -2,7 +2,7 @@ package internal
 
 import (
 	"context"
-	"danci-api/global"
+	"dancin-api/global"
 	"fmt"
 	"go.uber.org/zap"
 	"gorm.io/gorm/logger"
@@ -132,18 +132,18 @@ func (c *customLogger) Trace(ctx context.Context, begin time.Time, fc func() (st
 }
 
 func (c *customLogger) Printf(message string, data ...interface{}) {
-	if global.GVA_CONFIG.Mysql.LogZap != "" {
+	if global.CONFIG.Mysql.LogZap != "" {
 		switch len(data) {
 		case 0:
-			global.GVA_LOG.Info(message)
+			global.LOGGER.Info(message)
 		case 1:
-			global.GVA_LOG.Info("gorm", zap.Any("src", data[0]))
+			global.LOGGER.Info("gorm", zap.Any("src", data[0]))
 		case 2:
-			global.GVA_LOG.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]))
+			global.LOGGER.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]))
 		case 3:
-			global.GVA_LOG.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]))
+			global.LOGGER.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]))
 		case 4:
-			global.GVA_LOG.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]), zap.Any("sql", data[3]))
+			global.LOGGER.Info("gorm", zap.Any("src", data[0]), zap.Any("duration", data[1]), zap.Any("rows", data[2]), zap.Any("sql", data[3]))
 		}
 		return
 	}

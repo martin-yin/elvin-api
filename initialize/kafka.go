@@ -1,39 +1,26 @@
 package initialize
 
 import (
-	"danci-api/global"
-	kafka "github.com/segmentio/kafka-go"
+	"dancin-api/global"
+	"github.com/segmentio/kafka-go"
 	"strings"
 )
 
-func getKafkaReader(kafkaURL, topic, groupID string) *kafka.Reader {
-	brokers := strings.Split(kafkaURL, ",")
-	return kafka.NewReader(kafka.ReaderConfig{
-		Brokers:  brokers,
-		GroupID:  groupID,
-		Topic:    topic,
-		MinBytes: 10e3, // 10KB
-		MaxBytes: 10e6, // 10MB
-	})
-}
-
-func newKafkaWriter(kafkaURL, topic string) *kafka.Writer {
-	return &kafka.Writer{
-		Addr:     kafka.TCP(kafkaURL),
-		Topic:    topic,
+func KafkaWriter() {
+	global.KAFKA_WRITER = &kafka.Writer{
+		Addr:     kafka.TCP(global.CONFIG.Report.Path),
+		Topic:    global.CONFIG.Report.Topic,
 		Balancer: &kafka.LeastBytes{},
 	}
 }
 
-// 启动一个 kafka 生产者
-func KafkaWriter() {
-	kafkaURL := "localhost:9092"
-	topic := "maxSB"
-	global.GVA_KAFKA_WRITER = newKafkaWriter(kafkaURL, topic)
-}
-
 func KafkaReader() {
-	kafkaURL := "localhost:9092"
-	topic := "maxSB"
-	global.GVA_KAFKA = getKafkaReader(kafkaURL, topic, "maxSB")
+	brokers := strings.Split(global.CONFIG.Report.Path, ",")
+	global.KAFKA_READER = kafka.NewReader(kafka.ReaderConfig{
+		Brokers:  brokers,
+		GroupID:  global.CONFIG.Report.Group,
+		Topic:    global.CONFIG.Report.Topic,
+		MinBytes: 10e3, // 10KB
+		MaxBytes: 10e6, // 10MB
+	})
 }

@@ -1,7 +1,7 @@
 package router
 
 import (
-	v1 "danci-api/api/v1"
+	v1 "dancin-api/api/v1"
 	"github.com/gin-gonic/gin"
 )
 

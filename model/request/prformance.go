@@ -1,6 +1,6 @@
 package request
 
-import "danci-api/model"
+import "dancin-api/model"
 
 type ReportBody struct {
 	ActionType string `json:"action_type" form: "action_type"`
@@ -24,7 +24,7 @@ type PerformanceBody struct {
 	LoadEvent    float64 `json:"load_event"`
 	LoadType     string  `json:"load_type"`
 
-	model.PublicFiles
+	model.CommonFiles
 }
 
 type PerformanceParams struct {

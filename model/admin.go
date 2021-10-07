@@ -1,9 +1,7 @@
 package model
 
-import "danci-api/global"
-
 type Admin struct {
-	global.GVA_MODEL
+	MODEL
 	UserName string `json:"user_name" gorm:"unique"`
 	Password string `json:"password" sql:"-"`
 	Email    string `json:"email"`

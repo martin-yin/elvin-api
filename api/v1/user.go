@@ -1,9 +1,10 @@
 package v1
 
 import (
-	"danci-api/model/request"
-	"danci-api/model/response"
-	"danci-api/services"
+	"dancin-api/model/request"
+	"dancin-api/model/response"
+	"dancin-api/services"
+	"fmt"
 	"github.com/gin-gonic/gin"
 )
 
@@ -43,6 +44,7 @@ func GetUsersActionsStatistics(context *gin.Context) {
 func GetUserActionList(context *gin.Context) {
 	var userActionsRequest request.UserActionsRequest
 	_ = context.BindQuery(&userActionsRequest)
+	fmt.Print("userActionsRequest", userActionsRequest.SessionId)
 	actionResponse, err := services.GetUserActions(userActionsRequest.SessionId, userActionsRequest.Page, userActionsRequest.Limit)
 	total, err := services.GetUserActionsTotal(userActionsRequest.SessionId)
 	if err != nil {

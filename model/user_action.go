@@ -1,9 +1,7 @@
 package model
 
-import "danci-api/global"
-
 type UserAction struct {
-	global.GVA_MODEL
+	MODEL
 	UserId       string `json:"user_id"`
 	MonitorId    string `json:"monitor_id"`
 	HappenTime   int    `json:"happen_time"`

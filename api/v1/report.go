@@ -2,10 +2,12 @@ package v1
 
 import (
 	gocontext "context"
-	"danci-api/global"
-	"danci-api/model/request"
-	"danci-api/model/response"
-	"danci-api/utils"
+	"dancin-api/global"
+	"dancin-api/model/request"
+	"dancin-api/model/response"
+	"dancin-api/utils"
+	"go.uber.org/zap"
+
 	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -79,7 +81,9 @@ func reportProducer(context *gin.Context, body interface{}, err error) {
 		Key:   []byte(fmt.Sprint(sessionId)),
 		Value: report,
 	}
-	global.GVA_KAFKA_WRITER.WriteMessages(gocontext.Background(), msg)
+	if err := global.KAFKA_WRITER.WriteMessages(gocontext.Background(), msg); err != nil {
+		global.LOGGER.Error("kafka 写入数据失败:", zap.Any("err", err))
+	}
 	response.Ok(context)
 	return
 }

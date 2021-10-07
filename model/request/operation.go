@@ -1,6 +1,6 @@
 package request
 
-import "danci-api/model"
+import "dancin-api/model"
 
 type UserActionRequest struct {
 	ActionID   string `form:"action_id"`
@@ -14,7 +14,7 @@ type UserRequest struct {
 }
 
 type UserActionsRequest struct {
-	SessionId string `json:"session_id"`
+	SessionId string `form:"session_id"`
 	Page      int    `form:"page"`
 	Limit     int    `form:"limit"`
 }
@@ -27,5 +27,5 @@ type OperationBody struct {
 	TagName     string `json:"tag_name"`
 	InnerText   string `json:"inner_text"`
 
-	model.PublicFiles
+	model.CommonFiles
 }

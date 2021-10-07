@@ -1,6 +1,6 @@
 package response
 
-import "danci-api/model"
+import "dancin-api/model"
 
 type LoginResponse struct {
 	User      model.Admin `json:"user"`

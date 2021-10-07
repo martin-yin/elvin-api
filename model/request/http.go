@@ -1,6 +1,6 @@
 package request
 
-import "danci-api/model"
+import "dancin-api/model"
 
 type HttpBody struct {
 	PageUrl      string  `json:"page_url"`
@@ -13,7 +13,7 @@ type HttpBody struct {
 	RequestText  string  `json:"request_text"`
 	ResponseText string  `json:"response_text"`
 
-	model.PublicFiles
+	model.CommonFiles
 }
 
 type HttpParams struct {

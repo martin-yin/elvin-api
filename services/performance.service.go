@@ -1,13 +1,13 @@
 package services
 
 import (
-	"danci-api/global"
-	"danci-api/model"
-	"danci-api/model/response"
+	"dancin-api/global"
+	"dancin-api/model"
+	"dancin-api/model/response"
 )
 
 func GetPerformanceStack(monitorId string, startTime string, endTime string) (stackData response.StackResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("round(AVG(redirect),2) as redirect, "+
+	err = global.GORMDB.Model(&model.PagePerformance{}).Select("round(AVG(redirect),2) as redirect, "+
 		"round(AVG(appcache),2) as appcache, "+
 		"round(AVG(lookup_domain),2) as lookup_domain, "+
 		"round(AVG(tcp),2) as tcp, "+
@@ -20,11 +20,11 @@ func GetPerformanceStack(monitorId string, startTime string, endTime string) (st
 }
 
 func GetQuotaData(monitorId string, startTime string, endTime string) (quotaData response.QuotaResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("round(AVG(dom_parse),2) as dom_parse, "+
+	err = global.GORMDB.Model(&model.PagePerformance{}).Select("round(AVG(dom_parse),2) as dom_parse, "+
 		"round(AVG(ttfb),2) as ttfb, "+
 		"round(AVG(load_page),2) as load_page, "+
 		"Count(*) as Pv ").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Scan(&quotaData).Error
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("COUNT( * ) AS fast").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Scan(&quotaData.Fast).Error
+	err = global.GORMDB.Model(&model.PagePerformance{}).Select("COUNT( * ) AS fast").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Scan(&quotaData.Fast).Error
 
 	if quotaData.Fast != 0 {
 		quotaData.Fast = Decimal(quotaData.Fast/quotaData.Pv) * 100
@@ -33,7 +33,7 @@ func GetQuotaData(monitorId string, startTime string, endTime string) (quotaData
 }
 
 func GetRankingList(monitorId string, startTime string, endTime string) (RankingHttListResponse []response.RankingHttpListResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select(
+	err = global.GORMDB.Model(&model.PagePerformance{}).Select(
 		"page_url, "+
 			"round( AVG( load_page ), 2 ) AS load_page, "+
 			"COUNT(*) as total").Where(SqlWhereBuild("page_performances"), startTime, endTime, monitorId).Group("page_url").Order("load_page desc").Order("load_page desc").Limit(8).Find(&RankingHttListResponse).Error
@@ -52,7 +52,7 @@ func GetStageTimeList(monitorId string, startTime string, endTime string, timeGr
 		query = query + "'%m-%d'"
 	}
 
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, "+query+") AS time_key, "+
+	err = global.GORMDB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, "+query+") AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
 		"round( AVG( appcache ), 2 ) AS appcache,"+
 		"round( AVG( lookup_domain ), 2 ) AS lookup_domain,"+
@@ -67,7 +67,7 @@ func GetStageTimeList(monitorId string, startTime string, endTime string, timeGr
 }
 
 func GetLoadInfoPageList(monitorId string, startTime string, endTime string) (pagePerformanceList []response.PagePerformanceListResponse, err error) {
-	err = global.GVA_DB.Model(&model.PagePerformance{}).Select("ID, page_url, "+
+	err = global.GORMDB.Model(&model.PagePerformance{}).Select("ID, page_url, "+
 		"request, "+
 		"dom_parse, "+
 		"ttfb, "+

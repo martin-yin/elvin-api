@@ -1,6 +1,6 @@
 package request
 
-import "danci-api/model"
+import "dancin-api/model"
 
 type IssuesBody struct {
 	PageUrl       string `json:"page_url"`
@@ -12,7 +12,7 @@ type IssuesBody struct {
 	Stack         string `json:"stack"`
 	Message       string `json:"message"`
 
-	model.PublicFiles
+	model.CommonFiles
 }
 
 type JsErrorParams struct {

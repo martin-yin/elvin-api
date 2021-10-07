@@ -1,9 +1,9 @@
 package request
 
-import "danci-api/model"
+import "dancin-api/model"
 
 type PageViewBody struct {
 	PageUrl string `json:"page_url"`
 
-	model.PublicFiles
+	model.CommonFiles
 }
