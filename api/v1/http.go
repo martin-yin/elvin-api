@@ -20,6 +20,17 @@ func GetHttpList(context *gin.Context) {
 	response.OkWithDetailed(httpList, "获取成功", context)
 }
 
+func GetHttpErrorList(context *gin.Context) {
+	var httpParams request.HttpParams
+	err := context.BindQuery(&httpParams)
+	httpList, err := services.GetHttpErrorList(httpParams.MonitorId, httpParams.StartTime, httpParams.EndTime)
+	if err != nil {
+		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
+		return
+	}
+	response.OkWithDetailed(httpList, "获取成功", context)
+}
+
 func GetHttpStage(context *gin.Context) {
 	var queryPageHttp request.HttpParams
 	_ = context.BindQuery(&queryPageHttp)

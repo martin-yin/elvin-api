@@ -10,6 +10,7 @@ import (
 	"dancin-api/utils"
 	"encoding/json"
 	"fmt"
+	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
 )
@@ -89,7 +90,7 @@ func InitReportData() {
 		for {
 			m, err := global.KAFKA_READER.ReadMessage(context.Background())
 			if err != nil {
-				global.LOGGER.Error(err.Error())
+				global.LOGGER.Error("读取数据失败！！！！！！:", zap.Any("err", err))
 				return
 			}
 			var commonFiles model.CommonFiles

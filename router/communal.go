@@ -20,6 +20,8 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.GET("httpStage", v1.GetHttpStage)
 		Communal.GET("httpQuota", v1.GetHttpQuota)
 
+		Communal.GET("httpErrorList", v1.GetHttpErrorList)
+
 		// 用户相关接口
 		Communal.GET("userList", v1.GetUserList)
 		Communal.GET("user", v1.GetUser)

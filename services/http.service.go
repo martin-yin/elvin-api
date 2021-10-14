@@ -12,9 +12,20 @@ func GetHttpInfoList(monitorId string, startTime string, endTime string) (httpIn
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
 	err = global.GORMDB.Model(&model.PageHttp{}).
-		Select("http_url, Count(DISTINCT http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time").Where(
+		Select("http_url as url, Count(DISTINCT http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time, "+
+			"(SELECT Count(DISTINCT user_id) From page_https WHERE page_https.http_url = url AND page_https.load_time > 3000) as user_slow ").Where(
 		SqlWhereBuild("page_https")+" and status = 200", startTimes, endTimes, monitorId).
-		Group("http_url").Order("load_time desc").Limit(8).Find(&httpInfoList).Error
+		Group("url").Order("load_time desc").Find(&httpInfoList).Error
+	return
+}
+
+func GetHttpErrorList(monitorId string, startTime string, endTime string) (httpInfoList []response.HttpListResponse, err error) {
+	startTimes := startTime + " 00:00:00"
+	endTimes := endTime + " 23:59:59"
+	err = global.GORMDB.Model(&model.PageHttp{}).
+		Select("http_url, Count(DISTINCT http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time").Where(
+		SqlWhereBuild("page_https")+" and status != 200", startTimes, endTimes, monitorId).
+		Group("http_url").Order("load_time desc").Find(&httpInfoList).Error
 	return
 }
 

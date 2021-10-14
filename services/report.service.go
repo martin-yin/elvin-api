@@ -4,6 +4,7 @@ import (
 	"dancin-api/global"
 	"dancin-api/model"
 	"dancin-api/model/request"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -25,11 +26,13 @@ func CreatePagePerformance(performance *request.PerformanceBody, commonFiles *mo
 	}
 	global.GORMDB.Transaction(func(tx *gorm.DB) error {
 		if err := tx.Create(&performanceModel).Error; err != nil {
+			global.LOGGER.Error("写入 performance  失败！！！！！！:", zap.Any("err", err))
 			return err
 		}
 		if err := tx.Create(&model.User{
 			CommonFiles: *commonFiles,
 		}).Error; err != nil {
+			global.LOGGER.Error("创建用户失败！:", zap.Any("err", err))
 			return err
 		}
 		return nil
