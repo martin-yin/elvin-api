@@ -1,7 +1,6 @@
 package initialize
 
 import (
-	"context"
 	"dancin-api/global"
 	"dancin-api/model"
 	"dancin-api/model/request"
@@ -10,42 +9,70 @@ import (
 	"dancin-api/utils"
 	"encoding/json"
 	"fmt"
+	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
 	"io/ioutil"
 	"net/http"
+	"sync"
 )
 
 var handles *utils.Handles
 
-// redis 消费数据
-//func reportDataConsume() {
-//	var wg sync.WaitGroup
-//	pipe := global.GVA_REDIS.TxPipeline()
-//	reportList := pipe.LRange("reportData", 0, 10000)
-//	_, err := pipe.Exec()
-//	if err != nil {
-//		return
-//	}
-//	if len(reportList.Val()) > 0 {
-//		for _, report := range reportList.Val() {
-//			wg.Add(1)
-//			go func(report string) {
-//				var publicFiles model.PublicFiles
-//				json.Unmarshal([]byte(report), &publicFiles)
-//				addressInfo := getIpAddressInfo(publicFiles.IP)
-//				publicFiles.Nation = addressInfo.Nation
-//				publicFiles.City = addressInfo.City
-//				publicFiles.District = addressInfo.District
-//				publicFiles.Province = addressInfo.Province
-//				services.CreateUserAction(publicFiles, report)
-//				handles.ServiceHandlers[publicFiles.ActionType](report, &publicFiles)
-//				wg.Done()
-//			}(report)
-//		}
-//		wg.Wait()
-//		global.GVA_REDIS.LTrim("reportData", 10000, -1)
-//	}
-//}
+func consume(report string) {
+	var commonFiles model.CommonFiles
+	json.Unmarshal([]byte(report), &commonFiles)
+	addressInfo := getIpAddressInfo(commonFiles.IP)
+	commonFiles.Nation = addressInfo.Nation
+	commonFiles.City = addressInfo.City
+	commonFiles.District = addressInfo.District
+	commonFiles.Province = addressInfo.Province
+	services.CreateUserAction(commonFiles, report)
+	handles.ServiceHandlers[commonFiles.ActionType](report, &commonFiles)
+}
+
+// reportDataConsumeByKafka redis 消费数据
+func ReportDataConsumeByKafka() {
+	for {
+		m, err := global.KAFKA.ReadMessage(100)
+		if err != nil {
+			global.LOGGER.Error("读取数据失败！！！！！！:", zap.Any("err", err))
+			return
+		}
+		report := string(m.Value)
+		consume(report)
+	}
+}
+
+func ReportDataConsumeByRedis() {
+	cron2 := cron.New(cron.WithSeconds())
+	cron2.AddFunc("*/5 * * * * * ", consumeByRedis)
+	cron2.Start()
+}
+
+func consumeByRedis(){
+	var wg sync.WaitGroup
+	pipe := global.REDIS.TxPipeline()
+	reportList := pipe.LRange("reportData", 0, 10000)
+	_, err := pipe.Exec()
+	if err != nil {
+		fmt.Print("fuck 。", err)
+		return
+	}
+	if len(reportList.Val()) > 0 {
+		for _, report := range reportList.Val() {
+			wg.Add(1)
+			go func(report string) {
+				consume(report)
+				wg.Done()
+			}(report)
+		}
+		wg.Wait()
+		global.REDIS.LTrim("reportData", 10000, -1)
+	}
+}
+
+
+
 
 func init() {
 	handles = utils.NewHandles()
@@ -82,29 +109,6 @@ func init() {
 		},
 	}
 	handles.ServicesHandlerRegister(servicesHandles)
-}
-
-func InitReportData() {
-	KafkaReader()
-	if global.KAFKA_READER != nil {
-		for {
-			m, err := global.KAFKA_READER.ReadMessage(context.Background())
-			if err != nil {
-				global.LOGGER.Error("读取数据失败！！！！！！:", zap.Any("err", err))
-				return
-			}
-			var commonFiles model.CommonFiles
-			report := string(m.Value)
-			json.Unmarshal([]byte(report), &commonFiles)
-			addressInfo := getIpAddressInfo(commonFiles.IP)
-			commonFiles.Nation = addressInfo.Nation
-			commonFiles.City = addressInfo.City
-			commonFiles.District = addressInfo.District
-			commonFiles.Province = addressInfo.Province
-			services.CreateUserAction(commonFiles, report)
-			handles.ServiceHandlers[commonFiles.ActionType](report, &commonFiles)
-		}
-	}
 }
 
 //cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。

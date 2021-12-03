@@ -109,7 +109,7 @@ type ActionPageBehaviorResponse struct {
 	ClassName      string `json:"class_name"`
 	Placeholder    string `json:"placeholder"`
 	InputValue     string `json:"Input_value"`
-	TagNameint     string `json:"tag_name"`
+	TagName        string `json:"tag_name"`
 	InnterText     string `json:"innter_text"`
 	IP             string `json:"ip"`
 	Device         string `json:"device"`

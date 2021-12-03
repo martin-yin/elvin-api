@@ -15,12 +15,23 @@ import (
 
 // 获取团队列表
 func GetTeamList(context *gin.Context) {
-	claims, exists := context.Get("claims")
+	_, exists := context.Get("claims")
 	if exists {
-		var customClaims request.CustomClaims
-		utils.InterfaceToJsonToStruct(claims, &customClaims)
 		responses, _ := services.GetTeamList()
 		response.OkWithDetailed(responses, "获取成功", context)
+	}
+}
+
+func DelTeam(context *gin.Context) {
+	id, isExist := context.GetQuery("id")
+	if isExist {
+		paId := StrToUInt(id)
+		responses, err := services.DelTeam(paId)
+		if err != nil {
+			response.FailWithDetailed(responses, err.Error(), context)
+			return
+		}
+		response.OkWithDetailed(responses, "删除成功", context)
 	}
 }
 

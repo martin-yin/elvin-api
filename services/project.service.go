@@ -6,12 +6,11 @@ import (
 	"dancin-api/model/response"
 	"fmt"
 	"strconv"
-	"strings"
 )
 
 func GetProjectList(id uint) (projectList []model.Project, err error) {
 	var teamList []model.Team
-	err = global.GORMDB.Preload("Admins", "id = ? ", 1).Preload("Projects").Model(&model.Team{}).Find(&teamList).Error
+	err = global.GORMDB.Preload("Admins", "id = ? ", id).Preload("Projects").Model(&model.Team{}).Find(&teamList).Error
 	for _, team := range teamList {
 		for _, project := range team.Projects {
 			projectList = append(projectList, project)
@@ -39,28 +38,30 @@ func GetProject(monitorId string) (project model.Project, err error) {
 	return
 }
 
-func GetProjectStatistics(startTime string, endTime string, monitorId string) (projectStatistics response.ProjectStatistics, err error) {
-	err = global.GORMDB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-	return
-}
-
 func DelProject(id string) (err error) {
+	// todo 判断是否能删除
 	err = global.GORMDB.Delete(&model.Project{}, id).Error
 	return err
 }
 
-func GetProjectHealthy(startTime string, endTime string, monitorIds string) (projectStatisticsList []response.ProjectStatistics, err error) {
-	monitorIdealists := strings.Split(monitorIds, `,`)
-	for _, monitorId := range monitorIdealists {
-		var projectStatistics response.ProjectStatistics
-		err = global.GORMDB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		err = global.GORMDB.Model(&model.Issue{}).Select("COUNT( DISTINCT id ) as js_error").Where(SqlWhereBuild("issues"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		err = global.GORMDB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources_error").Where(SqlWhereBuild("page_resource_errors"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		err = global.GORMDB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(SqlWhereBuild("page_https"), startTime, endTime, monitorId).Scan(&projectStatistics).Error
-		projectStatistics.JsError = DecimalNotZero(projectStatistics.JsError, projectStatistics.Pv)
-		projectStatistics.ResourcesError = DecimalNotZero(projectStatistics.ResourcesError, projectStatistics.Pv)
-		projectStatistics.HttpError = DecimalNotZero(projectStatistics.HttpError, projectStatistics.Pv)
-		projectStatisticsList = append(projectStatisticsList, projectStatistics)
+func GetHealthStatus(id uint, startTime string, endTime string) (homeStatistics []response.HomeStatistic, err error) {
+	projectList, err := GetProjectList(id)
+	if err != nil {
+		return nil, err
+	}
+	// 获取当前用户下的项目
+	for _, project := range projectList {
+		var homeStatistic response.HomeStatistic
+		homeStatistic.ProjectName = project.ProjectName
+		homeStatistic.MonitorId = project.MonitorId
+		err = global.GORMDB.Model(&model.PageView{}).Select("COUNT( DISTINCT user_id ) as uv, COUNT( DISTINCT id ) as pv").Where(SqlWhereBuild("page_views"), startTime, endTime, project.MonitorId).Scan(&homeStatistic).Error
+		err = global.GORMDB.Model(&model.Issue{}).Select("COUNT( DISTINCT id ) as js_error").Where(SqlWhereBuild("issues"), startTime, endTime, project.MonitorId).Scan(&homeStatistic).Error
+		err = global.GORMDB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources_error").Where(SqlWhereBuild("page_resource_errors"), startTime, endTime, project.MonitorId).Scan(&homeStatistic).Error
+		err = global.GORMDB.Model(&model.PageHttp{}).Select("COUNT( DISTINCT id ) as http_error").Where(SqlWhereBuild("page_https"), startTime, endTime, project.MonitorId).Scan(&homeStatistic).Error
+		homeStatistic.JsError = DecimalNotZero(homeStatistic.JsError, homeStatistic.Pv)
+		homeStatistic.ResourcesError = DecimalNotZero(homeStatistic.ResourcesError, homeStatistic.Pv)
+		homeStatistic.HttpError = DecimalNotZero(homeStatistic.HttpError, homeStatistic.Pv)
+		homeStatistics = append(homeStatistics, homeStatistic)
 	}
 	return
 }

@@ -37,6 +37,7 @@ system:
   db-type: 'mysql'
   oss-type: 'local'
   use-multipoint: false
+  use-middleware: 'kafka'
 
 # mysql connect configuration
 mysql:

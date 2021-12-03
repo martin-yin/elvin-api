@@ -1,14 +1,16 @@
 package response
 
 type HttpListResponse struct {
-	Url         string  `json:"url"`
-	LoadTime    float64 `json:"load_time"`
-	Total       int     `json:"total"`
-	Status      int     `json:"status"`
-	UserTotal   int     `json:"user_total"`
-	ErrorUser   int     `json:"error_user"`
-	UserSlow    int     `json:"user_slow"`
-	SuccessRate float64 `json:"success_rate"`
+	Url             string  `json:"url"`
+	LoadTime        float64 `json:"load_time"`
+	Total           int     `json:"total"`
+	Status          int     `json:"status"`
+	UserTotal       int     `json:"user_total"`
+	ErrorUser       int     `json:"error_user"`
+	UserSlow        int     `json:"user_slow"`
+	SuccessRate     float64 `json:"success_rate"`
+	LastHappenTime  int     `json:"last_happen_time"`
+	FirstHappenTime int     `json:"first_happen_time"`
 }
 
 type HttpQuotaResponse struct {

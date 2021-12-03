@@ -10,6 +10,11 @@ func GetTeamList() (team []model.Team, err error) {
 	return
 }
 
+func DelTeam(id uint) (value interface{}, err error){
+	err = global.GORMDB.Model(&model.Team{}).Delete("id = ?", id).Error
+	return
+}
+
 func CreateTeam(team model.Team) (err error) {
 	err = global.GORMDB.Model(&model.Team{}).Create(&team).Error
 	return

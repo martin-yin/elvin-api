@@ -1,7 +1,6 @@
 package v1
 
 import (
-	gocontext "context"
 	"dancin-api/global"
 	"dancin-api/model/request"
 	"dancin-api/model/response"
@@ -69,7 +68,7 @@ func Report(context *gin.Context) {
 	actionType := context.Query("action_type")
 	handles.RouterHandlers[actionType](context)
 }
-
+// 数据消费
 func reportProducer(context *gin.Context, body interface{}, err error) {
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
@@ -77,12 +76,17 @@ func reportProducer(context *gin.Context, body interface{}, err error) {
 	}
 	sessionId := context.Query("session_id")
 	report, _ := json.Marshal(body)
-	msg := kafka.Message{
-		Key:   []byte(fmt.Sprint(sessionId)),
-		Value: report,
-	}
-	if err := global.KAFKA_WRITER.WriteMessages(gocontext.Background(), msg); err != nil {
-		global.LOGGER.Error("kafka 写入数据失败:", zap.Any("err", err))
+	if global.KAFKA != nil {  // 判断下 kafka 是否初始化成功，失败则走redis
+		msg := kafka.Message{
+			Key:   []byte(fmt.Sprint(sessionId)),
+			Value: report,
+		}
+		_, err = global.KAFKA.WriteMessages(msg)
+		if err != nil {
+			global.LOGGER.Error("kafka 写入数据失败:", zap.Any("err", err))
+		}
+	} else {
+		global.REDIS.LPush("reportData", report)
 	}
 	response.Ok(context)
 	return

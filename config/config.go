@@ -24,6 +24,7 @@ type System struct {
 	DbType        string `mapstructure:"db-type" json:"dbType" yaml:"db-type"`
 	OssType       string `mapstructure:"oss-type" json:"ossType" yaml:"oss-type"`
 	UseMultipoint bool   `mapstructure:"use-multipoint" json:"useMultipoint" yaml:"use-multipoint"`
+	UseMiddleware string `mapstructure:"use-middleware" json:"useMiddleware" yaml:"use-middleware"`
 }
 
 type Mysql struct {
@@ -36,6 +37,10 @@ type Mysql struct {
 	MaxOpenConns int    `mapstructure:"max-open-conns" json:"maxOpenConns" yaml:"max-open-conns"`
 	LogMode      bool   `mapstructure:"log-mode" json:"logMode" yaml:"log-mode"`
 	LogZap       string `mapstructure:"log-zap" json:"logZap" yaml:"log-zap"`
+}
+
+func (s *System) GetUseMiddleware() string {
+	return s.UseMiddleware;
 }
 
 func (m *Mysql) Dsn() string {

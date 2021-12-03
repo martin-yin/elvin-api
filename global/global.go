@@ -11,11 +11,10 @@ import (
 )
 
 var (
-	GORMDB       *gorm.DB
-	REDIS        *redis.Client
-	CONFIG       config.Server
-	VIPER        *viper.Viper
-	LOGGER       *zap.Logger
-	KAFKA_WRITER *kafka.Writer
-	KAFKA_READER *kafka.Reader
+	GORMDB *gorm.DB
+	REDIS  *redis.Client
+	CONFIG config.Server
+	VIPER  *viper.Viper
+	LOGGER *zap.Logger
+	KAFKA  *kafka.Conn
 )

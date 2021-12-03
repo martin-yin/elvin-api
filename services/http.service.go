@@ -28,7 +28,8 @@ func GetHttpErrorList(monitorId string, startTime string, endTime string) (httpI
 	startTimes := startTime + " 00:00:00"
 	endTimes := endTime + " 23:59:59"
 	err = global.GORMDB.Model(&model.PageHttp{}).
-		Select("http_url as url, Count(http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time").Where(
+		Select("http_url as url, Count(http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time, "+
+			"max(happen_time) as last_happen_time, min(happen_time) as first_happen_time ").Where(
 		SqlWhereBuild("page_https")+" AND status != 200", startTimes, endTimes, monitorId).
 		Group("url").Order("load_time desc").Find(&httpInfoList).Error
 	return

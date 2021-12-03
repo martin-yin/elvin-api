@@ -61,7 +61,7 @@ func DelProject(context *gin.Context) {
 	}
 }
 
-func GetProjectHealthy(context *gin.Context) {
+func GetHealthStatus(context *gin.Context) {
 	var healthyParams request.HealthyParams
 	err := context.ShouldBind(&healthyParams)
 	if err != nil {
@@ -69,10 +69,15 @@ func GetProjectHealthy(context *gin.Context) {
 		return
 	}
 	startTime, endTime := utils.GetTodayStartAndEndTime()
-	healthyData, err := services.GetProjectHealthy(startTime, endTime, healthyParams.MonitorId)
-	if err != nil {
-		response.FailWithMessage(err.Error(), context)
-		return
+	claims, exists := context.Get("claims")
+	if exists {
+		var customClaims request.CustomClaims
+		utils.InterfaceToJsonToStruct(claims, &customClaims)
+		homeStatistics, err := services.GetHealthStatus(customClaims.ID, startTime, endTime)
+		if err != nil {
+			response.FailWithMessage(err.Error(), context)
+			return
+		}
+		response.OkWithDetailed(homeStatistics, "获取成功", context)
 	}
-	response.OkWithDetailed(healthyData, "获取成功", context)
 }
