@@ -63,6 +63,7 @@ func DelProject(context *gin.Context) {
 
 func GetHealthStatus(context *gin.Context) {
 	var healthyParams request.HealthyParams
+	emptyList := make([]int, 0)
 	err := context.ShouldBind(&healthyParams)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
@@ -73,11 +74,17 @@ func GetHealthStatus(context *gin.Context) {
 	if exists {
 		var customClaims request.CustomClaims
 		utils.InterfaceToJsonToStruct(claims, &customClaims)
-		homeStatistics, err := services.GetHealthStatus(customClaims.ID, startTime, endTime)
+		healthStatistics, err := services.GetHealthStatus(customClaims.ID, startTime, endTime)
 		if err != nil {
 			response.FailWithMessage(err.Error(), context)
 			return
 		}
-		response.OkWithDetailed(homeStatistics, "获取成功", context)
+		if len(healthStatistics) == 0 {
+			response.OkWithDetailed(emptyList, "获取成功", context)
+			return
+		} else {
+			response.OkWithDetailed(healthStatistics, "获取成功", context)
+			return
+		}
 	}
 }
