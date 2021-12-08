@@ -4,12 +4,25 @@ import (
 	"dancin-api/global"
 	"dancin-api/initialize"
 	"fmt"
-	"go.uber.org/zap"
+	"net/http"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type server interface {
 	ListenAndServe() error
+}
+
+func initServer(address string, router *gin.Engine) server {
+	return &http.Server{
+		Addr:           address,
+		Handler:        router,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
 }
 
 func RunWindowsServer() {
