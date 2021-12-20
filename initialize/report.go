@@ -49,7 +49,7 @@ func ReportDataConsumeByRedis() {
 	cron2.Start()
 }
 
-func consumeByRedis(){
+func consumeByRedis() {
 	var wg sync.WaitGroup
 	pipe := global.REDIS.TxPipeline()
 	reportList := pipe.LRange("reportData", 0, 10000)
@@ -70,9 +70,6 @@ func consumeByRedis(){
 		global.REDIS.LTrim("reportData", 10000, -1)
 	}
 }
-
-
-
 
 func init() {
 	handles = utils.NewHandles()
@@ -144,7 +141,7 @@ func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
 	if len(addingStr.Val()) != 0 {
 		err := json.Unmarshal([]byte(addingStr.Val()), &AdInfo)
 		if err != nil {
-			fmt.Print(err, "出粗了！")
+			fmt.Print(err, "出错了！")
 		}
 		return AdInfo
 	} else {

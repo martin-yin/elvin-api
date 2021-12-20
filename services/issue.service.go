@@ -12,8 +12,8 @@ func FindJsIssue(message string) (jsIssues model.Issue, err error) {
 	return
 }
 
-func GetIssues() (pageJsErrorList []response.PageJsErrorList, err error) {
-	var issueList []response.PageJsErrorList
+func GetIssues() (pageJsErrorList []response.PageJsErrList, err error) {
+	var issueList []response.PageJsErrList
 	err = global.GORMDB.Model(&model.Issue{}).Select("issues.id, " +
 		"issues.error_name, " +
 		"issues.message, " +
@@ -32,15 +32,15 @@ func GetIssues() (pageJsErrorList []response.PageJsErrorList, err error) {
 	return
 }
 
-func GetIssuesDetail(issueId, errorId int, monitorId string) (jsErrorDetail response.PageJsErrorDetail, err error) {
-	if errorId != 0 {
-		err = global.GORMDB.Model(&model.PageIssue{}).Where("id = ? And monitor_id = ?", errorId, monitorId).Group("id DESC").Limit(1).Scan(&jsErrorDetail).Error
-		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as previous_error_id ").Where("id < ? And monitor_id = ? ", errorId, monitorId).Group("id DESC").Limit(1).Scan(&jsErrorDetail.PreviousErrorID).Error
-		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as next_error_id").Where("id > ? And monitor_id = ? ", errorId, monitorId).Group("id").Limit(1).Scan(&jsErrorDetail.NextErrorID).Error
-	} else {
-		err = global.GORMDB.Model(&model.PageIssue{}).Where("issues_id = ?", issueId).Group("id DESC").Limit(1).Scan(&jsErrorDetail).Error
-		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as previous_error_id").Where("id < ? And monitor_id = ? ", jsErrorDetail.ID, monitorId).Group("id DESC").Limit(1).Scan(&jsErrorDetail.PreviousErrorID).Error
-		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as next_error_id").Where("id > ? And monitor_id = ? ", jsErrorDetail.ID, monitorId).Group("id").Limit(1).Scan(&jsErrorDetail.NextErrorID).Error
+func GetIssuesDetail(id, errId int, monitorId string) (jsErrDetail response.PageJsErrDetail, err error) {
+	if errId != 0 && id == 0 {
+		err = global.GORMDB.Model(&model.PageIssue{}).Where("issues_id = ? And monitor_id = ?", errId, monitorId).Group("id DESC").Limit(1).Scan(&jsErrDetail).Error
+		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as previous_error_id ").Where("id < ? And monitor_id = ? And issues_id = ? ", jsErrDetail.ID, monitorId, errId).Group("id DESC").Limit(1).Scan(&jsErrDetail.PreviousErrorID).Error
+		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as next_error_id").Where("id > ? And monitor_id = ? And issues_id = ? ", jsErrDetail.ID, monitorId, errId).Group("id").Limit(1).Scan(&jsErrDetail.NextErrorID).Error
+	} else if id != 0 {
+		err = global.GORMDB.Model(&model.PageIssue{}).Where("id = ?", id).Group("id DESC").Limit(1).Scan(&jsErrDetail).Error
+		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as previous_error_id").Where("id < ? And monitor_id = ? And issues_id = ? ", id, monitorId, jsErrDetail.Issues_id).Group("id DESC").Limit(1).Scan(&jsErrDetail.PreviousErrorID).Error
+		err = global.GORMDB.Model(&model.PageIssue{}).Select("id as next_error_id").Where("id > ? And monitor_id = ? And issues_id = ? ", id, monitorId, jsErrDetail.Issues_id).Group("id").Limit(1).Scan(&jsErrDetail.NextErrorID).Error
 	}
 	return
 }

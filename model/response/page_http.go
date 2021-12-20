@@ -13,6 +13,16 @@ type HttpListResponse struct {
 	FirstHappenTime int     `json:"first_happen_time"`
 }
 
+type HttpErrsResponse struct {
+	Url             string `json:"url"`
+	Total           int    `json:"total"`
+	Status          int    `json:"status"`
+	UserTotal       int    `json:"user_total"`
+	LastHappenTime  int    `json:"last_happen_time"`
+	FirstHappenTime int    `json:"first_happen_time"`
+	RequestText     string `json:"request_text"`
+}
+
 type HttpQuotaResponse struct {
 	Total    float64 `json:"total"`
 	LoadTime float64 `json:"load_time"`

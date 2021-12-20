@@ -40,7 +40,7 @@ type Mysql struct {
 }
 
 func (s *System) GetUseMiddleware() string {
-	return s.UseMiddleware;
+	return s.UseMiddleware
 }
 
 func (m *Mysql) Dsn() string {

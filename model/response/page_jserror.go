@@ -2,7 +2,7 @@ package response
 
 import "time"
 
-type PageJsErrorList struct {
+type PageJsErrList struct {
 	ID        string `json:"id"`
 	PageUrl   string `json:"page_url"`
 	ErrorName string `json:"error_name"`
@@ -14,7 +14,7 @@ type PageJsErrorList struct {
 	FirstTime string `json:"first_time"`
 }
 
-type PageJsErrorDetail struct {
+type PageJsErrDetail struct {
 	ID            uint   `json:"id"`
 	PageUrl       string `json:"page_url"`
 	ComponentName string `json:"componentName"`
@@ -23,7 +23,7 @@ type PageJsErrorDetail struct {
 	ErrorName     string `json:"error_name"`
 	StackFrames   string `json:"stack_frames"`
 
-	JsIssuesId      uint      `json:"js_issues_id"`
+	Issues_id      uint      `json:"issues_id"`
 	PreviousErrorID uint      `json:"previous_error_id"`
 	NextErrorID     uint      `json:"next_error_id"`
 	UserId          string    `json:"user_id"`
