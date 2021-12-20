@@ -4,15 +4,14 @@ import (
 	"dancin-api/global"
 	"dancin-api/model"
 	"dancin-api/model/request"
-	"dancin-api/model/response"
 	"dancin-api/services"
 	"dancin-api/utils"
 	"encoding/json"
 	"fmt"
+	"github.com/lionsoul2014/ip2region/binding/golang/ip2region"
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
-	"io/ioutil"
-	"net/http"
+	"os"
 	"sync"
 )
 
@@ -21,10 +20,10 @@ var handles *utils.Handles
 func consume(report string) {
 	var commonFiles model.CommonFiles
 	json.Unmarshal([]byte(report), &commonFiles)
-	addressInfo := getIpAddressInfo(commonFiles.IP)
-	commonFiles.Nation = addressInfo.Nation
+	addressInfo, _ := GetAddresByIp(commonFiles.IP)
+	commonFiles.Nation = addressInfo.Country
 	commonFiles.City = addressInfo.City
-	commonFiles.District = addressInfo.District
+	commonFiles.District = ""
 	commonFiles.Province = addressInfo.Province
 	services.CreateUserAction(commonFiles, report)
 	handles.ServiceHandlers[commonFiles.ActionType](report, &commonFiles)
@@ -132,28 +131,51 @@ func init() {
 //	services.CreateReportDay(reportData)
 //})
 
-func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
+//func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
+//	if ip == "" {
+//		return
+//	}
+//	var txMapResponse response.TxMapResponse
+//	addingStr := global.REDIS.HGet("ipAddress", ip)
+//	if len(addingStr.Val()) != 0 {
+//		err := json.Unmarshal([]byte(addingStr.Val()), &AdInfo)
+//		if err != nil {
+//			fmt.Print(err, "出错了！")
+//		}
+//		return AdInfo
+//	} else {
+//		resp, err := http.Get("https://apis.map.qq.com/ws/location/v1/ip?ip=" + ip + "&key=TFNBZ-STIKX-JQ242-TNUNK-4NWCT-CLF7S")
+//		if err != nil {
+//			return
+//		}
+//		txMapResponded, err := ioutil.ReadAll(resp.Body)
+//		defer resp.Body.Close()
+//		err = json.Unmarshal(txMapResponded, &txMapResponse)
+//		txMapResponseStr, err := json.Marshal(&txMapResponse.Result.AdInfo)
+//		global.REDIS.HSet("ipAddress", ip, txMapResponseStr)
+//		return txMapResponse.Result.AdInfo
+//	}
+//}
+
+// ip 查询地址。
+func GetAddresByIp (ip string) (ipInfo ip2region.IpInfo, err error) {
 	if ip == "" {
 		return
 	}
-	var txMapResponse response.TxMapResponse
 	addingStr := global.REDIS.HGet("ipAddress", ip)
 	if len(addingStr.Val()) != 0 {
-		err := json.Unmarshal([]byte(addingStr.Val()), &AdInfo)
+		err := json.Unmarshal([]byte(addingStr.Val()), &ipInfo)
 		if err != nil {
 			fmt.Print(err, "出错了！")
 		}
-		return AdInfo
+		return ipInfo, nil
 	} else {
-		resp, err := http.Get("https://apis.map.qq.com/ws/location/v1/ip?ip=" + ip + "&key=TFNBZ-STIKX-JQ242-TNUNK-4NWCT-CLF7S")
-		if err != nil {
-			return
-		}
-		txMapResponded, err := ioutil.ReadAll(resp.Body)
-		defer resp.Body.Close()
-		err = json.Unmarshal(txMapResponded, &txMapResponse)
-		txMapResponseStr, err := json.Marshal(&txMapResponse.Result.AdInfo)
-		global.REDIS.HSet("ipAddress", ip, txMapResponseStr)
-		return txMapResponse.Result.AdInfo
+		basePath, err := os.Getwd()
+		region, err := ip2region.New(basePath + "/ip2region.db")
+		ipInfo, err = region.BtreeSearch(ip)
+		ipInfoStr, err := json.Marshal(ipInfo)
+		global.REDIS.HSet("ipAddress", ip, ipInfoStr)
+		defer region.Close()
+		return ipInfo, err
 	}
 }
