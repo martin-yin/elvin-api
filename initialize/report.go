@@ -158,7 +158,7 @@ func init() {
 //}
 
 // ip 查询地址。
-func GetAddresByIp (ip string) (ipInfo ip2region.IpInfo, err error) {
+func GetAddresByIp(ip string) (ipInfo ip2region.IpInfo, err error) {
 	if ip == "" {
 		return
 	}
@@ -175,6 +175,18 @@ func GetAddresByIp (ip string) (ipInfo ip2region.IpInfo, err error) {
 		ipInfo, err = region.BtreeSearch(ip)
 		ipInfoStr, err := json.Marshal(ipInfo)
 		global.REDIS.HSet("ipAddress", ip, ipInfoStr)
+		// 在数据中写一份数据。
+
+		ipAddressData := &model.IPAddress{
+			IP: ip,
+			ISP: ipInfo.ISP,
+			CityId: ipInfo.CityId,
+			Country: ipInfo.Country,
+			Region: ipInfo.Region,
+			Province: ipInfo.Province,
+			City: ipInfo.City,
+		}
+		global.GORMDB.Model(&model.IPAddress{}).Create(ipAddressData)
 		defer region.Close()
 		return ipInfo, err
 	}

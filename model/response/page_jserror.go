@@ -23,7 +23,7 @@ type PageJsErrDetail struct {
 	ErrorName     string `json:"error_name"`
 	StackFrames   string `json:"stack_frames"`
 
-	Issues_id      uint      `json:"issues_id"`
+	Issues_id       uint      `json:"issues_id"`
 	PreviousErrorID uint      `json:"previous_error_id"`
 	NextErrorID     uint      `json:"next_error_id"`
 	UserId          string    `json:"user_id"`
