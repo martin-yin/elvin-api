@@ -1,8 +1,9 @@
 package request
 
 type UsersRequest struct {
-	SearchDate string `form:"search_date"`
-	SearchHour string `form:"search_hour"`
-	UserId     string `form:"user_id"`
-	MonitorId  string `form:"monitor_id"`
+	StartTime string `form:"start_time"`
+	EndTime   string `form:"end_time"`
+	SessionId string `form:"session_id"`
+	UserId    string `form:"user_id"`
+	MonitorId string `form:"monitor_id"`
 }

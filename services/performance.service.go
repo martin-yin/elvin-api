@@ -40,19 +40,8 @@ func GetRankingList(monitorId string, startTime string, endTime string) (Ranking
 	return
 }
 
-func GetStageTimeList(monitorId string, startTime string, endTime string, timeGrain string) (stageTimeList []response.StageTimeResponse, err error) {
-	query := ""
-	if timeGrain == "minute" {
-		query = query + "'%H:%i'"
-	}
-	if timeGrain == "hour" {
-		query = query + "'%m-%d %H'"
-	}
-	if timeGrain == "day" {
-		query = query + "'%m-%d'"
-	}
-
-	err = global.GORMDB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, "+query+") AS time_key, "+
+func GetStageTimeList(monitorId string, startTime string, endTime string) (stageTimeList []response.StageTimeResponse, err error) {
+	err = global.GORMDB.Model(&model.PagePerformance{}).Select("from_unixtime(happen_time / 1000, '%m-%d %H:%i') AS time_key, "+
 		"round( AVG( redirect ), 2 ) AS redirect,"+
 		"round( AVG( appcache ), 2 ) AS appcache,"+
 		"round( AVG( lookup_domain ), 2 ) AS lookup_domain,"+

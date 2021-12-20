@@ -5,6 +5,7 @@ import (
 	"dancin-api/model/response"
 	"dancin-api/services"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -34,7 +35,7 @@ func GetHttpErrorList(context *gin.Context) {
 func GetHttpStage(context *gin.Context) {
 	var queryPageHttp request.HttpParams
 	_ = context.BindQuery(&queryPageHttp)
-	stageTime, err := services.GetHttpStage(queryPageHttp.MonitorId, queryPageHttp.TimeGrain, queryPageHttp.StartTime, queryPageHttp.EndTime)
+	stageTime, err := services.GetHttpStage(queryPageHttp.MonitorId, queryPageHttp.StartTime, queryPageHttp.EndTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 		return

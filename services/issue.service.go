@@ -4,7 +4,6 @@ import (
 	"dancin-api/global"
 	"dancin-api/model"
 	"dancin-api/model/response"
-	"dancin-api/utils"
 )
 
 func FindJsIssue(message string) (jsIssues model.Issue, err error) {
@@ -12,17 +11,18 @@ func FindJsIssue(message string) (jsIssues model.Issue, err error) {
 	return
 }
 
-func GetIssues() (pageJsErrorList []response.PageJsErrList, err error) {
+func GetIssues(monitorId string, startTime string, endTime string) (pageJsErrorList []response.PageJsErrList, err error) {
 	var issueList []response.PageJsErrList
-	err = global.GORMDB.Model(&model.Issue{}).Select("issues.id, " +
-		"issues.error_name, " +
-		"issues.message, " +
-		"COUNT(DISTINCT page_issues.user_id) as error_user, " +
-		"COUNT(page_issues.id) as total").Joins("" +
-		"INNER JOIN page_issues on page_issues.issues_id = issues.id" +
-		"").Group("issues.id").Find(&issueList).Error
+	err = global.GORMDB.Model(&model.Issue{}).Select("issues.id, "+
+		"issues.error_name, "+
+		"issues.message, "+
+		"page_issues.happen_time, page_issues.monitor_id, "+
+		"COUNT(DISTINCT page_issues.user_id) as error_user, "+
+		"COUNT(page_issues.id) as total").Joins(""+
+		"INNER JOIN page_issues on page_issues.issues_id = issues.id"+
+		"").Group("issues.id").Where(SqlWhereBuild("page_issues"), startTime, endTime, monitorId).Debug().Find(&issueList).Error
 
-	startTime, endTime := utils.GetTodayStartAndEndTime()
+	// startTime, endTime := utils.GetTodayStartAndEndTime()
 	for _, issue := range issueList {
 		err = global.GORMDB.Model(&model.PageIssue{}).Select("page_url, created_at as first_time").Where("issues_id = ? ", &issue.ID).Group("id ASC").Limit(1).Scan(&issue).Error
 		err = global.GORMDB.Model(&model.PageIssue{}).Select("created_at as last_time").Where("issues_id = ? ", &issue.ID).Group("id DESC").Limit(1).Scan(&issue).Error

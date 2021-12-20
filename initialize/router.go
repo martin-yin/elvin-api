@@ -1,12 +1,12 @@
 package initialize
 
 import (
-	//"danci-api/router"
 	"dancin-api/global"
 	"dancin-api/middleware"
 	"dancin-api/router"
-	"github.com/gin-gonic/gin"
 	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 初始化总路由

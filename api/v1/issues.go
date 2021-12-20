@@ -4,11 +4,14 @@ import (
 	"dancin-api/model/request"
 	"dancin-api/model/response"
 	"dancin-api/services"
+
 	"github.com/gin-gonic/gin"
 )
 
 func GetIssues(context *gin.Context) {
-	responses, err := services.GetIssues()
+	var userRequest request.UsersRequest
+	err := context.BindQuery(&userRequest)
+	responses, err := services.GetIssues(userRequest.MonitorId, userRequest.StartTime, userRequest.EndTime)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return

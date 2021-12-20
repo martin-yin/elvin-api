@@ -5,6 +5,7 @@ import (
 	"dancin-api/model/response"
 	"dancin-api/services"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -42,7 +43,7 @@ func GetPerformancePageList(context *gin.Context) {
 
 func GetPerformanceStageTime(context *gin.Context) {
 	performanceParams := getPerformanceQuery(context)
-	stageTime, err := services.GetStageTimeList(performanceParams.MonitorId.MonitorId, performanceParams.StartTime, performanceParams.EndTime, performanceParams.TimeGrain)
+	stageTime, err := services.GetStageTimeList(performanceParams.MonitorId.MonitorId, performanceParams.StartTime, performanceParams.EndTime)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 		return

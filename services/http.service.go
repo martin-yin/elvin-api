@@ -48,19 +48,9 @@ func GetHttpQuota(monitorId string, startTime string, endTime string) (httpQuota
 	return
 }
 
-func GetHttpStage(monitorId string, timeGrain string, startTime string, endTime string) (httpStageTime []response.HttpStageTimeResponse, err error) {
-	query := ""
-	if timeGrain == "minute" {
-		query = query + "'%H:%i'"
-	}
-	if timeGrain == "hour" {
-		query = query + "'%m-%d %H'"
-	}
-	if timeGrain == "day" {
-		query = query + "'%m-%d'"
-	}
+func GetHttpStage(monitorId string, startTime string, endTime string) (httpStageTime []response.HttpStageTimeResponse, err error) {
 	err = global.GORMDB.Model(&model.PageHttp{}).
-		Select("FROM_UNIXTIME( happen_time / 1000, "+query+") AS time_key, COUNT( * ) AS total, status, round( AVG( load_time ), 2 ) AS load_time").
+		Select("FROM_UNIXTIME( happen_time / 1000, '%m-%d %H:%i') AS time_key, COUNT( * ) AS total, status, round( AVG( load_time ), 2 ) AS load_time").
 		Where(SqlWhereBuild("page_https")+"and status = 200", startTime+" 00:00:00", endTime+" 23:59:59", monitorId).
 		Group("time_key").Find(&httpStageTime).Error
 	return

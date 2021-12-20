@@ -16,8 +16,8 @@ func GetUsers(usersParam request.UsersRequest) (userResponse []response.UserResp
 	if usersParam.UserId != "" {
 		whereQuery = whereQuery + " And user_id = ?"
 	}
-	startSearchTime := usersParam.SearchDate + " " + usersParam.SearchHour
-	endSearchTime := usersParam.SearchDate + " 23:59:59"
+	startSearchTime := usersParam.StartTime + " 23:59:59"
+	endSearchTime := usersParam.EndTime + " 23:59:59"
 	err = global.GORMDB.Model(&model.User{}).Where(whereQuery, usersParam.MonitorId, startSearchTime, endSearchTime, usersParam.UserId).Group("happen_time desc").Find(&userResponse).Error
 	return
 }

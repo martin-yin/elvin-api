@@ -3,6 +3,7 @@ package router
 import (
 	v1 "dancin-api/api/v1"
 	"dancin-api/middleware"
+
 	"github.com/gin-gonic/gin"
 )
 
