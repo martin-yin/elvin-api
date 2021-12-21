@@ -78,3 +78,21 @@ func DecimalNotZero(value float64, value2 float64) float64 {
 func SqlWhereBuild(model string) string {
 	return "from_unixtime(" + model + ".happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and " + model + ".monitor_id = ? "
 }
+
+
+func SqlBuildWhere(model, sql string, value ...interface{}) string {
+	fmt.Print(value, "===================")
+	return "from_unixtime(" + model + ".happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s') and " + model + ".monitor_id = ? " + sql
+}
+
+func TestMain() {
+	type test struct {
+		StartTime string
+		EndTime string
+	}
+	cc := &test{
+		StartTime: "",
+		EndTime: "",
+	}
+	SqlBuildWhere("", "",cc)
+}

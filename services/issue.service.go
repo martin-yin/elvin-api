@@ -4,6 +4,7 @@ import (
 	"dancin-api/global"
 	"dancin-api/model"
 	"dancin-api/model/response"
+	"fmt"
 )
 
 func FindJsIssue(message string) (jsIssues model.Issue, err error) {
@@ -22,7 +23,8 @@ func GetIssues(monitorId string, startTime string, endTime string) (pageJsErrorL
 		"INNER JOIN page_issues on page_issues.issues_id = issues.id"+
 		"").Group("issues.id").Where(SqlWhereBuild("page_issues"), startTime, endTime, monitorId).Debug().Find(&issueList).Error
 
-	// startTime, endTime := utils.GetTodayStartAndEndTime()
+	fmt.Print("")
+
 	for _, issue := range issueList {
 		err = global.GORMDB.Model(&model.PageIssue{}).Select("page_url, created_at as first_time").Where("issues_id = ? ", &issue.ID).Group("id ASC").Limit(1).Scan(&issue).Error
 		err = global.GORMDB.Model(&model.PageIssue{}).Select("created_at as last_time").Where("issues_id = ? ", &issue.ID).Group("id DESC").Limit(1).Scan(&issue).Error

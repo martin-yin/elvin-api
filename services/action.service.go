@@ -5,20 +5,16 @@ import (
 	"dancin-api/model"
 	"dancin-api/model/request"
 	"dancin-api/model/response"
+	"dancin-api/utils"
 )
 
 type WhereSql struct {
 	sql string
 }
 
-func GetUsers(usersParam request.UsersRequest) (userResponse []response.UserResponse, err error) {
-	whereQuery := "monitor_id = ? And from_unixtime(happen_time / 1000, '%Y-%m-%d %H:%i') between ? And ?"
-	if usersParam.UserId != "" {
-		whereQuery = whereQuery + " And user_id = ?"
-	}
-	startSearchTime := usersParam.StartTime + " 23:59:59"
-	endSearchTime := usersParam.EndTime + " 23:59:59"
-	err = global.GORMDB.Model(&model.User{}).Where(whereQuery, usersParam.MonitorId, startSearchTime, endSearchTime, usersParam.UserId).Group("happen_time desc").Find(&userResponse).Error
+func GetUsers(params request.RequestParams) (userResponse []response.UserResponse, err error) {
+	sql, paramSql := utils.BuildWhereSql("users", "", params)
+	err = global.GORMDB.Model(&model.User{}).Where(sql, paramSql...).Group("happen_time desc").Find(&userResponse).Error
 	return
 }
 

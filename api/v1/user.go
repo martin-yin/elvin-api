@@ -9,9 +9,11 @@ import (
 )
 
 func GetUsers(context *gin.Context) {
-	var userRequest request.UsersRequest
-	err := context.BindQuery(&userRequest)
-	responses, err := services.GetUsers(userRequest)
+	var params request.RequestParams
+	err := context.BindQuery(&params)
+	params.StartTime += " 00:00:00"
+	params.EndTime += " 23:59:59"
+	responses, err := services.GetUsers(params)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return

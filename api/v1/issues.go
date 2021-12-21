@@ -11,6 +11,9 @@ import (
 func GetIssues(context *gin.Context) {
 	var userRequest request.UsersRequest
 	err := context.BindQuery(&userRequest)
+
+	userRequest.StartTime = userRequest.StartTime + " 00:00:00"
+	userRequest.EndTime = userRequest.EndTime + " 23:59:59"
 	responses, err := services.GetIssues(userRequest.MonitorId, userRequest.StartTime, userRequest.EndTime)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
