@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"dancin-api/model/request"
 	"dancin-api/model/response"
 	"dancin-api/services"
@@ -19,6 +20,13 @@ func GetUsers(context *gin.Context) {
 		return
 	}
 	response.OkWithDetailed(responses, "获取成功", context)
+}
+
+func Test(ctx context.Context) interface{} {
+	cc := []interface{}{
+		"123",
+	}
+	return ctx.Value(cc)
 }
 
 func GetUser(context *gin.Context) {

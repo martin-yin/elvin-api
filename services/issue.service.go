@@ -3,8 +3,9 @@ package services
 import (
 	"dancin-api/global"
 	"dancin-api/model"
+	"dancin-api/model/request"
 	"dancin-api/model/response"
-	"fmt"
+	"dancin-api/utils"
 )
 
 func FindJsIssue(message string) (jsIssues model.Issue, err error) {
@@ -12,8 +13,9 @@ func FindJsIssue(message string) (jsIssues model.Issue, err error) {
 	return
 }
 
-func GetIssues(monitorId string, startTime string, endTime string) (pageJsErrorList []response.PageJsErrList, err error) {
+func GetIssues(params request.RequestParams) (pageJsErrorList []response.PageJsErrList, err error) {
 	var issueList []response.PageJsErrList
+	sql, sqlParams := utils.BuildWhereSql("page_issues", " and status = 200", params)
 	err = global.GORMDB.Model(&model.Issue{}).Select("issues.id, "+
 		"issues.error_name, "+
 		"issues.message, "+
@@ -21,14 +23,13 @@ func GetIssues(monitorId string, startTime string, endTime string) (pageJsErrorL
 		"COUNT(DISTINCT page_issues.user_id) as error_user, "+
 		"COUNT(page_issues.id) as total").Joins(""+
 		"INNER JOIN page_issues on page_issues.issues_id = issues.id"+
-		"").Group("issues.id").Where(SqlWhereBuild("page_issues"), startTime, endTime, monitorId).Debug().Find(&issueList).Error
-
-	fmt.Print("")
+		"").Group("issues.id").Where(sql, sqlParams...).Debug().Find(&issueList).Error
 
 	for _, issue := range issueList {
 		err = global.GORMDB.Model(&model.PageIssue{}).Select("page_url, created_at as first_time").Where("issues_id = ? ", &issue.ID).Group("id ASC").Limit(1).Scan(&issue).Error
 		err = global.GORMDB.Model(&model.PageIssue{}).Select("created_at as last_time").Where("issues_id = ? ", &issue.ID).Group("id DESC").Limit(1).Scan(&issue).Error
-		err = global.GORMDB.Model(&model.PageIssue{}).Select("COUNT(id) as today").Where("from_unixtime(page_issues.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", startTime, endTime).Scan(&issue).Error
+		// Todo  感觉不需要了，可以考虑删掉。
+		err = global.GORMDB.Model(&model.PageIssue{}).Select("COUNT(id) as today").Where("from_unixtime(page_issues.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')", params.StartTime, params.EndTime).Scan(&issue).Error
 		pageJsErrorList = append(pageJsErrorList, issue)
 	}
 	return

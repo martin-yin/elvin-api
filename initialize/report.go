@@ -7,11 +7,8 @@ import (
 	"dancin-api/services"
 	"dancin-api/utils"
 	"encoding/json"
-	"fmt"
-	"github.com/lionsoul2014/ip2region/binding/golang/ip2region"
 	"github.com/robfig/cron/v3"
 	"go.uber.org/zap"
-	"os"
 	"sync"
 )
 
@@ -20,21 +17,18 @@ var handles *utils.Handles
 func consume(report string) {
 	var commonFiles model.CommonFiles
 	json.Unmarshal([]byte(report), &commonFiles)
-	addressInfo, _ := GetAddresByIp(commonFiles.IP)
-	commonFiles.Nation = addressInfo.Country
-	commonFiles.City = addressInfo.City
-	commonFiles.District = ""
-	commonFiles.Province = addressInfo.Province
+	// 向chan 添加ip地址
+	utils.IPChan <- commonFiles.IP
 	services.CreateUserAction(commonFiles, report)
 	handles.ServiceHandlers[commonFiles.ActionType](report, &commonFiles)
 }
 
-// reportDataConsumeByKafka redis 消费数据
+// kafka 消费数据
 func ReportDataConsumeByKafka() {
 	for {
 		m, err := global.KAFKA.ReadMessage(100)
 		if err != nil {
-			global.LOGGER.Error("读取数据失败！！！！！！:", zap.Any("err", err))
+			global.LOGGER.Error("kafka读取数据失败:", zap.Any("err", err))
 			return
 		}
 		report := string(m.Value)
@@ -49,21 +43,21 @@ func ReportDataConsumeByRedis() {
 }
 
 func consumeByRedis() {
-	var wg sync.WaitGroup
+	wg := sync.WaitGroup{}
 	pipe := global.REDIS.TxPipeline()
 	reportList := pipe.LRange("reportData", 0, 10000)
 	_, err := pipe.Exec()
 	if err != nil {
-		fmt.Print("fuck 。", err)
+		global.LOGGER.Error("redis 数据读取出错:", zap.Any("err", err))
 		return
 	}
 	if len(reportList.Val()) > 0 {
 		for _, report := range reportList.Val() {
 			wg.Add(1)
-			go func(report string) {
+			go func(wg *sync.WaitGroup, report string) {
 				consume(report)
-				wg.Done()
-			}(report)
+				defer wg.Done()
+			}(&wg, report)
 		}
 		wg.Wait()
 		global.REDIS.LTrim("reportData", 10000, -1)
@@ -105,89 +99,5 @@ func init() {
 		},
 	}
 	handles.ServicesHandlerRegister(servicesHandles)
-}
-
-//cron2.AddFunc("0 0 0 1 * ?  ", func() {   这个是正式得，每天凌晨调用一次。
-//cron2.AddFunc("*/10 * * * * * ", func() {  // 这个是测试时使用的。
-//
-//	actionType := [7]string{"PAGE_LOAD", "HTTP_ERROR_LOG", "HTTP_LOG" , "RESOURCE_ERROR", "BEHAVIOR_INFO", "PAGE_VIEW", "JS_ERROR"}
-//	var reportData []model.ReportDayStatistic
-//	startTime := time.Now().Format("2006-01-02")
-//	for _, value := range projectList {
-//		for _, action :=range actionType {
-//			keyName := startTime + value.MonitorId + action;
-//			count := global.GVA_REDIS.Get(keyName).Val()
-//			if count != "" {
-//				reportData = append(reportData, model.ReportDayStatistic{
-//					ActionType: "PAGE_LOAD",
-//					MonitorId: value.MonitorId,
-//					Day: startTime,
-//					Count: global.GVA_REDIS.Get(keyName).Val(),
-//				})
-//				global.GVA_REDIS.Del(keyName)
-//			}
-//		}
-//	}
-//	services.CreateReportDay(reportData)
-//})
-
-//func getIpAddressInfo(ip string) (AdInfo response.TxMapResultAdInfo) {
-//	if ip == "" {
-//		return
-//	}
-//	var txMapResponse response.TxMapResponse
-//	addingStr := global.REDIS.HGet("ipAddress", ip)
-//	if len(addingStr.Val()) != 0 {
-//		err := json.Unmarshal([]byte(addingStr.Val()), &AdInfo)
-//		if err != nil {
-//			fmt.Print(err, "出错了！")
-//		}
-//		return AdInfo
-//	} else {
-//		resp, err := http.Get("https://apis.map.qq.com/ws/location/v1/ip?ip=" + ip + "&key=TFNBZ-STIKX-JQ242-TNUNK-4NWCT-CLF7S")
-//		if err != nil {
-//			return
-//		}
-//		txMapResponded, err := ioutil.ReadAll(resp.Body)
-//		defer resp.Body.Close()
-//		err = json.Unmarshal(txMapResponded, &txMapResponse)
-//		txMapResponseStr, err := json.Marshal(&txMapResponse.Result.AdInfo)
-//		global.REDIS.HSet("ipAddress", ip, txMapResponseStr)
-//		return txMapResponse.Result.AdInfo
-//	}
-//}
-
-// ip 查询地址。
-func GetAddresByIp(ip string) (ipInfo ip2region.IpInfo, err error) {
-	if ip == "" {
-		return
-	}
-	addingStr := global.REDIS.HGet("ipAddress", ip)
-	if len(addingStr.Val()) != 0 {
-		err := json.Unmarshal([]byte(addingStr.Val()), &ipInfo)
-		if err != nil {
-			fmt.Print(err, "出错了！")
-		}
-		return ipInfo, nil
-	} else {
-		basePath, err := os.Getwd()
-		region, err := ip2region.New(basePath + "/ip2region.db")
-		ipInfo, err = region.BtreeSearch(ip)
-		ipInfoStr, err := json.Marshal(ipInfo)
-		global.REDIS.HSet("ipAddress", ip, ipInfoStr)
-		// 在数据中写一份数据。
-
-		ipAddressData := &model.IPAddress{
-			IP: ip,
-			ISP: ipInfo.ISP,
-			CityId: ipInfo.CityId,
-			Country: ipInfo.Country,
-			Region: ipInfo.Region,
-			Province: ipInfo.Province,
-			City: ipInfo.City,
-		}
-		global.GORMDB.Model(&model.IPAddress{}).Create(ipAddressData)
-		defer region.Close()
-		return ipInfo, err
-	}
+	go utils.ConsumeIP()
 }

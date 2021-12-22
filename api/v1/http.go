@@ -14,7 +14,7 @@ func GetHttpList(context *gin.Context) {
 	var parmas request.RequestParams
 	err := context.BindQuery(&parmas)
 	parmas.StartTime = " 00:00:00"
-	parmas.EndTime =  " 23:59:59"
+	parmas.EndTime = " 23:59:59"
 	httpList, err := services.GetHttpInfoList(parmas)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
@@ -35,9 +35,12 @@ func GetHttpErrorList(context *gin.Context) {
 }
 
 func GetHttpStage(context *gin.Context) {
-	var queryPageHttp request.HttpParams
-	_ = context.BindQuery(&queryPageHttp)
-	stageTime, err := services.GetHttpStage(queryPageHttp.MonitorId, queryPageHttp.StartTime, queryPageHttp.EndTime)
+	var params request.RequestParams
+	_ = context.BindQuery(&params)
+
+	params.StartTime = params.StartTime + " 00:00:00"
+	params.EndTime = params.EndTime + " 23:59:59"
+	stageTime, err := services.GetHttpStage(params)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 		return
