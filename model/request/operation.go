@@ -26,6 +26,6 @@ type OperationBody struct {
 	InputValue  string `json:"input_value"`
 	TagName     string `json:"tag_name"`
 	InnerText   string `json:"inner_text"`
-
+	Path        string `json:"path"`
 	model.CommonFiles
 }

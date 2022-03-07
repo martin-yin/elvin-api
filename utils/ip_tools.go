@@ -8,10 +8,11 @@ import (
 	"go.uber.org/zap"
 	"os"
 )
+
 var Ip2region *ip2region.Ip2Region
 var IPChan = make(chan string)
 
-func init()  {
+func init() {
 	Ip2region = NewIp2Region()
 }
 

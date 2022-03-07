@@ -27,4 +27,10 @@ type CommonFiles struct {
 	Province       string `json:"province"`
 	City           string `json:"city"`
 	District       string `json:"district"`
+	ConnectionType string `json:"connection_type"`
+	Environment    string `json:"environment"`
+	Language       string `json:"language"`
+	Screen         string `json:"screen"`
+	SdkVersion     string `json:"sdk_version"`
+	Vp             string `json:"vp"`
 }

@@ -67,17 +67,17 @@ func consumeByRedis() {
 func init() {
 	handles = utils.NewHandles()
 	servicesHandles := map[string]utils.ServiceFunc{
-		"PAGE_LOAD": func(report string, commonFiles *model.CommonFiles) {
+		"PERFORMANCE": func(report string, commonFiles *model.CommonFiles) {
 			var performance request.PerformanceBody
 			json.Unmarshal([]byte(report), &performance)
 			services.CreatePagePerformance(&performance, commonFiles)
 		},
-		"HTTP_LOG": func(report string, commonFiles *model.CommonFiles) {
+		"HTTPLOG": func(report string, commonFiles *model.CommonFiles) {
 			var http request.HttpBody
 			json.Unmarshal([]byte(report), &http)
 			services.CreatePageHttp(&http, commonFiles)
 		},
-		"PAGE_VIEW": func(report string, commonFiles *model.CommonFiles) {
+		"PAGEVIEW": func(report string, commonFiles *model.CommonFiles) {
 			var pageView request.PageViewBody
 			json.Unmarshal([]byte(report), &pageView)
 			services.CreatePageView(&pageView, commonFiles)
@@ -92,7 +92,7 @@ func init() {
 			json.Unmarshal([]byte(report), &resource)
 			services.CreateResourcesError(&resource, commonFiles)
 		},
-		"JS_ERROR": func(report string, commonFiles *model.CommonFiles) {
+		"JSERROR": func(report string, commonFiles *model.CommonFiles) {
 			var issuesBody request.IssuesBody
 			json.Unmarshal([]byte(report), &issuesBody)
 			services.CreatePageJsError(&issuesBody, commonFiles)

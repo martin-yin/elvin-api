@@ -18,21 +18,21 @@ var handles *utils.Handles
 func init() {
 	handles = utils.NewHandles()
 	routerHandles := map[string]utils.RouterFunc{
-		"PAGE_LOAD": func(context *gin.Context) {
+		"PERFORMANCE": func(context *gin.Context) {
 			var performanceBody request.PerformanceBody
 			err := context.ShouldBindJSON(&performanceBody)
 			performanceBody.IP = context.ClientIP()
 			reportProducer(context, performanceBody, err)
 			return
 		},
-		"HTTP_LOG": func(context *gin.Context) {
+		"HTTPLOG": func(context *gin.Context) {
 			var httpBody request.HttpBody
 			err := context.ShouldBindJSON(&httpBody)
 			httpBody.IP = context.ClientIP()
 			reportProducer(context, httpBody, err)
 			return
 		},
-		"PAGE_VIEW": func(context *gin.Context) {
+		"PAGEVIEW": func(context *gin.Context) {
 			var pageViewBody request.PageViewBody
 			err := context.ShouldBindJSON(&pageViewBody)
 			pageViewBody.IP = context.ClientIP()
@@ -53,7 +53,7 @@ func init() {
 			reportProducer(context, resourceBody, err)
 			return
 		},
-		"JS_ERROR": func(context *gin.Context) {
+		"JSERROR": func(context *gin.Context) {
 			var issuesBody request.IssuesBody
 			err := context.ShouldBindJSON(&issuesBody)
 			issuesBody.IP = context.ClientIP()
