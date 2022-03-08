@@ -11,8 +11,8 @@ import (
 func GetIssues(context *gin.Context) {
 	var params request.RequestParams
 	_ = context.BindQuery(&params)
-	params.StartTime = params.StartTime + " 00:00:00"
-	params.EndTime = params.EndTime + " 23:59:59"
+	params.StartTime += " 00:00:00"
+	params.EndTime += " 23:59:59"
 	responses, err := services.GetIssues(params)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)

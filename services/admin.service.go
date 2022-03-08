@@ -4,7 +4,6 @@ import (
 	"dancin-api/global"
 	"dancin-api/model"
 	"dancin-api/model/request"
-	"fmt"
 )
 
 func Login(loginParam request.Login) (err error, userInter *model.Admin) {
@@ -20,6 +19,5 @@ func RegisterAdmin(admin model.Admin) (userInter *model.Admin, err error) {
 
 func FindAdmins(adminIds ...uint) (adminList []model.Admin, err error) {
 	err = global.GORMDB.Model(&model.Admin{}).Where("id in ?", adminIds).Find(&adminList).Error
-	fmt.Println(adminList, "adminList")
 	return
 }

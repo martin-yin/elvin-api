@@ -4,14 +4,9 @@ import (
 	"dancin-api/global"
 	"dancin-api/model"
 	"dancin-api/model/response"
-	"fmt"
 )
 
 func GetSurveyStatisticsData(startTime string, endTime string, monitorId string) (surveyStatisticsResponse response.SurveyStatisticsResponse, err error) {
-	fmt.Println(startTime, "startTime-----")
-	fmt.Println(endTime, "endTime-----")
-
-	//sqlWhere := `from_unixtime(happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`
 	err = global.GORMDB.Model(&model.PagePerformance{}).Select(" round( AVG( load_page ), 2 ) AS load_page").Where(`from_unixtime(page_performances.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`, startTime, endTime, monitorId).Find(&surveyStatisticsResponse.LoadPage).Error
 	err = global.GORMDB.Model(&model.PageResourceError{}).Select("COUNT( DISTINCT id ) as resources").Where(`from_unixtime(page_resource_errors.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`, startTime, endTime, monitorId).Find(&surveyStatisticsResponse.Resources).Error
 	err = global.GORMDB.Model(&model.Issue{}).Select("COUNT( DISTINCT id ) as js_error").Where(`from_unixtime(issues.happen_time / 1000, '%Y-%m-%d %H:%i:%s') between date_format( ? , '%Y-%m-%d %H:%i:%s') and date_format( ?, '%Y-%m-%d %H:%i:%s')  and monitor_id = ?`, startTime, endTime, monitorId).Find(&surveyStatisticsResponse.JsError).Error

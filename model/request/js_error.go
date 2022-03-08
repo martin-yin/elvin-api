@@ -2,7 +2,7 @@ package request
 
 import "dancin-api/model"
 
-type IssuesBody struct {
+type JsErrorBody struct {
 	PageUrl       string `json:"page_url"`
 	ErrorName     string `json:"error_name"`
 	StackFrames   string `json:"stack_frames"`

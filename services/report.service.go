@@ -92,44 +92,54 @@ func CreatePageOperation(operation *request.OperationBody, commonFiles *model.Co
 	global.GORMDB.Create(&operationModel)
 }
 
-func CreatePageJsError(issue *request.IssuesBody, commonFiles *model.CommonFiles) {
-	issueModel := model.PageIssue{
-		PageUrl:       issue.PageUrl,
-		ComponentName: issue.ComponentName,
-		Stack:         issue.Stack,
-		Message:       issue.Message,
-		StackFrames:   issue.StackFrames,
-		ErrorName:     issue.ErrorName,
+func CreatePageJsError(jsErrorBody *request.JsErrorBody, commonFiles *model.CommonFiles) {
+	jsErrorModel := model.PageJsErr{
+		PageUrl:       jsErrorBody.PageUrl,
+		ComponentName: jsErrorBody.ComponentName,
+		Stack:         jsErrorBody.Stack,
+		Message:       jsErrorBody.Message,
+		StackFrames:   jsErrorBody.StackFrames,
+		ErrorName:     jsErrorBody.ErrorName,
 		CommonFiles:   *commonFiles,
 	}
-	jsIssueModel, err := FindJsIssue(issueModel.Message)
-	if err == nil {
-		if jsIssueModel.ID != 0 {
-			issueModel.IssuesId = jsIssueModel.ID
-			global.GORMDB.Save(&issueModel)
+	global.GORMDB.Transaction(func(tx *gorm.DB) error {
+		issueModel, err := FindIssue(jsErrorModel.Stack)
+		if err == nil && issueModel.ID != 0 {
+			jsErrorModel.IssuesId = issueModel.ID
+			if err := tx.Create(&jsErrorModel).Error; err != nil {
+				global.LOGGER.Error("创建JS Error失败！:", zap.Any("err", err))
+				return err
+			}
 		} else {
-			jsIssue := model.Issue{
-				ErrorName:  issue.ErrorName,
-				Message:    issue.Message,
-				MonitorId:  issue.CommonFiles.MonitorId,
-				HappenTime: issue.HappenTime,
-				PageIssue: []model.PageIssue{
-					issueModel,
+			issueModel := model.Issue{
+				ErrorName:  jsErrorBody.ErrorName,
+				Message:    jsErrorBody.Message,
+				MonitorId:  jsErrorBody.CommonFiles.MonitorId,
+				IsFix:      false,
+				FixTime:    0,
+				FixUserId:  0,
+				Stack:      jsErrorBody.Stack,
+				HappenTime: jsErrorBody.HappenTime,
+				PageJsErr: []model.PageJsErr{
+					jsErrorModel,
 				},
 			}
-			CreateJsIssue(jsIssue)
+			if err := tx.Create(&issueModel).Error; err != nil {
+				global.LOGGER.Error("创建JS Error失败！:", zap.Any("err", err))
+				return err
+			}
 		}
-	}
-}
-
-func CreateJsIssue(stack model.Issue) {
-	global.GORMDB.Save(&stack)
+		return nil
+	})
 }
 
 func CreatePageView(pageView *request.PageViewBody, commonFiles *model.CommonFiles) {
 	pageViewModel := model.PageView{
-		PageUrl:     pageView.PageUrl,
-		CommonFiles: *commonFiles,
+		PageUrl:       pageView.PageUrl,
+		DocumentTitle: pageView.DocumentTitle,
+		Referrer:      pageView.Referrer,
+		Encode:        pageView.Encode,
+		CommonFiles:   *commonFiles,
 	}
 	global.GORMDB.Create(&pageViewModel)
 }

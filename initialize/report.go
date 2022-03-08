@@ -72,12 +72,12 @@ func init() {
 			json.Unmarshal([]byte(report), &performance)
 			services.CreatePagePerformance(&performance, commonFiles)
 		},
-		"HTTPLOG": func(report string, commonFiles *model.CommonFiles) {
+		"HTTP_LOG": func(report string, commonFiles *model.CommonFiles) {
 			var http request.HttpBody
 			json.Unmarshal([]byte(report), &http)
 			services.CreatePageHttp(&http, commonFiles)
 		},
-		"PAGEVIEW": func(report string, commonFiles *model.CommonFiles) {
+		"PAGE_VIEW": func(report string, commonFiles *model.CommonFiles) {
 			var pageView request.PageViewBody
 			json.Unmarshal([]byte(report), &pageView)
 			services.CreatePageView(&pageView, commonFiles)
@@ -92,10 +92,10 @@ func init() {
 			json.Unmarshal([]byte(report), &resource)
 			services.CreateResourcesError(&resource, commonFiles)
 		},
-		"JSERROR": func(report string, commonFiles *model.CommonFiles) {
-			var issuesBody request.IssuesBody
-			json.Unmarshal([]byte(report), &issuesBody)
-			services.CreatePageJsError(&issuesBody, commonFiles)
+		"JS_ERROR": func(report string, commonFiles *model.CommonFiles) {
+			var jsErrorBody request.JsErrorBody
+			json.Unmarshal([]byte(report), &jsErrorBody)
+			services.CreatePageJsError(&jsErrorBody, commonFiles)
 		},
 	}
 	handles.ServicesHandlerRegister(servicesHandles)

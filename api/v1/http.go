@@ -11,11 +11,11 @@ import (
 
 // http 性能相关接口
 func GetHttpList(context *gin.Context) {
-	var parmas request.RequestParams
-	err := context.BindQuery(&parmas)
-	parmas.StartTime = " 00:00:00"
-	parmas.EndTime = " 23:59:59"
-	httpList, err := services.GetHttpInfoList(parmas)
+	var params request.RequestParams
+	err := context.BindQuery(&params)
+	params.StartTime += " 00:00:00"
+	params.EndTime += " 23:59:59"
+	httpList, err := services.GetHttpList(params)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)
 		return
@@ -51,6 +51,8 @@ func GetHttpStage(context *gin.Context) {
 func GetHttpQuota(context *gin.Context) {
 	var params request.RequestParams
 	_ = context.BindQuery(&params)
+	params.StartTime = params.StartTime + " 00:00:00"
+	params.EndTime = params.EndTime + " 23:59:59"
 	quota, err := services.GetHttpQuota(params)
 	if err != nil {
 		response.FailWithMessage(fmt.Sprintf("获取失败：%v", err), context)

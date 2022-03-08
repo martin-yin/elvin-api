@@ -2,7 +2,7 @@ package response
 
 import "time"
 
-type PageJsErrList struct {
+type Issues struct {
 	ID        string `json:"id"`
 	PageUrl   string `json:"page_url"`
 	ErrorName string `json:"error_name"`

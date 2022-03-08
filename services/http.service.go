@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func GetHttpInfoList(params request.RequestParams) (httpInfoList []response.HttpListResponse, err error) {
+func GetHttpList(params request.RequestParams) (httpInfoList []response.HttpListResponse, err error) {
 	sql, sqlParams := utils.BuildWhereSql("page_https", " and status = 200", params)
 	err = global.GORMDB.Model(&model.PageHttp{}).
 		Select("http_url as url, Count(http_url) as total, Count(DISTINCT user_id) as user_total, status, round( AVG( load_time ), 2 ) AS load_time, "+
@@ -25,7 +25,7 @@ func GetHttpInfoList(params request.RequestParams) (httpInfoList []response.Http
 }
 
 func GetHttpErrorList(params request.RequestParams) (httpErrs []response.HttpErrsResponse, err error) {
-	sql, sqlParams := utils.BuildWhereSql("page_https", " and status = 200", params)
+	sql, sqlParams := utils.BuildWhereSql("page_https", " and status != 200", params)
 	err = global.GORMDB.Model(&model.PageHttp{}).
 		Select("http_url as url, Count(http_url) as total, Count(DISTINCT user_id) as user_total, status,  request_text, "+
 			"max(happen_time) as last_happen_time, min(happen_time) as first_happen_time ").Where(sql, sqlParams...).
@@ -34,16 +34,16 @@ func GetHttpErrorList(params request.RequestParams) (httpErrs []response.HttpErr
 }
 
 func GetHttpQuota(params request.RequestParams) (httpQuota response.HttpQuotaResponse, err error) {
-	sql, sqlParams := utils.BuildWhereSql("page_https", "", params)
+	sql, sqlParams := utils.BuildWhereSql("page_https", " and status = 200", params)
 	err = global.GORMDB.Model(&model.PageHttp{}).Select("round(AVG( load_time )) AS load_time, status, COUNT(*) AS total").Where(sql, sqlParams...).Find(&httpQuota).Error
 	err = global.GORMDB.Model(&model.PageHttp{}).Select(" Count(DISTINCT user_id) as error_user, status ").Where(sql+" and status > 400", sqlParams...).Find(&httpQuota).Error
 	err = global.GORMDB.Model(&model.PageHttp{}).Select("COUNT(*) AS success_total, status").
-		Where(sql+" and status < 400", sqlParams).Scan(&httpQuota).Error
+		Where(sql+" and status < 400", sqlParams...).Scan(&httpQuota).Error
 	return
 }
 
 func GetHttpStage(params request.RequestParams) (httpStageTime []response.HttpStageTimeResponse, err error) {
-	sql, sqlParams := utils.BuildWhereSql("page_https", "", params)
+	sql, sqlParams := utils.BuildWhereSql("page_https", " and status = 200", params)
 	err = global.GORMDB.Model(&model.PageHttp{}).
 		Select("FROM_UNIXTIME( happen_time / 1000, '%m-%d %H:%i') AS time_key, COUNT( * ) AS total, status, round( AVG( load_time ), 2 ) AS load_time").
 		Where(sql, sqlParams...).Group("time_key").Find(&httpStageTime).Error

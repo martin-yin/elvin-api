@@ -25,14 +25,14 @@ func init() {
 			reportProducer(context, performanceBody, err)
 			return
 		},
-		"HTTPLOG": func(context *gin.Context) {
+		"HTTP_LOG": func(context *gin.Context) {
 			var httpBody request.HttpBody
 			err := context.ShouldBindJSON(&httpBody)
 			httpBody.IP = context.ClientIP()
 			reportProducer(context, httpBody, err)
 			return
 		},
-		"PAGEVIEW": func(context *gin.Context) {
+		"PAGE_VIEW": func(context *gin.Context) {
 			var pageViewBody request.PageViewBody
 			err := context.ShouldBindJSON(&pageViewBody)
 			pageViewBody.IP = context.ClientIP()
@@ -46,18 +46,18 @@ func init() {
 			reportProducer(context, operationBody, err)
 			return
 		},
-		"RESOURCE": func(context *gin.Context) {
+		"RESOURCE_ERROR": func(context *gin.Context) {
 			var resourceBody request.ResourceErrorBody
 			err := context.ShouldBindJSON(&resourceBody)
 			resourceBody.IP = context.ClientIP()
 			reportProducer(context, resourceBody, err)
 			return
 		},
-		"JSERROR": func(context *gin.Context) {
-			var issuesBody request.IssuesBody
-			err := context.ShouldBindJSON(&issuesBody)
-			issuesBody.IP = context.ClientIP()
-			reportProducer(context, issuesBody, err)
+		"JS_ERROR": func(context *gin.Context) {
+			var jsErrorBody request.JsErrorBody
+			err := context.ShouldBindJSON(&jsErrorBody)
+			jsErrorBody.IP = context.ClientIP()
+			reportProducer(context, jsErrorBody, err)
 			return
 		},
 	}

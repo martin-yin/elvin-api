@@ -14,7 +14,7 @@ type WhereSql struct {
 
 func GetUsers(params request.RequestParams) (userResponse []response.UserResponse, err error) {
 	sql, paramSql := utils.BuildWhereSql("users", "", params)
-	err = global.GORMDB.Model(&model.User{}).Where(sql, paramSql...).Group("happen_time desc").Find(&userResponse).Error
+	err = global.GORMDB.Model(&model.User{}).Where(sql, paramSql...).Group("happen_time desc").Debug().Find(&userResponse).Error
 	return
 }
 
@@ -49,7 +49,7 @@ func GetActionPerformance(id string) (actionPerformanceResponse response.ActionP
 }
 
 func GetActionJsError(id string) (actionJsErrorResponse response.ActionJsErrorResponse, err error) {
-	err = global.GORMDB.Model(&model.PageIssue{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
+	err = global.GORMDB.Model(&model.PageJsErr{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
 	return
 }
 
