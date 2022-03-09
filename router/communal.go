@@ -34,7 +34,7 @@ func InitCommunal(Router *gin.RouterGroup) {
 		Communal.Use(middleware.Auth()).GET("getHealthStatus", v1.GetHealthStatus)
 		// 资源错误接口
 		Communal.GET("staticErr", v1.GetResourceError)
-		Communal.GET("jsErrors", v1.GetIssues)
-		Communal.GET("jsError", v1.GetIssuesDetail)
+		Communal.GET("issues", v1.GetIssues)
+		Communal.GET("jsError", v1.GetJsErrorDetail)
 	}
 }

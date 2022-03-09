@@ -19,7 +19,7 @@ func MysqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
 		model.PageOperation{},
 		model.PageHttp{},
-		model.PageJsErr{},
+		model.PageJsError{},
 		model.Issue{},
 		model.PagePerformance{},
 		model.PageResourceError{},

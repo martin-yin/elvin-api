@@ -93,7 +93,7 @@ func CreatePageOperation(operation *request.OperationBody, commonFiles *model.Co
 }
 
 func CreatePageJsError(jsErrorBody *request.JsErrorBody, commonFiles *model.CommonFiles) {
-	jsErrorModel := model.PageJsErr{
+	jsErrorModel := model.PageJsError{
 		PageUrl:       jsErrorBody.PageUrl,
 		ComponentName: jsErrorBody.ComponentName,
 		Stack:         jsErrorBody.Stack,
@@ -120,7 +120,7 @@ func CreatePageJsError(jsErrorBody *request.JsErrorBody, commonFiles *model.Comm
 				FixUserId:  0,
 				Stack:      jsErrorBody.Stack,
 				HappenTime: jsErrorBody.HappenTime,
-				PageJsErr: []model.PageJsErr{
+				PageJsError: []model.PageJsError{
 					jsErrorModel,
 				},
 			}

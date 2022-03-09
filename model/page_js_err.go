@@ -1,6 +1,6 @@
 package model
 
-type PageJsErr struct {
+type PageJsError struct {
 	MODEL
 	PageUrl       string      `json:"page_url"`
 	ComponentName string      `json:"componentName"`
@@ -22,5 +22,5 @@ type Issue struct {
 	IsFix      bool        `json:"is_fix" gorm:"type: bool" gorm:"default: false"`
 	FixTime    int         `json:"fix_time"`
 	FixUserId  int         `json:"fix_user_id"`
-	PageJsErr  []PageJsErr `json:"page_js_err" gorm:"foreignKey:IssuesId"`
+	PageJsError  []PageJsError `json:"page_js_error" gorm:"foreignKey:IssuesId"`
 }

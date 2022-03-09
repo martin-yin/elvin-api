@@ -14,7 +14,7 @@ type Issues struct {
 	FirstTime string `json:"first_time"`
 }
 
-type PageJsErrDetail struct {
+type PageJsErrorDetail struct {
 	ID            uint   `json:"id"`
 	PageUrl       string `json:"page_url"`
 	ComponentName string `json:"componentName"`

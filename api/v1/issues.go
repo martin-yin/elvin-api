@@ -21,11 +21,11 @@ func GetIssues(context *gin.Context) {
 	response.OkWithDetailed(responses, "获取成功", context)
 }
 
-func GetIssuesDetail(context *gin.Context) {
-	var jsErrorParams request.JsErrorParams
-	_ = context.BindQuery(&jsErrorParams)
+func GetJsErrorDetail(context *gin.Context) {
+	var params request.JsErrorParams
+	_ = context.BindQuery(&params)
 
-	responses, err := services.GetIssuesDetail(jsErrorParams.IssueId, jsErrorParams.ErrorId, jsErrorParams.MonitorId)
+	responses, err := services.GetJsErrorDetail(params.IssueId, params.ErrorId, params.MonitorId)
 	if err != nil {
 		response.FailWithMessage(err.Error(), context)
 		return

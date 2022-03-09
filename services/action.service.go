@@ -49,7 +49,7 @@ func GetActionPerformance(id string) (actionPerformanceResponse response.ActionP
 }
 
 func GetActionJsError(id string) (actionJsErrorResponse response.ActionJsErrorResponse, err error) {
-	err = global.GORMDB.Model(&model.PageJsErr{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
+	err = global.GORMDB.Model(&model.PageJsError{}).Where("id = ?", id).Scan(&actionJsErrorResponse).Error
 	return
 }
 
